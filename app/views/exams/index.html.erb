@@ -11,10 +11,10 @@
       data-exam-total-value="<%= total_questions %>"
       data-exam-current-value="0"
     >
-      <%# Sidebar: danh sách câu hỏi 1..N %>
       <aside class="lg:w-64 xl:w-72 lg:flex-shrink-0 lg:border-r lg:border-slate-200 lg:overflow-y-auto bg-white">
         <div class="p-3">
-          <p class="text-xs font-medium uppercase tracking-wider text-slate-500 px-1 mb-2">Danh sách câu hỏi</p>
+          <p class="text-xs font-medium uppercase tracking-wider text-slate-500 px-1 mb-2">Questions</p>
+          <%= button_to "Refresh AI answer key", fetch_correct_answers_pre_exams_path, method: :post, data: { turbo_confirm: "Re-fetch the AI answer key and explanations for all questions?" }, class: "mb-3 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100" %>
           <div class="grid grid-cols-5 sm:grid-cols-5 gap-1.5">
             <% @questions.each_with_index do |_q, index| %>
               <button
@@ -23,7 +23,7 @@
                 data-exam-target="questionItem"
                 data-question-index="<%= index %>"
                 data-action="click->exam#goTo"
-                title="<%= index == 0 ? 'Đang xem' : 'Chưa làm' %>"
+                title="<%= index == 0 ? 'Viewing' : 'Unanswered' %>"
               >
                 <%= index + 1 %>
               </button>
@@ -32,33 +32,33 @@
           <div class="mt-3 pt-3 border-t border-slate-200 space-y-1.5 text-xs text-slate-500">
             <p class="flex items-center gap-2">
               <span class="w-5 h-5 rounded bg-slate-100 border border-slate-200 shrink-0"></span>
-              Chưa làm
+              Unanswered
             </p>
             <p class="flex items-center gap-2">
               <span class="w-5 h-5 rounded bg-indigo-100 border-2 border-indigo-400 shrink-0"></span>
-              Đã chọn đáp án
+              Answered
             </p>
             <p class="flex items-center gap-2">
               <span class="w-5 h-5 rounded bg-indigo-600 shrink-0"></span>
-              Đang xem
+              Viewing
             </p>
           </div>
         </div>
       </aside>
 
-      <%# Main: title + chi tiết câu hỏi + Next/Prev %>
       <main class="flex-1 flex flex-col min-h-0 lg:overflow-y-auto">
         <header class="flex-shrink-0 p-4 sm:p-6 lg:p-8 pb-0">
           <h1 class="text-xl font-semibold text-slate-900 sm:text-2xl"><%= exam_title %></h1>
           <div class="mt-2 flex flex-wrap gap-2 text-sm text-slate-600">
-            <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 font-medium text-indigo-700"><%= total_questions %> câu</span>
-            <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 font-medium text-amber-700"><%= number_pass %> đúng để đạt</span>
+            <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 font-medium text-indigo-700"><%= total_questions %> questions</span>
+            <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 font-medium text-amber-700"><%= number_pass %> correct to pass</span>
             <% if exam_time.present? && exam_time > 0 %>
-              <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 font-medium text-slate-700"><%= (exam_time / 60).to_i %> phút</span>
+              <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 font-medium text-slate-700"><%= (exam_time / 60).to_i %> min</span>
             <% end %>
           </div>
         </header>
         <%= form_with url: exams_path, method: :post, local: true, data: { turbo: false, action: "change->exam#markAnswered" }, class: "flex flex-col flex-1" do |f| %>
+          <%= f.hidden_field :attempt_id, value: @exam_attempt&.attempt_token, name: "attempt_id" %>
           <div class="flex-1 p-4 sm:p-6 lg:p-8">
             <% @questions.each_with_index do |question, index| %>
               <% q_id = question["id"] %>
@@ -71,9 +71,9 @@
                 data-question-index="<%= index %>"
               >
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                  <span class="text-xs font-medium uppercase tracking-wider text-indigo-600">Câu <%= index + 1 %> / <%= total_questions %></span>
+                  <span class="text-xs font-medium uppercase tracking-wider text-indigo-600">Question <%= index + 1 %> / <%= total_questions %></span>
                   <% if is_multi %>
-                    <span class="ml-2 text-xs text-slate-500">(Chọn nhiều đáp án)</span>
+                    <span class="ml-2 text-xs text-slate-500">(Multiple answers)</span>
                   <% end %>
                 </div>
                 <div class="p-6">
@@ -81,7 +81,7 @@
                     <%= simple_exam_markdown(question["question"]) %>
                   </div>
                   <fieldset class="space-y-2">
-                    <legend class="sr-only">Chọn đáp án</legend>
+                    <legend class="sr-only">Select answer</legend>
                     <% choices.each do |choice| %>
                       <% c_id = choice["id"] %>
                       <% label_text = choice["label"] %>
@@ -106,20 +106,20 @@
               class="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               data-action="click->exam#prev"
             >
-              ← Câu trước
+              ← Previous
             </button>
             <button
               type="button"
               class="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               data-action="click->exam#next"
             >
-              Câu sau →
+              Next →
             </button>
             <button
               type="submit"
               class="rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              Nộp bài
+              Submit
             </button>
           </div>
         <% end %>
@@ -128,8 +128,10 @@
   <% else %>
     <div class="max-w-2xl mx-auto px-4 py-12">
       <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-12 text-center">
-        <p class="text-slate-600">Chưa có đề thi hoặc không thể tải dữ liệu.</p>
-        <p class="mt-2 text-sm text-slate-500">Kiểm tra kết nối API hoặc cookies Viblo.</p>
+        <p class="text-slate-600">No exam session found. Please create an exam first.</p>
+        <p class="mt-4">
+          <%= link_to "Create exam", pre_exams_path, class: "inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+        </p>
       </div>
     </div>
   <% end %>

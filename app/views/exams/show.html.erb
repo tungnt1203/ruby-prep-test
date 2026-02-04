@@ -1,19 +1,7 @@
-<% if @error.present? %>
-  <div class="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-    <div class="rounded-xl bg-red-50 ring-1 ring-red-200 p-6 max-w-md">
-      <h1 class="text-lg font-semibold text-red-800">Không tải được kết quả</h1>
-      <p class="mt-2 text-sm text-red-700"><%= @error %></p>
-      <%= link_to "← Quay lại đề thi", exams_path, class: "mt-4 inline-block text-sm font-medium text-red-600 hover:text-red-800" %>
-    </div>
-  </div>
-<% elsif @result_data.present? %>
-  <% data = @result_data["data"] || {} %>
-  <% exam = data["exam"] || {} %>
-  <% submissions = data["submissions"] || [] %>
-  <% questions = data["questions"] || [] %>
-  <% correct_count = submissions.count { |s| s["correct"] } %>
+<% if @questions_for_result.present? %>
+  <% questions = @questions_for_result %>
   <% total_questions = questions.size %>
-  <% submission_by_qid = submissions.index_by { |s| s["question_id"] } %>
+  <% correct_count = @score_from_db.present? ? @score_from_db[:score] : 0 %>
 
   <div
     class="flex flex-col lg:flex-row lg:h-screen bg-slate-50"
@@ -21,29 +9,28 @@
     data-exam-result-total-value="<%= total_questions %>"
     data-exam-result-current-value="0"
   >
-    <%# Sidebar trái: Danh sách câu hỏi + X/50 đáp án đúng + legend %>
     <aside class="lg:w-64 xl:w-72 lg:flex-shrink-0 lg:border-r lg:border-slate-200 lg:overflow-y-auto bg-white">
       <div class="p-4">
-        <h2 class="text-base font-semibold text-slate-900">Danh sách câu hỏi</h2>
-        <p class="mt-2 text-sm font-medium text-slate-700"><%= correct_count %> / <%= total_questions %> đáp án đúng</p>
+        <h2 class="text-base font-semibold text-slate-900">Questions</h2>
+        <p class="mt-2 text-sm font-medium text-slate-700"><%= correct_count %> / <%= total_questions %> correct (based on persisted answer key)</p>
         <div class="mt-4 space-y-2 text-xs text-slate-600">
           <p class="flex items-center gap-2">
             <span class="w-4 h-4 rounded-full bg-emerald-500 shrink-0"></span>
-            Đáp án đúng
+            Correct
           </p>
           <p class="flex items-center gap-2">
             <span class="w-4 h-4 rounded-full bg-rose-400 shrink-0"></span>
-            Đáp án sai
+            Incorrect
           </p>
         </div>
         <p class="mt-3 text-xs text-slate-500 flex items-center gap-1">
           <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-          Bấm vào câu hỏi để xem chi tiết
+          Click a question to view details
         </p>
         <div class="mt-4 grid grid-cols-5 gap-1.5">
           <% questions.each_with_index do |q, index| %>
-            <% sub = submission_by_qid[q["id"]] %>
-            <% correct = sub&.dig("correct") %>
+            <% detail = @details_by_qid && @details_by_qid[q["id"].to_i] %>
+            <% correct = detail ? detail[:correct] : nil %>
             <button
               type="button"
               class="w-9 h-9 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 <%= index == 0 ? 'bg-indigo-600 text-white' : correct == true ? 'bg-emerald-500 text-white' : correct == false ? 'bg-rose-400 text-white' : 'bg-slate-200 text-slate-600' %>"
@@ -59,21 +46,13 @@
       </div>
     </aside>
 
-    <%# Main phải: policy + từng câu (1 câu/panel) + đáp án của bạn + nút %>
     <main class="flex-1 flex flex-col min-h-0 lg:overflow-y-auto">
       <div class="flex-1 p-4 sm:p-6 lg:p-8">
-        <p class="mb-4 text-sm text-slate-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-          Theo chính sách của Viblo Learning, đáp án đúng và phần giải thích chỉ hiển thị ở chế độ luyện tập.
-        </p>
-        <div class="flex justify-end mb-4">
-          <button type="button" class="text-sm font-medium text-slate-600 hover:text-slate-800">Báo cáo</button>
-        </div>
-
         <% questions.each_with_index do |question, index| %>
-          <% sub = submission_by_qid[question["id"]] %>
-          <% answer_ids = sub ? Array.wrap(sub["answers"]) : [] %>
+          <% detail = @details_by_qid && @details_by_qid[question["id"].to_i] %>
+          <% answer_ids = detail ? detail[:user_answers] : [] %>
           <% choices = question["choices"] || [] %>
-          <% is_correct = sub&.dig("correct") %>
+          <% is_correct = detail ? detail[:correct] : nil %>
 
           <section
             class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200 overflow-hidden <%= index == 0 ? '' : 'hidden' %>"
@@ -81,11 +60,11 @@
             data-question-index="<%= index %>"
           >
             <div class="p-6">
-              <h3 class="text-lg font-semibold text-slate-900 mb-4">Câu hỏi <%= index + 1 %></h3>
+              <h3 class="text-lg font-semibold text-slate-900 mb-4">Question <%= index + 1 %></h3>
               <div class="prose prose-slate max-w-none text-slate-700 mb-6">
                 <%= simple_exam_markdown(question["question"]) %>
               </div>
-              <p class="text-sm font-medium text-slate-600 mb-2">Đáp án của bạn:</p>
+              <p class="text-sm font-medium text-slate-600 mb-2">Your answers:</p>
               <ul class="space-y-2">
                 <% choices.each do |choice| %>
                   <% selected = answer_ids.include?(choice["id"]) %>
@@ -103,8 +82,18 @@
                   </li>
                 <% end %>
               </ul>
-              <% if answer_ids.empty? %>
-                <p class="mt-2 text-sm text-slate-500">Bạn chưa chọn đáp án cho câu này.</p>
+              <% if answer_ids.blank? || answer_ids.empty? %>
+                <p class="mt-2 text-sm text-slate-500">You did not answer this question.</p>
+              <% end %>
+              <% if detail.present? %>
+                <div class="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                  <p class="text-xs font-medium uppercase tracking-wider text-slate-500 mb-1">Result (persisted answer key)</p>
+                  <p class="text-sm font-medium <%= is_correct ? 'text-emerald-700' : 'text-rose-700' %>"><%= is_correct ? "✓ Correct" : "✗ Incorrect" %></p>
+                  <% if detail[:description].present? %>
+                    <p class="text-xs font-medium uppercase tracking-wider text-slate-500 mt-2 mb-1">Explanation</p>
+                    <p class="text-sm text-slate-700"><%= simple_exam_markdown(detail[:description]) %></p>
+                  <% end %>
+                </div>
               <% end %>
             </div>
           </section>
@@ -117,24 +106,24 @@
           class="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           data-action="click->exam-result#prev"
         >
-          ← Câu trước
+          ← Previous
         </button>
         <button
           type="button"
           class="rounded-lg bg-amber-400 hover:bg-amber-500 text-amber-900 px-5 py-2.5 text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
           data-action="click->exam-result#next"
         >
-          Câu hỏi tiếp theo →
+          Next →
         </button>
-        <%= link_to "Thử lại bài kiểm tra", exams_path, class: "rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+        <%= link_to "Try again", exams_path(exam_code: @hash_id), class: "rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
       </div>
     </main>
   </div>
 <% else %>
   <div class="min-h-screen bg-slate-50 flex items-center justify-center p-6">
     <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-12 text-center">
-      <p class="text-slate-600">Không có dữ liệu kết quả.</p>
-      <%= link_to "Quay lại đề thi", exams_path, class: "mt-4 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
+      <p class="text-slate-600">Exam or submission not found.</p>
+      <%= link_to "Back to exam", exams_path(exam_code: @hash_id), class: "mt-4 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
     </div>
   </div>
 <% end %>

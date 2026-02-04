@@ -1,5 +1,5 @@
 module ApplicationHelper
-  # Chuyển **text** thành <strong>, ```ruby``` highlight màu Ruby, ```code``` thành <pre><code>
+  # Minimal markdown renderer for exam content.
   def simple_exam_markdown(text)
     return "" if text.blank?
     t = text.to_s
@@ -16,7 +16,7 @@ module ApplicationHelper
     t.html_safe
   end
 
-  # Highlight Ruby code với Rouge, style màu Ruby
+  # Syntax-highlights Ruby code via Rouge (HTML formatter).
   def highlight_ruby_code(code)
     lexer = Rouge::Lexers::Ruby.new
     formatter = Rouge::Formatters::HTML.new

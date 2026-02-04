@@ -17,7 +17,7 @@ module Viblo
       response.body
     end
 
-    # POST nộp bài: body [{ question_id:, answers: (số hoặc mảng) }, ...]
+    # POST submissions: body [{ question_id:, answers: (integer or array) }, ...]
     def submit_submissions(submissions)
       headers = {
         "Content-Type" => "application/json",
@@ -28,7 +28,7 @@ module Viblo
       response.body
     end
 
-    # GET kết quả bài thi: GET .../tests/:hash_id/result
+    # GET result: .../tests/:hash_id/result
     def get_result
       response = Faraday.get(@url, {}, {
         "Cookie" => @cookies,

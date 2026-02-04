@@ -10,7 +10,13 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "posts#index"
+  root "pre_exams#index"
+
+  resources :pre_exams, only: [:index], path: "pre_exams" do
+    get :created, on: :collection
+    post :create_test, on: :collection
+    post :fetch_correct_answers, on: :collection
+  end
 
   resources :exams, only: [ :index, :create, :show ]
 end

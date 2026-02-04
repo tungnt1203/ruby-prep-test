@@ -1,104 +1,101 @@
-require "net/http"
-require "uri"
-
 class ExamsController < ApplicationController
   def index
-    uri = URI("https://learn.viblo.asia")
-    res = Net::HTTP.get_response(uri)
+    hash_id = params[:exam_code].presence || session[:exam_hash_id]
+    if hash_id.present?
+      session[:exam_hash_id] = hash_id
+      @exam_session = ExamSession.find_by(hash_id: hash_id)
+      @exam_attempt = find_or_create_attempt if @exam_session
+    else
+      @exam_session = nil
+      @exam_attempt = nil
+    end
 
-    cookies = res.get_fields("set-cookie")
-
-    csrf = cookies
-    .find { |c| c.start_with?("XSRF-TOKEN=") }
-    .split(";").first.split("=").last
-
-    cookie_header = cookies.map { |c| c.split(";").first }.join("; ")
-    cookie_header += "; viblo_session_nonce="
-    cookie_header += "; viblo_learning_auth=="
-    raw = Viblo::Exams.new(
-      url: "https://learn.viblo.asia/api/exams/76/tests/create?language=en",
-      cookies: cookie_header,
-      x_xsrf_token: csrf
-    ).create_test
-
-    parsed = JSON.parse(raw)
-    @exam_data = parsed["data"]
-    @exam = @exam_data&.dig("exam") || {}
-    @questions = @exam_data&.dig("questions") || []
-    session[:exam_hash_id] = @exam_data["hashId"] if @exam_data&.key?("hashId")
-  rescue JSON::ParserError
-    @exam_data = nil
-    @exam = {}
-    @questions = []
+    if @exam_session
+      @exam = build_exam_hash(@exam_session)
+      @questions = build_questions_array(@exam_session)
+    else
+      @exam = {}
+      @questions = []
+    end
   end
 
   def create
-    uri = URI("https://learn.viblo.asia")
-    res = Net::HTTP.get_response(uri)
-
-    cookies = res.get_fields("set-cookie")
-
-    csrf = cookies
-    .find { |c| c.start_with?("XSRF-TOKEN=") }
-    .split(";").first.split("=").last
-
-    cookie_header = cookies.map { |c| c.split(";").first }.join("; ")
-    cookie_header += "; viblo_session_nonce="
-    cookie_header += "; viblo_learning_auth=="
-
     hash_id = session[:exam_hash_id]
     unless hash_id.present?
-      redirect_to exams_path, alert: "Phiên làm bài không hợp lệ. Vui lòng bắt đầu lại từ trang đề thi."
+      redirect_to pre_exams_path, alert: "Invalid session. Please create an exam first."
       return
     end
+
     answers_hash = params[:answers].present? ? params[:answers].to_unsafe_h : {}
     submissions = build_submissions_from_params(answers_hash)
 
-    Viblo::Exams.new(
-      url: "https://learn.viblo.asia/api/tests/#{hash_id}/submissions",
-      cookies: cookie_header,
-      x_xsrf_token: csrf
-    ).submit_submissions(submissions)
-    redirect_to exam_path(hash_id), notice: "Đã nộp bài thành công."
-  rescue Faraday::Error => e
-    redirect_to exams_path, alert: "Lỗi khi nộp bài: #{e.message}"
+    payload = submissions.map { |s| { "question_id" => s[:question_id], "answers" => s[:answers] } }
+    exam_session = ExamSession.find_by(hash_id: hash_id)
+    attempt_token = params[:attempt_id].presence || session[:exam_attempt_token]
+    attempt = ExamAttempt.find_by(attempt_token: attempt_token, exam_session: exam_session) if attempt_token && exam_session
+    attempt&.update!(submissions: payload.to_json)
+
+    redirect_to exam_path(hash_id, attempt_id: attempt&.attempt_token), notice: "Submission saved."
   end
 
   def show
-    uri = URI("https://learn.viblo.asia")
-    res = Net::HTTP.get_response(uri)
-
-    cookies = res.get_fields("set-cookie")
-
-    csrf = cookies
-    .find { |c| c.start_with?("XSRF-TOKEN=") }
-    .split(";").first.split("=").last
-
-    cookie_header = cookies.map { |c| c.split(";").first }.join("; ")
-    cookie_header += "; viblo_session_nonce="
-    cookie_header += "; viblo_learning_auth=="
-
     @hash_id = params[:id]
+    @exam_session = ExamSession.find_by(hash_id: @hash_id)
+    @exam_attempt = find_attempt_for_result
+    last_submissions = @exam_attempt&.submissions_array
 
-    raw = Viblo::Exams.new(
-      url: "https://learn.viblo.asia/api/tests/#{@hash_id}/result",
-      cookies: cookie_header,
-      x_xsrf_token: csrf
-    ).get_result
-    @result_data = JSON.parse(raw)
-  rescue Faraday::Error => e
-    @error = e.message
-    @result_data = nil
-  rescue JSON::ParserError
-    @error = "Không thể đọc kết quả."
-    @result_data = nil
+    @score_from_db = if @exam_session && last_submissions.present?
+      @exam_session.score_submissions(last_submissions)
+    end
+    @details_by_qid = @score_from_db[:details].index_by { |d| d[:external_question_id].to_i } if @score_from_db.present?
+
+    if @exam_session
+      @questions_for_result = build_questions_array(@exam_session)
+      @exam_title = @exam_session.exam_title
+      @total_questions = @exam_session.total_questions
+    end
   end
 
   private
 
-  # Chuyển params[:answers] từ form thành mảng theo format Viblo:
-  # Chọn 1: [{ question_id: 43014, answers: 170402 }]
-  # Chọn nhiều: [{ question_id: 43189, answers: [171027, 171028] }]
+  def build_exam_hash(exam_session)
+    {
+      "title" => exam_session.exam_title,
+      "time" => exam_session.time_limit_seconds,
+      "totalQuestions" => exam_session.total_questions,
+      "numberPass" => exam_session.number_pass
+    }
+  end
+
+  def build_questions_array(exam_session)
+    exam_session.questions.order(:id).map do |q|
+      {
+        "id" => q.external_question_id,
+        "type" => q.question_type,
+        "question" => q.body,
+        "choices" => q.question_choices.map { |c| { "id" => c.external_choice_id, "label" => c.label } }
+      }
+    end
+  end
+
+  def find_or_create_attempt
+    token = session[:exam_attempt_token]
+    attempt = ExamAttempt.find_by(attempt_token: token, exam_session_id: @exam_session.id) if token.present?
+    unless attempt
+      attempt = @exam_session.exam_attempts.create!
+      session[:exam_attempt_token] = attempt.attempt_token
+    end
+    attempt
+  end
+
+  def find_attempt_for_result
+    if params[:attempt_id].present?
+      ExamAttempt.find_by(attempt_token: params[:attempt_id], exam_session: @exam_session)
+    elsif session[:exam_attempt_token].present? && @exam_session
+      ExamAttempt.find_by(attempt_token: session[:exam_attempt_token], exam_session: @exam_session)
+    end
+  end
+
   def build_submissions_from_params(answers_params)
     return [] if answers_params.blank?
 

@@ -1,0 +1,23 @@
+<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+  <div class="w-full max-w-md rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8">
+    <h1 class="text-xl font-semibold text-slate-900">Create an exam</h1>
+    <p class="mt-2 text-sm text-slate-600">
+    </p>
+    <%= form_with url: create_test_pre_exams_path, method: :post, local: true, data: { turbo: false }, class: "mt-6 space-y-4" do |f| %>
+      <div>
+        <label for="exam_id" class="block text-sm font-medium text-slate-700">Exam ID (Viblo)</label>
+        <input type="number" name="exam_id" id="exam_id" value="76" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+      </div>
+      <div>
+        <label for="language" class="block text-sm font-medium text-slate-700">Language</label>
+        <select name="language" id="language" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+          <option value="en">English</option>
+          <option value="vi">Vietnamese</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        Create exam
+      </button>
+    <% end %>
+  </div>
+</div>
