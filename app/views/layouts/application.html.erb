@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Fast Quiz" %></title>
+    <title><%= content_for(:title) || "Ruby Prep Test" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Fast Quiz">
+    <meta name="application-name" content="Ruby Prep Test">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -34,7 +34,31 @@
 
   </head>
 
-  <body>
+  <body class="min-h-screen bg-slate-50">
+    <header class="border-b border-slate-200 bg-white">
+      <div class="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <%= link_to "Ruby Prep Test", root_path, class: "text-sm font-semibold text-slate-900" %>
+        <nav class="flex items-center gap-4">
+          <% if logged_in? %>
+            <span class="text-sm text-slate-600"><%= current_user.email %></span>
+            <%= button_to "Sign out", logout_path, method: :delete, class: "text-sm text-slate-500 hover:text-slate-700" %>
+          <% else %>
+            <%= link_to "Sign in", login_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
+            <%= link_to "Sign up", signup_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-500" %>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+    <% if flash[:notice] %>
+      <div class="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
+        <p class="rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800"><%= flash[:notice] %></p>
+      </div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
+        <p class="rounded-lg bg-amber-50 p-3 text-sm text-amber-800"><%= flash[:alert] %></p>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

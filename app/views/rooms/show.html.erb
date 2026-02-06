@@ -1,0 +1,51 @@
+<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4" data-controller="room-countdown" data-room-countdown-starts-at-value="<%= @room.starts_at.iso8601 %>" data-room-countdown-room-url-value="<%= exams_path(exam_code: @room.exam_hash_id, room_code: @room.room_code) %>">
+  <div class="w-full max-w-lg rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8 text-center">
+    <h1 class="text-xl font-semibold text-slate-900"><%= @room.name.presence || "Exam room" %></h1>
+    <p class="mt-2 text-sm text-slate-600"><%= @exam_session.exam_title %></p>
+    <p class="mt-1 text-sm text-slate-500"><%= @exam_session.total_questions %> questions</p>
+
+    <div class="mt-8 p-6 rounded-xl bg-slate-100 border border-slate-200">
+      <p class="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">Starts at</p>
+      <p class="text-lg font-semibold text-slate-800" data-room-countdown-target="startsAt"><%= @room.starts_at.strftime("%Y-%m-%d %H:%M %Z") %></p>
+      <p class="text-sm text-slate-500 mt-1" data-room-countdown-target="localTime">(<span class="local-time" data-iso="<%= @room.starts_at.iso8601 %>">...</span>)</p>
+      <p class="mt-4 text-2xl font-mono font-bold text-indigo-600 tabular-nums" data-room-countdown-target="countdown">--:--:--</p>
+      <p class="mt-1 text-xs text-slate-500" data-room-countdown-target="label">Loading…</p>
+    </div>
+    <script>
+      (function() {
+        var el = document.querySelector('.local-time');
+        if (el && el.dataset.iso) {
+          var d = new Date(el.dataset.iso);
+          el.textContent = 'your time: ' + d.toLocaleString();
+        }
+      })();
+    </script>
+
+    <div class="mt-6" data-room-countdown-target="startBlock" style="display: none;">
+      <%= form_with url: exams_path, method: :get, local: true, class: "flex flex-col gap-3 items-center" do |f| %>
+        <%= hidden_field_tag :exam_code, @room.exam_hash_id %>
+        <%= hidden_field_tag :room_code, @room.room_code %>
+        <div class="w-full max-w-xs text-left">
+          <label for="display_name" class="block text-xs font-medium text-slate-500 mb-1">Your name (optional, for leaderboard)</label>
+          <%= text_field_tag :display_name, nil, placeholder: "e.g. Minh", class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+        </div>
+        <button type="submit" class="inline-flex items-center rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Start exam</button>
+      <% end %>
+    </div>
+
+    <div class="mt-6 flex flex-col gap-2">
+      <label class="block text-xs font-medium text-slate-500 text-left">Share this link</label>
+      <div class="flex gap-2">
+        <input type="text" readonly value="<%= request.base_url %><%= room_path(@room.room_code) %>" id="room_url" class="flex-1 rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-900 font-mono text-sm" />
+        <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('room_url').value).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy'; }, 1500); })" class="rounded-lg bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-300 shrink-0">Copy</button>
+      </div>
+    </div>
+
+    <p class="mt-4 text-sm text-slate-600">
+      <%= link_to "View leaderboard", room_results_path(@room.room_code), class: "text-indigo-600 hover:underline" %> (updates as participants submit)
+    </p>
+    <p class="mt-6 text-xs text-slate-500">
+      <%= link_to "← Back", root_path, class: "text-indigo-600 hover:underline" %>
+    </p>
+  </div>
+</div>

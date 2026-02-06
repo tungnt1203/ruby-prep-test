@@ -1,0 +1,30 @@
+<div class="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+  <div class="w-full max-w-md rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8">
+    <h1 class="text-xl font-semibold text-slate-900">Ruby Prep Test</h1>
+
+    <% if current_user %>
+      <% if current_user.host? %>
+        <p class="mt-2 text-sm text-slate-600">You are signed in as a host. Create exams and schedule rooms.</p>
+        <div class="mt-6 space-y-3">
+          <%= link_to "Create exam", pre_exams_path, class: "block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500" %>
+          <%= link_to "Schedule a room", new_room_path, class: "block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
+        </div>
+      <% else %>
+        <p class="mt-2 text-sm text-slate-600">Signed in as <%= current_user.email %>. Join a room to take an exam.</p>
+        <div class="mt-6">
+          <%= link_to "Join a room", join_path, class: "block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500" %>
+        </div>
+      <% end %>
+      <p class="mt-4 text-center">
+        <%= button_to "Sign out", logout_path, method: :delete, class: "text-sm text-slate-500 hover:text-slate-700" %>
+      </p>
+    <% else %>
+      <p class="mt-2 text-sm text-slate-600">Sign in or join a room to take an exam.</p>
+      <div class="mt-6 space-y-3">
+        <%= link_to "Sign in", login_path, class: "block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500" %>
+        <%= link_to "Sign up", signup_path, class: "block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
+        <%= link_to "Join a room (no account)", join_path, class: "block w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-center text-sm text-slate-600 hover:bg-slate-100" %>
+      </div>
+    <% end %>
+  </div>
+</div>

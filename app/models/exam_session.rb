@@ -3,6 +3,7 @@
 class ExamSession < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :exam_attempts, dependent: :destroy
+  has_many :exam_rooms, dependent: :destroy
 
   validates :hash_id, presence: true, uniqueness: true
   validates :external_exam_id, presence: true

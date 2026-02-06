@@ -4,6 +4,8 @@ require "net/http"
 require "uri"
 
 class PreExamsController < ApplicationController
+  before_action :require_host
+
   def index
   end
 

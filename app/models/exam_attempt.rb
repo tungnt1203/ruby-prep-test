@@ -2,6 +2,7 @@
 
 class ExamAttempt < ApplicationRecord
   belongs_to :exam_session
+  belongs_to :exam_room, optional: true
 
   validates :attempt_token, presence: true, uniqueness: true
 
