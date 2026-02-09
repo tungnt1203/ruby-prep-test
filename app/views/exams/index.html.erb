@@ -10,7 +10,7 @@
       data-controller="exam <%= 'exam-room-timer' if @room_ends_at %>"
       data-exam-total-value="<%= total_questions %>"
       data-exam-current-value="0"
-      <%= "data-exam-room-timer-ends-at-value=#{@room_ends_at.iso8601.inspect}" if @room_ends_at %>
+      <% if @room_ends_at %>data-exam-room-timer-ends-at-value="<%= @room_ends_at.iso8601 %>"<% end %>
     >
       <aside class="lg:w-64 xl:w-72 lg:flex-shrink-0 lg:border-r lg:border-slate-200 lg:overflow-y-auto bg-white">
         <div class="p-3">

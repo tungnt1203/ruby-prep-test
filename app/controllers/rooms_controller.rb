@@ -38,6 +38,8 @@ class RoomsController < ApplicationController
   end
 
   def show
+    return if performed?
+
     @exam_session = @room.exam_session
     @participants_count = @room.exam_attempts.count
     @submitted_count = @room.exam_attempts.where.not(submissions: [nil, ""]).count
@@ -53,6 +55,8 @@ class RoomsController < ApplicationController
   end
 
   def start_now
+    return if performed?
+
     unless current_user&.host? && @room.created_by_id == current_user.id
       redirect_to room_path(@room.room_code), alert: "Only the room creator can start the exam early."
       return
@@ -66,6 +70,8 @@ class RoomsController < ApplicationController
   end
 
   def participants
+    return if performed?
+
     render json: {
       participants_count: @room.exam_attempts.count,
       submitted_count: @room.exam_attempts.where.not(submissions: [nil, ""]).count,
@@ -74,6 +80,8 @@ class RoomsController < ApplicationController
   end
 
   def results
+    return if performed?
+
     @exam_session = @room.exam_session
     attempts_with_submissions = @room.exam_attempts.where.not(submissions: [nil, ""])
 
@@ -96,10 +104,11 @@ class RoomsController < ApplicationController
   private
 
   def set_room
-    @room = ExamRoom.find_by!(room_code: params[:room_code])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to root_path, alert: "Room not found."
-    throw :abort
+    @room = ExamRoom.find_by(room_code: params[:room_code])
+    unless @room
+      redirect_to root_path, alert: "Room not found."
+      return
+    end
   end
 
   def parse_starts_at(date_str, time_str)

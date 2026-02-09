@@ -18,6 +18,11 @@ export default class extends Controller {
     const now = new Date()
     const diffMs = endsAt - now
 
+    if (Number.isNaN(diffMs)) {
+      if (this.hasCountdownTarget) this.countdownTarget.textContent = "--:--:--"
+      return
+    }
+
     if (diffMs <= 0) {
       if (this.interval) {
         clearInterval(this.interval)
