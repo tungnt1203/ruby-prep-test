@@ -4,7 +4,12 @@ module ApplicationHelper
   def simple_exam_markdown(text)
     return "" if text.blank?
     raw = text.to_s
-    raw = CGI.unescape_html(raw) if raw.include?("&")
+    # Decode HTML entities (e.g. =&gt; -> =>, &lt; -> <); repeat to handle double-encoding
+    loop do
+      decoded = CGI.unescape_html(raw)
+      break if decoded == raw
+      raw = decoded
+    end
     # Remove backticks around quoted strings (e.g. `"hello"` -> "hello", `'A'` -> 'A')
     raw = raw.gsub(/`"([^"]*)"`/, '"\1"').gsub(/`'([^']*)'`/, "'\\1'")
     t = ERB::Util.html_escape_once(raw)
