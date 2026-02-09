@@ -17,12 +17,14 @@ class PreExamsController < ApplicationController
     http.verify_mode = Rails.env.development? && ENV["DISABLE_SSL_VERIFY"] == "1" ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
 
     response = http.get(uri.request_uri)
-    cookies = response.get_fields("set-cookie")
+    cookies = response.get_fields("set-cookie") || []
 
-    csrf = cookies
-      .find { |c| c.start_with?("XSRF-TOKEN=") }
-      .split(";").first.split("=").last
-
+    csrf_cookie = cookies.find { |c| c.to_s.start_with?("XSRF-TOKEN=") }
+    unless csrf_cookie
+      redirect_to pre_exams_path, alert: "Could not get Viblo session. Please check the Viblo API."
+      return
+    end
+    csrf = csrf_cookie.split(";").first.split("=").last
     cookie_header = cookies.map { |c| c.split(";").first }.join("; ")
     cookie_header += "; viblo_session_nonce=#{Rails.application.credentials.viblo_session_nonce}"
     cookie_header += "; viblo_learning_auth=#{Rails.application.credentials.viblo_learning_auth}"

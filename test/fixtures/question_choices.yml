@@ -1,0 +1,9 @@
+one:
+  question: one
+  external_choice_id: 1
+  label: "2"
+
+two:
+  question: one
+  external_choice_id: 2
+  label: "3"

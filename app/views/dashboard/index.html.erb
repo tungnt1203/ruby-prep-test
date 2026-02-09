@@ -1,0 +1,46 @@
+<div class="min-h-screen bg-slate-50 py-8 px-4">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-xl font-semibold text-slate-900">Ruby Interview Test – Dashboard</h1>
+    <p class="mt-1 text-sm text-slate-600">Your scheduled rooms. Share the room link with candidates.</p>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <%= link_to "Create exam", pre_exams_path, class: "inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" %>
+      <%= link_to "Schedule a room", new_room_path, class: "inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
+      <%= link_to "← Home", root_path, class: "text-sm text-slate-600 hover:text-slate-900" %>
+    </div>
+
+    <div class="mt-8 rounded-xl bg-white shadow-sm ring-1 ring-slate-200 overflow-hidden">
+      <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+          <tr>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Room</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Exam</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Starts</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Status</th>
+            <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+          <% @rooms.each do |room| %>
+            <% status = room.expired? ? "Ended" : (room.started? ? "In progress" : "Upcoming") %>
+            <tr class="hover:bg-slate-50/50">
+              <td class="px-4 py-3 text-sm font-medium text-slate-900"><%= room.name.presence || "Room #{room.room_code}" %></td>
+              <td class="px-4 py-3 text-sm text-slate-700"><%= room.exam_session.exam_title %></td>
+              <td class="px-4 py-3 text-sm text-slate-600"><%= room.starts_at.strftime("%Y-%m-%d %H:%M") %></td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium <%= status == 'Ended' ? 'bg-slate-100 text-slate-700' : (status == 'In progress' ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800') %>"><%= status %></span>
+              </td>
+              <td class="px-4 py-3 text-right space-x-2">
+                <%= link_to "Room", room_path(room.room_code), class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
+                <%= link_to "Results", room_results_path(room.room_code), class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% if @rooms.empty? %>
+        <p class="px-4 py-8 text-center text-sm text-slate-500">No rooms yet. Create an exam and schedule a room to get started.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ExamsController < ApplicationController
+  before_action :require_login, only: [:index, :create, :show]
+
   def index
     hash_id = params[:exam_code].presence || session[:exam_hash_id]
     room_code = params[:room_code].presence || session[:exam_room_code]
@@ -16,7 +18,22 @@ class ExamsController < ApplicationController
     if hash_id.present?
       session[:exam_hash_id] = hash_id
       session[:exam_display_name] = params[:display_name].presence || session[:exam_display_name]
+      session[:exam_candidate_identifier] = params[:candidate_identifier].presence || session[:exam_candidate_identifier]
       @exam_session = ExamSession.find_by(hash_id: hash_id)
+      if hash_id.present? && @exam_session.nil?
+        redirect_to root_path, alert: "Exam not found. Please use a valid exam or room link."
+        return
+      end
+      if @exam_room && @exam_session
+        if @exam_room.require_display_name && session[:exam_display_name].blank?
+          redirect_to room_path(@exam_room.room_code), alert: "Please enter your name to start the exam."
+          return
+        end
+        if @exam_room.require_candidate_identifier && session[:exam_candidate_identifier].blank?
+          redirect_to room_path(@exam_room.room_code), alert: "Please enter your email or candidate ID to start the exam."
+          return
+        end
+      end
       if @exam_session
         @exam_attempt = find_or_create_attempt
         if @exam_room&.started? && @exam_attempt&.submissions.present?
@@ -35,7 +52,7 @@ class ExamsController < ApplicationController
 
     if @exam_session
       @exam = build_exam_hash(@exam_session)
-      @questions = build_questions_array(@exam_session)
+      @questions = build_questions_array(@exam_session, @exam_attempt)
       @room_ends_at = @exam_room&.started? && @exam_room.ends_at.present? ? @exam_room.ends_at : nil
     else
       @exam = {}
@@ -93,13 +110,22 @@ class ExamsController < ApplicationController
     }
   end
 
-  def build_questions_array(exam_session)
-    exam_session.questions.order(:id).map do |q|
+  def build_questions_array(exam_session, attempt = nil)
+    questions = exam_session.questions.order(:id).to_a
+    seed = attempt.present? && attempt.attempt_token.present? ? attempt.attempt_token.bytes.sum : nil
+    if seed
+      questions = questions.shuffle(random: Random.new(seed))
+    end
+    questions.map do |q|
+      choices = q.question_choices.to_a.map { |c| { "id" => c.external_choice_id, "label" => c.label } }
+      if seed
+        choices = choices.shuffle(random: Random.new(seed + q.external_question_id))
+      end
       {
         "id" => q.external_question_id,
         "type" => q.question_type,
         "question" => q.body,
-        "choices" => q.question_choices.map { |c| { "id" => c.external_choice_id, "label" => c.label } }
+        "choices" => choices
       }
     end
   end
@@ -112,6 +138,7 @@ class ExamsController < ApplicationController
     unless attempt
       attrs = { exam_room: @exam_room&.started? ? @exam_room : nil }
       attrs[:display_name] = session[:exam_display_name].presence if session[:exam_display_name].present?
+      attrs[:candidate_identifier] = session[:exam_candidate_identifier].presence if session[:exam_candidate_identifier].present?
       attempt = @exam_session.exam_attempts.create!(attrs)
       session[:exam_attempt_token] = attempt.attempt_token
     end

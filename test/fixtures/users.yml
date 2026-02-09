@@ -1,0 +1,11 @@
+# user role: for candidates taking exams
+one:
+  email: candidate@example.com
+  role: user
+  password_digest: <%= BCrypt::Password.create('password', cost: 4) %>
+
+# host role: for creating exams and rooms
+host:
+  email: host@example.com
+  role: host
+  password_digest: <%= BCrypt::Password.create('password', cost: 4) %>

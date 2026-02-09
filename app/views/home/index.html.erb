@@ -4,9 +4,10 @@
 
     <% if current_user %>
       <% if current_user.host? %>
-        <p class="mt-2 text-sm text-slate-600">You are signed in as a host. Create exams and schedule rooms.</p>
+        <p class="mt-2 text-sm text-slate-600">You are signed in as a host. Create exams and schedule rooms for Ruby interview tests.</p>
         <div class="mt-6 space-y-3">
-          <%= link_to "Create exam", pre_exams_path, class: "block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500" %>
+          <%= link_to "Dashboard (my rooms)", dashboard_path, class: "block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500" %>
+          <%= link_to "Create exam", pre_exams_path, class: "block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
           <%= link_to "Schedule a room", new_room_path, class: "block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
         </div>
       <% else %>

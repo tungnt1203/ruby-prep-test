@@ -1,0 +1,6 @@
+one:
+  exam_session: one
+  room_code: RoomCode01
+  starts_at: <%= 1.hour.ago %>
+  require_display_name: true
+  require_candidate_identifier: false

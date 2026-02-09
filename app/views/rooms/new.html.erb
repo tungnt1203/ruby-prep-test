@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
   <div class="w-full max-w-md rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8">
-    <h1 class="text-xl font-semibold text-slate-900">Schedule a room</h1>
-    <p class="mt-2 text-sm text-slate-600">Create a timed room so a group can join and start the exam at the same time.</p>
+    <h1 class="text-xl font-semibold text-slate-900">Schedule a Ruby interview room</h1>
+    <p class="mt-2 text-sm text-slate-600">Create a timed room so candidates can join and start the Ruby test at the same time.</p>
 
     <%= form_with url: rooms_path, method: :post, local: true, data: { turbo: false }, class: "mt-6 space-y-4" do |f| %>
       <div>
@@ -11,7 +11,23 @@
       </div>
       <div>
         <label for="room_name" class="block text-sm font-medium text-slate-700">Room name (optional)</label>
-        <input type="text" name="room_name" id="room_name" placeholder="e.g. Team Ruby Quiz" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        <input type="text" name="room_name" id="room_name" placeholder="e.g. Ruby Backend – <%= Date.current.strftime('%Y-%m-%d') %>" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+      </div>
+      <div>
+        <label for="instructions" class="block text-sm font-medium text-slate-700">Instructions for candidates (optional)</label>
+        <textarea name="instructions" id="instructions" rows="3" placeholder="e.g. Cameras on. No external help." class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="flex items-center gap-2">
+          <input type="hidden" name="require_display_name" value="0" />
+          <input type="checkbox" name="require_display_name" id="require_display_name" value="1" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+          <span class="text-sm text-slate-700">Require display name to start</span>
+        </label>
+        <label class="flex items-center gap-2">
+          <input type="hidden" name="require_candidate_identifier" value="0" />
+          <input type="checkbox" name="require_candidate_identifier" id="require_candidate_identifier" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+          <span class="text-sm text-slate-700">Require email / candidate ID to start</span>
+        </label>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
@@ -25,7 +41,7 @@
       </div>
       <div>
         <label for="duration_minutes" class="block text-sm font-medium text-slate-700">Time limit (minutes, optional)</label>
-        <input type="number" name="duration_minutes" id="duration_minutes" min="0" placeholder="e.g. 30 (blank = no limit)" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+        <input type="number" name="duration_minutes" id="duration_minutes" min="0" placeholder="e.g. 45 (blank = no limit)" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
       </div>
       <button type="submit" class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
         Create room
