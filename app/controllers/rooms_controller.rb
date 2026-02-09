@@ -42,9 +42,11 @@ class RoomsController < ApplicationController
     end
     if @room.started?
       redirect_to exams_path(exam_code: @room.exam_hash_id, room_code: @room.room_code)
+      return
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: "Room not found."
+    return
   end
 
   def results
@@ -60,6 +62,7 @@ class RoomsController < ApplicationController
 
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: "Room not found."
+    return
   end
 
   private

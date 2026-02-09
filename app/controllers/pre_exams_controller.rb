@@ -13,7 +13,8 @@ class PreExamsController < ApplicationController
     uri = URI("https://learn.viblo.asia")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    # In development you may set DISABLE_SSL_VERIFY=1 if the external API has cert issues
+    http.verify_mode = Rails.env.development? && ENV["DISABLE_SSL_VERIFY"] == "1" ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
 
     response = http.get(uri.request_uri)
     cookies = response.get_fields("set-cookie")
@@ -65,7 +66,8 @@ class PreExamsController < ApplicationController
   rescue JSON::ParserError
     redirect_to pre_exams_path, alert: "Invalid API response."
   rescue StandardError => e
-    redirect_to pre_exams_path, alert: "Error: #{e.message}"
+    Rails.logger.error("[PreExamsController#create_test] #{e.class}: #{e.message}\n#{e.backtrace.first(5).join("\n")}")
+    redirect_to pre_exams_path, alert: "Could not create exam. Please try again or check the Viblo API."
   end
 
   def created
