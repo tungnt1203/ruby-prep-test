@@ -1,9 +1,15 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+# Default host user for creating exams and rooms (development only; set HOST_SEED_PASSWORD in production)
+if Rails.env.development? || ENV["HOST_SEED_PASSWORD"].present?
+  password = ENV["HOST_SEED_PASSWORD"].presence || "hostpassword"
+  User.find_or_initialize_by(email: "host@example.com").tap do |u|
+    if u.new_record?
+      u.password = password
+      u.role = "host"
+      u.save!
+    end
+  end
+end

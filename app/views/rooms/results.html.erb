@@ -1,0 +1,43 @@
+<div class="min-h-screen bg-slate-50 py-8 px-4">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-xl font-semibold text-slate-900"><%= @room.name.presence || "Room results" %></h1>
+    <p class="mt-1 text-sm text-slate-600"><%= @exam_session.exam_title %> · <%= @room.starts_at.strftime("%Y-%m-%d %H:%M") %></p>
+
+    <div class="mt-6 rounded-xl bg-white shadow-sm ring-1 ring-slate-200 overflow-hidden">
+      <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+          <tr>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">#</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Name</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Score</th>
+            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Submitted</th>
+            <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Result</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+          <% @leaderboard.each_with_index do |entry, index| %>
+            <% attempt = entry[:attempt] %>
+            <tr class="hover:bg-slate-50/50">
+              <td class="px-4 py-3 text-sm font-medium text-slate-900"><%= index + 1 %></td>
+              <td class="px-4 py-3 text-sm text-slate-700"><%= attempt.display_name.presence || "—" %></td>
+              <td class="px-4 py-3 text-sm text-slate-700"><%= entry[:score] %> / <%= entry[:total] %></td>
+              <td class="px-4 py-3 text-sm text-slate-500"><%= entry[:submitted_at].strftime("%H:%M") %></td>
+              <td class="px-4 py-3 text-right">
+                <%= link_to "View", exam_path(@exam_session.hash_id, attempt_id: attempt.attempt_token), class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% if @leaderboard.empty? %>
+        <p class="px-4 py-8 text-center text-sm text-slate-500">No submissions yet.</p>
+      <% end %>
+    </div>
+
+    <p class="mt-6 text-sm text-slate-600">
+      <%= link_to "← Back to room", room_path(@room.room_code), class: "text-indigo-600 hover:underline" %>
+      ·
+      <%= link_to "Home", root_path, class: "text-indigo-600 hover:underline" %>
+    </p>
+  </div>
+</div>

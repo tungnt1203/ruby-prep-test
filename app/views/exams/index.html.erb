@@ -7,9 +7,10 @@
 
     <div
       class="flex flex-col lg:flex-row lg:h-screen"
-      data-controller="exam"
+      data-controller="exam <%= 'exam-room-timer' if @room_ends_at %>"
       data-exam-total-value="<%= total_questions %>"
       data-exam-current-value="0"
+      <%= "data-exam-room-timer-ends-at-value=#{@room_ends_at.iso8601.inspect}" if @room_ends_at %>
     >
       <aside class="lg:w-64 xl:w-72 lg:flex-shrink-0 lg:border-r lg:border-slate-200 lg:overflow-y-auto bg-white">
         <div class="p-3">
@@ -48,15 +49,18 @@
       <main class="flex-1 flex flex-col min-h-0 lg:overflow-y-auto">
         <header class="flex-shrink-0 p-4 sm:p-6 lg:p-8 pb-0">
           <h1 class="text-xl font-semibold text-slate-900 sm:text-2xl"><%= exam_title %></h1>
-          <div class="mt-2 flex flex-wrap gap-2 text-sm text-slate-600">
+          <div class="mt-2 flex flex-wrap gap-2 text-sm text-slate-600 items-center">
             <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 font-medium text-indigo-700"><%= total_questions %> questions</span>
             <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 font-medium text-amber-700"><%= number_pass %> correct to pass</span>
             <% if exam_time.present? && exam_time > 0 %>
               <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 font-medium text-slate-700"><%= (exam_time / 60).to_i %> min</span>
             <% end %>
+            <% if @room_ends_at %>
+              <span class="inline-flex items-center rounded-full bg-rose-100 px-2.5 py-0.5 font-mono font-semibold text-rose-700 tabular-nums" data-exam-room-timer-target="countdown">--:--:--</span>
+            <% end %>
           </div>
         </header>
-        <%= form_with url: exams_path, method: :post, local: true, data: { turbo: false, action: "change->exam#markAnswered" }, class: "flex flex-col flex-1" do |f| %>
+        <%= form_with url: exams_path, method: :post, local: true, data: { turbo: false, action: "change->exam#markAnswered" }.merge(@room_ends_at ? { exam_room_timer_target: "form" } : {}), class: "flex flex-col flex-1" do |f| %>
           <%= f.hidden_field :attempt_id, value: @exam_attempt&.attempt_token, name: "attempt_id" %>
           <div class="flex-1 p-4 sm:p-6 lg:p-8">
             <% @questions.each_with_index do |question, index| %>

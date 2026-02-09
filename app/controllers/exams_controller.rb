@@ -1,10 +1,33 @@
+# frozen_string_literal: true
+
 class ExamsController < ApplicationController
   def index
     hash_id = params[:exam_code].presence || session[:exam_hash_id]
+    room_code = params[:room_code].presence || session[:exam_room_code]
+    if room_code.present?
+      session[:exam_room_code] = room_code
+      @exam_room = ExamRoom.find_by(room_code: room_code)
+    else
+      @exam_room = nil
+      session.delete(:exam_room_code)
+      session.delete(:exam_display_name)
+    end
+
     if hash_id.present?
       session[:exam_hash_id] = hash_id
+      session[:exam_display_name] = params[:display_name].presence || session[:exam_display_name]
       @exam_session = ExamSession.find_by(hash_id: hash_id)
-      @exam_attempt = find_or_create_attempt if @exam_session
+      if @exam_session
+        @exam_attempt = find_or_create_attempt
+        if @exam_room&.started? && @exam_attempt&.submissions.present?
+          redirect_to exam_path(hash_id, attempt_id: @exam_attempt.attempt_token)
+          return
+        end
+        if @exam_room&.expired?
+          redirect_to room_results_path(@exam_room.room_code), notice: "Room has ended. View results below."
+          return
+        end
+      end
     else
       @exam_session = nil
       @exam_attempt = nil
@@ -13,9 +36,11 @@ class ExamsController < ApplicationController
     if @exam_session
       @exam = build_exam_hash(@exam_session)
       @questions = build_questions_array(@exam_session)
+      @room_ends_at = @exam_room&.started? && @exam_room.ends_at.present? ? @exam_room.ends_at : nil
     else
       @exam = {}
       @questions = []
+      @room_ends_at = nil
     end
   end
 
@@ -40,6 +65,7 @@ class ExamsController < ApplicationController
 
   def show
     @hash_id = params[:id]
+    @room_code = session[:exam_room_code]
     @exam_session = ExamSession.find_by(hash_id: @hash_id)
     @exam_attempt = find_attempt_for_result
     last_submissions = @exam_attempt&.submissions_array
@@ -80,9 +106,13 @@ class ExamsController < ApplicationController
 
   def find_or_create_attempt
     token = session[:exam_attempt_token]
-    attempt = ExamAttempt.find_by(attempt_token: token, exam_session_id: @exam_session.id) if token.present?
+    scope = @exam_session.exam_attempts
+    scope = scope.where(exam_room_id: @exam_room.id) if @exam_room&.started?
+    attempt = scope.find_by(attempt_token: token) if token.present?
     unless attempt
-      attempt = @exam_session.exam_attempts.create!
+      attrs = { exam_room: @exam_room&.started? ? @exam_room : nil }
+      attrs[:display_name] = session[:exam_display_name].presence if session[:exam_display_name].present?
+      attempt = @exam_session.exam_attempts.create!(attrs)
       session[:exam_attempt_token] = attempt.attempt_token
     end
     attempt

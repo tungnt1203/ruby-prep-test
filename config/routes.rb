@@ -9,8 +9,16 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  root "pre_exams#index"
+  root "home#index"
+
+  get "login", to: "sessions#new", as: :login
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy", as: :logout
+
+  get "signup", to: "users#new", as: :signup
+  post "signup", to: "users#create"
+
+  get "join", to: "home#join", as: :join
 
   resources :pre_exams, only: [:index], path: "pre_exams" do
     get :created, on: :collection
@@ -19,4 +27,9 @@ Rails.application.routes.draw do
   end
 
   resources :exams, only: [ :index, :create, :show ]
+
+  get "rooms/new", to: "rooms#new", as: :new_room
+  post "rooms", to: "rooms#create", as: :rooms
+  get "rooms/:room_code", to: "rooms#show", as: :room, room_code: /[A-Za-z0-9]+/
+  get "rooms/:room_code/results", to: "rooms#results", as: :room_results, room_code: /[A-Za-z0-9]+/
 end
