@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_06_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_09_120000) do
   create_table "exam_attempts", force: :cascade do |t|
     t.string "attempt_token", null: false
+    t.string "candidate_identifier"
     t.datetime "created_at", null: false
     t.string "display_name"
     t.integer "exam_room_id"
@@ -26,12 +27,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_06_110000) do
 
   create_table "exam_rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "created_by_id"
     t.integer "duration_minutes"
     t.integer "exam_session_id", null: false
+    t.text "instructions"
     t.string "name"
+    t.boolean "require_candidate_identifier", default: false, null: false
+    t.boolean "require_display_name", default: true, null: false
     t.string "room_code", null: false
     t.datetime "starts_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_exam_rooms_on_created_by_id"
     t.index ["exam_session_id"], name: "index_exam_rooms_on_exam_session_id"
     t.index ["room_code"], name: "index_exam_rooms_on_room_code", unique: true
   end
@@ -97,6 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_06_110000) do
   add_foreign_key "exam_attempts", "exam_rooms"
   add_foreign_key "exam_attempts", "exam_sessions"
   add_foreign_key "exam_rooms", "exam_sessions"
+  add_foreign_key "exam_rooms", "users", column: "created_by_id"
   add_foreign_key "question_choices", "questions"
   add_foreign_key "question_correct_answers", "question_choices"
   add_foreign_key "question_correct_answers", "questions"

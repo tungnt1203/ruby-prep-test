@@ -1,0 +1,9 @@
+<% participants_count = room.exam_attempts.count %>
+<% submitted_count = room.exam_attempts.where.not(submissions: [nil, ""]).count %>
+<% participants = room.exam_attempts.order(created_at: :asc) %>
+<p class="mb-2 text-sm text-slate-600">Participants: <strong><%= participants_count %></strong> joined, <strong><%= submitted_count %></strong> submitted</p>
+<div class="mb-3 max-h-24 overflow-y-auto text-left rounded bg-slate-50 p-2">
+  <% participants.each do |attempt| %>
+    <div class="text-xs text-slate-600"><%= attempt.display_name.presence || "—" %> <%= attempt.submissions.present? ? "✓" : "" %></div>
+  <% end %>
+</div>

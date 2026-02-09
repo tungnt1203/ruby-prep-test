@@ -115,7 +115,7 @@
         >
           Next →
         </button>
-        <%= link_to "Try again", exams_path(exam_code: @hash_id), class: "rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
+        <%= link_to "Try again", (@room_code.present? ? exams_path(exam_code: @hash_id, room_code: @room_code) : exams_path(exam_code: @hash_id)), class: "rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
         <% if @room_code.present? %>
           <%= link_to "Room leaderboard", room_results_path(@room_code), class: "rounded-lg bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" %>
         <% end %>

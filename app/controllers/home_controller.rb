@@ -3,9 +3,7 @@
 class HomeController < ApplicationController
 
   def index
-    if current_user&.host?
-      redirect_to pre_exams_path
-    end
+    # Show home for everyone (host sees Dashboard / Create exam / Schedule room; others see Join / Sign in).
   end
 
   def join

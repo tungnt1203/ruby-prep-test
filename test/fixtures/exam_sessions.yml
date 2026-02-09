@@ -1,0 +1,8 @@
+one:
+  hash_id: TestHash01
+  external_exam_id: 1
+  language: en
+  exam_title: "Test Ruby Exam"
+  total_questions: 1
+  number_pass: 1
+  time_limit_seconds: 300
