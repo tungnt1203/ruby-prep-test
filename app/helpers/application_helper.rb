@@ -1,8 +1,13 @@
 module ApplicationHelper
-  # Minimal markdown renderer for exam content. Escapes HTML first to prevent XSS.
+  # Minimal markdown renderer for exam content. Decodes any existing HTML entities
+  # (e.g. from API) then escapes to prevent XSS and double-encoding.
   def simple_exam_markdown(text)
     return "" if text.blank?
-    t = ERB::Util.html_escape_once(text.to_s)
+    raw = text.to_s
+    raw = CGI.unescape_html(raw) if raw.include?("&")
+    # Remove backticks around quoted strings (e.g. `"hello"` -> "hello", `'A'` -> 'A')
+    raw = raw.gsub(/`"([^"]*)"`/, '"\1"').gsub(/`'([^']*)'`/, "'\\1'")
+    t = ERB::Util.html_escape_once(raw)
     t = t.gsub(/\*\*(.+?)\*\*/m, '<strong>\1</strong>')
     t = t.gsub(/```(ruby)?\n?([\s\S]*?)```/m) do
       lang = Regexp.last_match(1)
