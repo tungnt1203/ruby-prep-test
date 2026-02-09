@@ -7,7 +7,7 @@ image: tungnt1203/fast_quiz
 # Deploy to these servers.
 servers:
   web:
-    - 15.134.220.192
+    - 15.135.89.48
   # job:
   #   hosts:
   #     - 192.168.0.1
