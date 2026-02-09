@@ -1,12 +1,27 @@
 # FastQuiz
 
-Rails app to create exams from [Viblo Learn](https://learn.viblo.asia) and run them with an AI-generated answer key (OpenRouter/Gemini). Supports single- and multi-choice questions, scoring against the stored key, and deployment with [Kamal](https://kamal-deploy.org).
+**Ruby interview quiz:** timed rooms, AI scoring (Viblo Learn + OpenRouter/Gemini), real-time leaderboard, CSV export. Rails 8 app for running group tests in interview sessions.
+
+Create exams from [Viblo Learn](https://learn.viblo.asia), schedule a room, share the link. Candidates sign in, join the room, and take the same Ruby (or other) quiz with shuffled questions. Results update in real time; hosts can export CSV for HR.
+
+## Features
+
+- **Timed rooms** — Set start time and duration; everyone sees countdown, then starts together.
+- **Host dashboard** — List your rooms, link to results, quick actions (Create exam, Schedule room).
+- **Login required to take exam** — Candidates must sign in; after login they are sent back to the exam URL.
+- **Real-time participants** — Turbo Streams + Action Cable: join/submit events update the room page without refresh.
+- **Start now** — Room creator can start the exam early when everyone is ready.
+- **Room options** — Optional instructions, require display name and/or candidate ID (email) for HR.
+- **Shuffle per attempt** — Questions and choices order vary by candidate (deterministic from attempt token).
+- **AI answer key** — OpenRouter or Gemini fills correct answers and explanations; optional refresh per exam.
+- **Export results** — Download room leaderboard as CSV (name, candidate ID, score, submitted at).
 
 ## Stack
 
 - **Rails 8.1**, Ruby 3.4
 - **SQLite** (development/production)
 - **Vite** + Tailwind CSS, Stimulus, Turbo
+- **Action Cable** (Turbo Streams for real-time updates)
 - **Solid Queue** (in-process with Puma), **Thruster** (production web)
 - **OpenRouter** (preferred) or **Google Gemini** for answer key + explanations
 
@@ -14,7 +29,7 @@ Rails app to create exams from [Viblo Learn](https://learn.viblo.asia) and run t
 
 - Ruby 3.4 (see [.ruby-version](.ruby-version))
 - Node.js 18+ and Yarn (for assets)
-- [Viblo](https://viblo.asia) account (to obtain session cookies for the exam API)
+- [Viblo](https://viblo.asia) account (session cookies for the exam API)
 
 ## Setup
 
@@ -28,13 +43,13 @@ bin/rails db:prepare
 
 ### Credentials
 
-The app uses Rails credentials for secrets. Edit with:
+Edit with:
 
 ```bash
 EDITOR="code --wait" bin/rails credentials:edit
 ```
 
-Add (or rely on ENV fallbacks where noted):
+Add (or use ENV fallbacks where noted):
 
 | Key | Purpose | ENV fallback |
 |-----|---------|--------------|
@@ -43,7 +58,7 @@ Add (or rely on ENV fallbacks where noted):
 | `viblo_session_nonce` | Viblo session cookie (from browser when logged in) | — |
 | `viblo_learning_auth` | Viblo learning auth cookie | — |
 
-Viblo cookies are required to call the exam API. OpenRouter or Gemini is required to fetch and store the correct answers per question.
+Viblo cookies are required to create exams from Viblo. OpenRouter or Gemini is required to fetch and store correct answers per question.
 
 ## Running
 
@@ -53,7 +68,7 @@ Viblo cookies are required to call the exam API. OpenRouter or Gemini is require
   bin/dev
   ```
 
-  Root: [http://localhost:3000](http://localhost:3000) → Create exam → then take exam via the link/code shown.
+  Open [http://localhost:3000](http://localhost:3000).
 
 - **Production (Docker)**
 
@@ -64,36 +79,39 @@ Viblo cookies are required to call the exam API. OpenRouter or Gemini is require
 
 ## Usage
 
-1. **Create exam** (`/` or `/pre_exams`)  
-   - Optionally set Exam ID (Viblo) and language.  
-   - Submit → app calls Viblo API, stores session and questions, then (if configured) fetches AI answer key for each question.
+**Roles:** *Host* (create exams, schedule rooms, see results) and *User* (take exams). Sign up and set role in DB or via seeds.
 
-2. **Take exam**  
-   - Use the exam code/link from the “Exam created” page (e.g. `?exam_code=...`).  
-   - Answer questions, submit.  
-   - On the result page you see score and per-question result vs the stored answer key and explanation.
+1. **Host: Create exam** — Go to *Create exam* (or `/pre_exams`). Default exam ID 76 = Ruby; change for other topics. Submit → app calls Viblo API, stores questions, then (if configured) fetches AI answer key in the background.
 
-3. **Refresh answer key**  
-   - From the exam page sidebar, use “Refresh AI answer key” to re-call the AI and update correct answers and explanations.
+2. **Host: Schedule room** — *Schedule a room* → enter exam code (from “Exam created” page), room name, optional instructions, start date/time, duration. Optionally require display name and/or candidate ID. Create → you get a room link.
+
+3. **Host: Share link** — Send the room URL to candidates. On the room page they see countdown (or “Started!”). Host can click *Start exam now* to begin early, or wait for the timer.
+
+4. **Candidate: Join** — Open the room link (or *Join a room* and enter room code). Enter name and optional email/candidate ID if required. Click *Start exam* — if not signed in, you’ll be redirected to login and then back to the exam.
+
+5. **Candidate: Take exam** — Answer questions (order and choice order are shuffled per attempt). Submit; view score and per-question result vs the stored answer key.
+
+6. **Results** — Room *View leaderboard* shows rankings; *Export CSV* downloads name, candidate ID, score, submitted at. Per-attempt *View* opens the detailed result page.
 
 ## Deployment (Kamal)
 
-1. Set `servers.web` in [config/deploy.yml](config/deploy.yml) to your EC2 (or other) host(s).
-2. Ensure SSH access (e.g. `~/.ssh/config` with `IdentityFile` for your `.pem`).
-3. Set secrets (see [.kamal/secrets](.kamal/secrets)): `RAILS_MASTER_KEY`, `KAMAL_REGISTRY_PASSWORD`, and optionally ENV for OpenRouter/Gemini if not using credentials.
-4. Deploy:
+1. Set `servers.web` in [config/deploy.yml](config/deploy.yml).
+2. Configure SSH and secrets (see [.kamal/secrets](.kamal/secrets)): `RAILS_MASTER_KEY`, `KAMAL_REGISTRY_PASSWORD`, and optionally ENV for OpenRouter/Gemini.
+3. Run:
 
    ```bash
    bin/kamal deploy
    ```
 
-For EC2, use the correct SSH user (`ubuntu` or `ec2-user`) and do not commit `.pem` or `config/master.key`.
+Do not commit `config/master.key` or `.pem` files.
 
 ## Tests
 
 ```bash
 bin/rails test
 ```
+
+Controller tests cover exam access (login required, `return_to` redirect) and session redirect after login.
 
 ## License
 
