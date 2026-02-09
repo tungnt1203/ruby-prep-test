@@ -14,7 +14,7 @@ class PreExamsController < ApplicationController
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     # In development you may set DISABLE_SSL_VERIFY=1 if the external API has cert issues
-    http.verify_mode = Rails.env.development? && ENV["DISABLE_SSL_VERIFY"] == "1" ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
     response = http.get(uri.request_uri)
     cookies = response.get_fields("set-cookie") || []
@@ -76,7 +76,7 @@ class PreExamsController < ApplicationController
     @exam_code = params[:exam_code].presence
     if @exam_code.blank?
       redirect_to pre_exams_path, alert: "Missing exam code."
-      return
+      nil
     end
   end
 
