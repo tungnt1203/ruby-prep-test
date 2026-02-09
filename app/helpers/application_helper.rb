@@ -12,17 +12,27 @@ module ApplicationHelper
     end
     # Remove backticks around quoted strings (e.g. `"hello"` -> "hello", `'A'` -> 'A')
     raw = raw.gsub(/`"([^"]*)"`/, '"\1"').gsub(/`'([^']*)'`/, "'\\1'")
-    t = ERB::Util.html_escape_once(raw)
-    t = t.gsub(/\*\*(.+?)\*\*/m, '<strong>\1</strong>')
-    t = t.gsub(/```(ruby)?\n?([\s\S]*?)```/m) do
+
+    # Process code blocks BEFORE escaping, so code with " and < is not double-encoded
+    code_blocks = []
+    raw = raw.gsub(/```(ruby)?\n?([\s\S]*?)```/m) do
       lang = Regexp.last_match(1)
       code = Regexp.last_match(2).strip
-      if lang == "ruby"
+      html = if lang == "ruby"
         highlight_ruby_code(code)
       else
         "<pre class=\"exam-code-block my-2 p-3 bg-slate-100 rounded-lg overflow-x-auto text-sm\"><code>#{ERB::Util.html_escape_once(code)}</code></pre>"
       end
+      code_blocks << html
+      "\n\x00CODEBLOCK#{code_blocks.size - 1}\x00\n"
     end
+
+    # Remove inline backticks (e.g. `__init__` -> __init__, `new` -> new); safe after ``` blocks are replaced
+    raw = raw.gsub(/`([^`]+)`/, '\1')
+
+    t = ERB::Util.html_escape_once(raw)
+    t = t.gsub(/\*\*(.+?)\*\*/m, '<strong>\1</strong>')
+    code_blocks.each_with_index { |html, i| t = t.sub("\x00CODEBLOCK#{i}\x00", html) }
     t.html_safe
   end
 
