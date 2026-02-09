@@ -97,4 +97,10 @@ bin/rails test
 
 ## License
 
-Private / unlicensed unless stated otherwise.
+This project is released under the [MIT License](LICENSE).
+
+See also:
+
+* [Code of Conduct](CODE_OF_CONDUCT.md)
+* [Contributing](CONTRIBUTING.md)
+* [Security Policy](SECURITY.md)
