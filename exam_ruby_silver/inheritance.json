@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Object Orientation: Inheritance",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "How do you declare that a class **inherits** from another in Ruby?",
+      "options": {"A": "class Child < Parent", "B": "class Child extends Parent", "C": "class Child : Parent", "D": "class Child inherits Parent"},
+      "answer": "A",
+      "explanation": "class Child < Parent makes Child a subclass of Parent. Child inherits Parent's instance methods. The < symbol denotes inheritance."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "Does Ruby support **multiple inheritance** (one class inheriting from several classes)?",
+      "options": {"A": "No; only single inheritance", "B": "Yes", "C": "Only with modules", "D": "Only for built-in classes"},
+      "answer": "A",
+      "explanation": "Ruby has single inheritance: a class can have only one superclass. To share behavior from multiple sources, use mixins (include/prepend modules)."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What does **super** (no arguments) pass to the superclass method?",
+      "options": {"A": "The same arguments that were passed to the current method", "B": "No arguments", "C": "Only the first argument", "D": "self only"},
+      "answer": "A",
+      "explanation": "super with no arguments forwards the current method's arguments to the superclass's version of the same method. Use super() to pass no arguments explicitly."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Animal\n  def initialize(name)\n    @name = name\n  end\nend\nclass Dog < Animal\n  def initialize(name, breed)\n    super(name)\n    @breed = breed\n  end\nend\nd = Dog.new(\"Rex\", \"Lab\")\nputs d.instance_variable_get(:@name)\nputs d.instance_variable_get(:@breed)\n```",
+      "options": {"A": "Rex then Lab", "B": "Rex then nil", "C": "Error", "D": "Lab then Rex"},
+      "answer": "A",
+      "explanation": "Dog#initialize calls super(name), which runs Animal#initialize and sets @name = \"Rex\". Then @breed = \"Lab\". So both instance variables are set."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What is the **default superclass** of a class that does not specify one?",
+      "options": {"A": "Object", "B": "BasicObject", "C": "Kernel", "D": "nil"},
+      "answer": "A",
+      "explanation": "class Foo (with no < Parent) implicitly inherits from Object. So Foo.superclass is Object. Object inherits from BasicObject."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "Does a **subclass** inherit its parent's **instance methods**?",
+      "options": {"A": "Yes", "B": "No", "C": "Only public ones", "D": "Only if they are not overridden"},
+      "answer": "A",
+      "explanation": "A subclass inherits all instance methods from its superclass (public, protected, and private). The subclass can override them; otherwise the parent's implementation is used."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass A\n  def m\n    \"A\"\n  end\nend\nclass B < A\nend\nputs B.new.m\n```",
+      "options": {"A": "A", "B": "B", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "B inherits from A and does not override m. So B.new.m calls A#m and returns \"A\"."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "Does a subclass **inherit** its parent's **class methods**?",
+      "options": {"A": "Yes; class methods are inherited", "B": "No", "C": "Only if defined with def self.method", "D": "Only for built-in classes"},
+      "answer": "A",
+      "explanation": "Class methods are defined on the class object's singleton class. When Child < Parent, Child's singleton class has Parent's singleton class in its chain, so Child inherits Parent's class methods."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What does **ancestors** return for a class?",
+      "options": {"A": "Array of classes and modules in the method lookup order", "B": "Only the direct superclass", "C": "Only the class itself", "D": "All subclasses"},
+      "answer": "A",
+      "explanation": "SomeClass.ancestors returns the list of classes and modules used for method lookup: the class, its included/prepended modules, superclass, etc. So you see the full chain."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Parent\n  private\n  def secret\n    \"hidden\"\n  end\nend\nclass Child < Parent\n  def show\n    secret\n  end\nend\nputs Child.new.show\n```",
+      "options": {"A": "hidden", "B": "Error (private method)", "C": "nil", "D": "Child"},
+      "answer": "A",
+      "explanation": "Child inherits secret (private). Private methods can be called without an explicit receiver from within the class or subclass. So secret in Child#show calls Parent's secret and returns \"hidden\"."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is **superclass**?",
+      "options": {"A": "A method that returns the parent class", "B": "A keyword for inheritance", "C": "The same as ancestors", "D": "The root class"},
+      "answer": "A",
+      "explanation": "SomeClass.superclass returns the direct parent class (e.g. String.superclass => Object). ancestors returns the full chain including modules."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass X\n  def init\n    @x = 1\n  end\nend\nclass Y < X\n  def init\n    super\n    @y = 2\n  end\nend\nobj = Y.new\nobj.init\nputs obj.instance_variable_get(:@x)\nputs obj.instance_variable_get(:@y)\n```",
+      "options": {"A": "1 then 2", "B": "nil then 2", "C": "1 then nil", "D": "Error"},
+      "answer": "A",
+      "explanation": "Y#init calls super, which runs X#init and sets @x = 1 on the same object (obj). Then @y = 2. So both @x and @y are set."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "Can a **subclass** call a **private** method of the parent (from its own instance methods)?",
+      "options": {"A": "Yes, without an explicit receiver", "B": "No", "C": "Only with super", "D": "Only if it is protected"},
+      "answer": "A",
+      "explanation": "Private methods are inherited. They can be called from the subclass's instance methods without a receiver (e.g. just secret). So the subclass can use the parent's private methods."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Base\n  def greet\n    \"Hello\"\n  end\nend\nclass Derived < Base\n  def greet\n    super + \" World\"\n  end\nend\nputs Derived.new.greet\n```",
+      "options": {"A": "Hello World", "B": "Hello", "C": "World", "D": "Error"},
+      "answer": "A",
+      "explanation": "Derived#greet calls super (Base#greet returns \"Hello\"), then concatenates \" World\". Result is \"Hello World\"."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is **super()** (with empty parentheses)?",
+      "options": {"A": "Calls the superclass method with no arguments", "B": "Same as super", "C": "Calls the superclass constructor only", "D": "Invalid syntax"},
+      "answer": "A",
+      "explanation": "super() explicitly passes no arguments to the superclass method. Use it when you don't want to forward the current method's arguments (e.g. in initialize when the parent takes different args)."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass A\n  def f\n    1\n  end\nend\nclass B < A\n  def f\n    super + 1\n  end\nend\nclass C < B\n  def f\n    super + 1\n  end\nend\nputs C.new.f\n```",
+      "options": {"A": "3", "B": "1", "C": "2", "D": "Error"},
+      "answer": "A",
+      "explanation": "C#f calls super => B#f (returns 2). B#f calls super => A#f (returns 1), then 1+1=2. C#f gets 2 and adds 1 => 3. Chain: C -> B -> A."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "Are **instance variables** defined in the superclass **inherited**?",
+      "options": {"A": "Not as storage; each object gets its own when the superclass code runs (e.g. via super)", "B": "Yes; they are copied to the subclass", "C": "No; only methods are inherited", "D": "Only @instance variables"},
+      "answer": "A",
+      "explanation": "Instance variables are not \"inherited\" in the sense of being declared on the subclass. When the superclass's method runs (e.g. via super in initialize), it sets @var on the same object. So the object can have @var from the parent's logic."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs Integer.superclass\nputs String.superclass\n```",
+      "options": {"A": "Numeric then Object", "B": "Object then Object", "C": "Object then String", "D": "Number then Object"},
+      "answer": "A",
+      "explanation": "Integer.superclass is Numeric; Numeric.superclass is Object. String.superclass is Object. So we print Numeric and Object."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What happens if a subclass does **not** define **initialize** and you call Subclass.new(args)?",
+      "options": {"A": "The parent's initialize is called with those args (if it exists)", "B": "Error (no initialize)", "C": "Object is created with no initialize", "D": "Only Subclass gets the args"},
+      "answer": "A",
+      "explanation": "When the subclass has no initialize, method lookup finds the parent's initialize. So Parent#initialize is called with the arguments passed to new. If no ancestor defines initialize, Object#initialize (which takes no args and does nothing) is used."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass P\n  def self.type_name\n    \"P\"\n  end\nend\nclass Q < P\nend\nputs Q.type_name\n```",
+      "options": {"A": "P", "B": "Q", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "Q inherits the class method type_name from P (via the singleton class chain). So Q.type_name calls P's method and returns \"P\"."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which are **inherited** by a subclass in Ruby?",
+      "options": {"A": "Instance methods (public, protected, private)", "B": "Class methods", "C": "Constants", "D": "Instance variables (as declarations)"},
+      "answer": ["A", "B"],
+      "explanation": "Instance methods and class methods are inherited. Constants are looked up in the lexical scope and ancestor chain but are not \"copied\" in the same way. Instance variables are not declared on the class; they exist on objects when assigned (e.g. when super runs). So A and B; C is nuanced; D is false."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Animal\n  def speak\n    \"?\"\n  end\nend\nclass Cat < Animal\n  def speak\n    \"meow\"\n  end\nend\nc = Cat.new\nputs c.speak\nputs c.class.superclass.name\n```",
+      "options": {"A": "meow then Animal", "B": "? then Animal", "C": "meow then Cat", "D": "Error"},
+      "answer": "A",
+      "explanation": "c.speak calls Cat#speak (overriding) => \"meow\". c.class is Cat; Cat.superclass is Animal; .name => \"Animal\". So output: meow then Animal."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Parent\n  def add(a, b)\n    a + b\n  end\nend\nclass Child < Parent\n  def add(a, b)\n    super + 1\n  end\nend\nputs Child.new.add(2, 3)\n```",
+      "options": {"A": "6", "B": "5", "C": "Error", "D": "4"},
+      "answer": "A",
+      "explanation": "Child#add(2, 3) calls super, which forwards 2, 3 to Parent#add => 5. Then super + 1 => 6. So we print 6."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is **BasicObject.superclass**?",
+      "options": {"A": "nil", "B": "Object", "C": "Kernel", "D": "Class"},
+      "answer": "A",
+      "explanation": "BasicObject is the root of the hierarchy and has no superclass. So BasicObject.superclass is nil."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "Can you call **super** from a method that the **parent** does not define?",
+      "options": {"A": "No; NoMethodError (no superclass method)", "B": "Yes; it returns nil", "C": "Yes; it calls the same method in the parent", "D": "Only in initialize"},
+      "answer": "A",
+      "explanation": "super looks for the same method name in the ancestor chain. If no ancestor defines that method, super raises NoMethodError. So you can only use super when a parent (or module) defines the method."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Parent\n  def m\n    \"P\"\n  end\nend\nclass Child < Parent\n  def m\n    super\n  end\nend\nputs Child.new.m\n```",
+      "options": {"A": "P", "B": "Child", "C": "nil", "D": "Error"},
+      "answer": "A",
+      "explanation": "Child#m calls super with no args, which forwards to Parent#m. Parent#m returns \"P\". So we get \"P\"."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "In the **method lookup** chain, where does Ruby look **first**?",
+      "options": {"A": "The object's class (and its prepended modules), then included modules, then superclass", "B": "The superclass first", "C": "Kernel first", "D": "Object first"},
+      "answer": "A",
+      "explanation": "Lookup starts at the object's class. Prepended modules come before the class, then the class, then included modules, then the superclass (and its modules). So the most specific (subclass, prepend) is first."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass A\n  def initialize\n    @a = 1\n  end\nend\nclass B < A\n  def initialize\n    super()\n    @b = 2\n  end\nend\nb = B.new\nputs b.instance_variable_get(:@a)\nputs b.instance_variable_get(:@b)\n```",
+      "options": {"A": "1 then 2", "B": "nil then 2", "C": "1 then nil", "D": "Error"},
+      "answer": "A",
+      "explanation": "B#initialize calls super() (no args), so A#initialize is called. A#initialize sets @a = 1 on the same object. Then @b = 2. So we have 1 and 2."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "Does **overriding** a method in a subclass **remove** the parent's method?",
+      "options": {"A": "No; the parent's method still exists; super can call it", "B": "Yes", "C": "Only if you use undef", "D": "Only for private methods"},
+      "answer": "A",
+      "explanation": "Overriding does not remove the parent's method. The subclass's method is found first during lookup. You can still call the parent's version with super from within the overriding method."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass X\n  def foo\n    \"X\"\n  end\nend\nclass Y < X\n  def bar\n    foo\n  end\nend\nputs Y.new.bar\n```",
+      "options": {"A": "X", "B": "Y", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "Y inherits foo from X. When we call bar on a Y instance, bar calls foo (no receiver). Method lookup finds X#foo (inherited by Y). So we get \"X\"."
+    }
+  ]
+}

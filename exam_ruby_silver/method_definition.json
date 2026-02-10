@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Method Definition",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "What keyword **ends** a method definition in Ruby?",
+      "options": {"A": "end", "B": "enddef", "C": "}", "D": "finish"},
+      "answer": "A",
+      "explanation": "Method definitions use def method_name ... end. The end keyword closes the method body."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the correct **order** of parameters in a method definition?",
+      "options": {"A": "Positional, then *rest, then keyword, then &block", "B": "Any order", "C": "Keyword first, then positional", "D": "*rest must be last"},
+      "answer": "A",
+      "explanation": "Standard order: required positional, optional positional (with defaults), *rest, keyword args, **kwargs, then &block. * and & parameters are last in their categories."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef foo(a, b = 10)\n  a + b\nend\nputs foo(5)\nputs foo(5, 3)\n```",
+      "options": {"A": "15 then 8", "B": "5 then 8", "C": "Error", "D": "15 then 15"},
+      "answer": "A",
+      "explanation": "foo(5) uses b=10, so 5+10=15. foo(5, 3) uses both args, so 5+3=8. Defaults apply when the argument is omitted."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "Can you put a **required parameter** after an **optional** one (with default)?",
+      "options": {"A": "No; required parameters must come first", "B": "Yes", "C": "Only with keyword args", "D": "Only in Ruby 3+"},
+      "answer": "A",
+      "explanation": "Required positional parameters must come before optional ones. Otherwise the call would be ambiguous (e.g. foo(1) could mean a=1 or b=1)."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What does **def self.method_name** define?",
+      "options": {"A": "An instance method", "B": "A singleton (class) method on the current object", "C": "A private method", "D": "A method on Object"},
+      "answer": "B",
+      "explanation": "def self.method_name defines a method on the singleton class of the current object. Inside a class, that is a class method (e.g. MyClass.foo)."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef greet(name = \"World\")\n  \"Hello, #{name}!\"\nend\nputs greet()\nputs greet(\"Ruby\")\n```",
+      "options": {"A": "Hello, World! then Hello, Ruby!", "B": "Error (greet() invalid)", "C": "Hello, ! then Hello, Ruby!", "D": "nil then Hello, Ruby!"},
+      "answer": "A",
+      "explanation": "greet() with no argument uses the default name=\"World\". greet(\"Ruby\") passes the argument. Both are valid; output is two lines."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "How do you define a method that accepts **keyword arguments**?",
+      "options": {"A": "def foo(a: 1, b: 2)", "B": "def foo(a, b with: 1, 2)", "C": "def foo(keyword a, b)", "D": "def foo(a => 1)"},
+      "answer": "A",
+      "explanation": "Keyword arguments use name: or name: default. def foo(a: 1, b: 2) allows foo(a: 10), foo(b: 20), or foo(a: 10, b: 20)."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef sum(a:, b:)\n  a + b\nend\nputs sum(a: 1, b: 2)\n```",
+      "options": {"A": "3", "B": "Error (wrong syntax)", "C": "12", "D": "nil"},
+      "answer": "A",
+      "explanation": "a: and b: are required keyword arguments (no default). sum(a: 1, b: 2) passes them by name. Result is 1+2=3."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What does **private** (with no arguments) do?",
+      "options": {"A": "Makes the next method definition private", "B": "Makes all methods below it in the class private", "C": "Makes only instance methods private", "D": "B, until the next visibility keyword"},
+      "answer": "D",
+      "explanation": "private with no arguments sets the default visibility: all method definitions that follow are private until public or protected is called."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef multi\n  return 1, 2, 3\nend\nx, y, z = multi\nputs \"#{x} #{y} #{z}\"\n```",
+      "options": {"A": "1 2 3", "B": "[1, 2, 3]", "C": "1", "D": "Error"},
+      "answer": "A",
+      "explanation": "return 1, 2, 3 returns an array [1, 2, 3]. With x, y, z = multi we assign x=1, y=2, z=3. So we print \"1 2 3\"."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "How do you define a **class method** inside a class?",
+      "options": {"A": "def self.method_name", "B": "def ClassName.method_name", "C": "def class.method_name", "D": "A and B"},
+      "answer": "D",
+      "explanation": "def self.method_name (inside the class) or def ClassName.method_name both define a method on the class object. They are equivalent when self is the class."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What is **alias** used for?",
+      "options": {"A": "To create another name for an existing method", "B": "To import methods", "C": "To override a method", "D": "To delete a method"},
+      "answer": "A",
+      "explanation": "alias new_name old_name creates a new name that refers to the same method. Useful for preserving the old implementation when overriding."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef foo(a, *rest)\n  [a, rest]\nend\np foo(1, 2, 3)\n```",
+      "options": {"A": "[1, [2, 3]]", "B": "[1, 2, 3]", "C": "[[1, 2], 3]", "D": "Error"},
+      "answer": "A",
+      "explanation": "Splat *rest collects remaining positional arguments. So a=1, rest=[2, 3]. The method returns [1, [2, 3]]."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "Can a method have both **positional** and **keyword** parameters?",
+      "options": {"A": "Yes", "B": "No", "C": "Only in Ruby 3+", "D": "Only with ** at the end"},
+      "answer": "A",
+      "explanation": "You can mix them: def foo(a, b, c: 1). Positional must come first, then keyword args. Call with foo(1, 2) or foo(1, 2, c: 3)."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What does **undef** do?",
+      "options": {"A": "Makes a method private", "B": "Removes a method from the current class", "C": "Undefines a variable", "D": "Reverts the last definition"},
+      "answer": "B",
+      "explanation": "undef method_name removes the method from the current class (so it is no longer available). Subclasses are not affected for their own method table."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef bar(x, y = 2, z = 3)\n  x + y + z\nend\nputs bar(1, 5)\n```",
+      "options": {"A": "9", "B": "6", "C": "8", "D": "Error"},
+      "answer": "A",
+      "explanation": "bar(1, 5) gives x=1, y=5 (second arg), z=3 (default). So 1+5+3=9. Defaults fill from left to right for missing args."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is **protected** visibility?",
+      "options": {"A": "Same as private", "B": "Method can be called only with explicit receiver when receiver is self or same class", "C": "Only subclasses can call", "D": "Only from inside the same object"},
+      "answer": "B",
+      "explanation": "protected methods can be called with an explicit receiver only when that receiver is self or an instance of the same class (or subclass). Used for comparison or internal protocol."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef double(x)\n  x * 2\nend\nputs double 4\n```",
+      "options": {"A": "8", "B": "4", "C": "44", "D": "Error"},
+      "answer": "A",
+      "explanation": "double 4 is a valid call (parentheses optional). x=4, so x*2=8. We print 8."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "How do you define a method that accepts **any keyword arguments** with **?",
+      "options": {"A": "def foo(**kwargs)", "B": "def foo(*kwargs)", "C": "def foo(keywords: **)", "D": "def foo(&kwargs)"},
+      "answer": "A",
+      "explanation": "def foo(**kwargs) collects extra keyword arguments into a Hash. So foo(a: 1, b: 2) gives kwargs = { a: 1, b: 2 }."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is the **default visibility** of a method defined in a class?",
+      "options": {"A": "public", "B": "private", "C": "protected", "D": "depends on the class"},
+      "answer": "A",
+      "explanation": "Methods defined in a class are public by default. You can change visibility with private, protected, or public."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which are valid in a **method parameter** list?",
+      "options": {"A": "Required positional (a)", "B": "Optional with default (b = 2)", "C": "Splat (*args)", "D": "Block (&block)"},
+      "answer": ["A", "B", "C", "D"],
+      "explanation": "All are valid: a (required), b = 2 (default), *args (rest), &block (block). Order: positional (required then optional), *args, keyword, **kwargs, &block."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef f(a, b = a + 1)\n  [a, b]\nend\np f(1)\n```",
+      "options": {"A": "[1, 2]", "B": "[1, 1]", "C": "Error (b depends on a)", "D": "[1, nil]"},
+      "answer": "A",
+      "explanation": "Default values can reference earlier parameters. So when we call f(1), a=1 and b=a+1=2. Result is [1, 2]."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "Can **private** methods be called with an explicit receiver?",
+      "options": {"A": "Yes, from anywhere", "B": "No; only without a receiver (implicit self)", "C": "Only from subclasses", "D": "Only with self as receiver"},
+      "answer": "B",
+      "explanation": "Private methods cannot be called with an explicit receiver (e.g. obj.private_method is not allowed). They can only be called as private_method (implicit self)."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef greet(name)\n  \"Hello, #{name}\"\nend\nputs greet\n```",
+      "options": {"A": "Hello, ", "B": "Error (wrong number of arguments)", "C": "Hello, nil", "D": "nil"},
+      "answer": "B",
+      "explanation": "greet requires one argument. greet with no arguments raises ArgumentError (wrong number of arguments (given 0, expected 1))."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What does **alias_method** do?",
+      "options": {"A": "Same as alias but can use computed names", "B": "Imports a method", "C": "Creates a copy of the method", "D": "Renames the method (old name is removed)"},
+      "answer": "A",
+      "explanation": "alias_method :new_name, :old_name is like alias but the names are symbols (or expressions). alias is a keyword and takes bare names. Both create an alias; the old method still exists."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef foo(**opts)\n  opts.keys.size\nend\nputs foo(a: 1, b: 2)\n```",
+      "options": {"A": "2", "B": "{ a: 1, b: 2 }", "C": "Error", "D": "0"},
+      "answer": "A",
+      "explanation": "**opts collects keyword arguments into a Hash. foo(a: 1, b: 2) gives opts = { a: 1, b: 2 }. opts.keys.size is 2."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "Where must the **block parameter** (&block) appear in a method definition?",
+      "options": {"A": "Last", "B": "First", "C": "After *rest only", "D": "Anywhere"},
+      "answer": "A",
+      "explanation": "The &block parameter must be last in the parameter list. Order is: positional, *rest, keyword, **kwargs, &block."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass C\ndef self.cls_meth\n  \"class\"\nend\nend\nputs C.cls_meth\n```",
+      "options": {"A": "class", "B": "Error", "C": "C", "D": "nil"},
+      "answer": "A",
+      "explanation": "def self.cls_meth defines a class method on C. So C.cls_meth is valid and returns \"class\"."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "Can you use **return** multiple times in one method?",
+      "options": {"A": "No", "B": "Yes; the first return executed exits the method", "C": "Only in different branches", "D": "Only at the end"},
+      "answer": "B",
+      "explanation": "You can have multiple return statements (e.g. in if/else). Whichever return is executed first exits the method with that value. The rest of the method is not run."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is **define_method**?",
+      "options": {"A": "A keyword to define a method", "B": "A method that defines a method at runtime (taking a name and a block)", "C": "Same as def", "D": "Defines a method on the singleton class only"},
+      "answer": "B",
+      "explanation": "define_method(:name) { ... } or define_method(:name) do |args| ... end defines an instance method at runtime. The block becomes the method body. Used for metaprogramming."
+    }
+  ]
+}

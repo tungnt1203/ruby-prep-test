@@ -1,0 +1,365 @@
+{
+  "topic": "Ruby 3.1.x Silver - Operators",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "What is the result of `10 % 3` in Ruby?",
+      "options": {"A": "1", "B": "3", "C": "0", "D": "3.33"},
+      "answer": "A",
+      "explanation": "Modulo (%) returns the remainder. 10 ÷ 3 = 3 remainder 1, so 10 % 3 is 1."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What does the ** operator do in Ruby?",
+      "options": {"A": "Exponentiation (power)", "B": "Multiplication", "C": "Pointer dereference", "D": "Splat"},
+      "answer": "A",
+      "explanation": "** is exponentiation. For example, 2**3 is 8. The splat operator for arrays is also * but in different contexts."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is the value of `-7 % 3` in Ruby?",
+      "options": {"A": "-1", "B": "2", "C": "1", "D": "-2"},
+      "answer": "B",
+      "explanation": "Ruby's modulo keeps the sign of the divisor. -7 % 3 gives 2 (same as -7 - (-3)*3 = -7 + 9)."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs 5 / 2\n```",
+      "options": {"A": "2.5", "B": "2", "C": "2.0", "D": "3"},
+      "answer": "B",
+      "explanation": "Integer division: both operands are integers, so the result is truncated to 2 (not 2.5)."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What does the **spaceship operator** `<=>` return when the left side is greater?",
+      "options": {"A": "1", "B": "-1", "C": "0", "D": "true"},
+      "answer": "A",
+      "explanation": "<=> returns -1 if left < right, 0 if equal, 1 if left > right. Used for sorting and Comparable."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is `nil || 42`?",
+      "options": {"A": "nil", "B": "42", "C": "true", "D": "false"},
+      "answer": "B",
+      "explanation": "|| returns the first truthy value. nil is falsy, so evaluation continues and 42 is returned."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What is `0 && 99`?",
+      "options": {"A": "99", "B": "0", "C": "true", "D": "false"},
+      "answer": "A",
+      "explanation": "In Ruby, 0 is truthy. && returns the first falsy value or the last value. Both 0 and 99 are truthy, so the result is 99."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is `false && 99`?",
+      "options": {"A": "99", "B": "false", "C": "nil", "D": "true"},
+      "answer": "B",
+      "explanation": "&& short-circuits: it returns the first falsy value. false is falsy, so false is returned and 99 is never evaluated."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "Which has **lower precedence**: `and` or `&&`?",
+      "options": {"A": "and", "B": "&&", "C": "Same precedence", "D": "Depends on context"},
+      "answer": "A",
+      "explanation": "and and or have lower precedence than && and ||. Prefer && and || in expressions to avoid surprises."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What does `x ||= 10` do?",
+      "options": {"A": "Assign 10 to x only if x is falsy (nil or false)", "B": "Always assign 10 to x", "C": "Logical OR of x and 10", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "||= is \"or-equals\": assign the right side only when the left is falsy. Commonly used for default values."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\na, b = 1, 2\na, b = b, a\nputs \"#{a} #{b}\"\n```",
+      "options": {"A": "1 2", "B": "2 1", "C": "1 1", "D": "Error"},
+      "answer": "B",
+      "explanation": "Parallel assignment: a, b = b, a swaps the values. So a becomes 2 and b becomes 1."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What does `===` (case equality) do in Ruby?",
+      "options": {"A": "Same as == for most classes", "B": "Used by case/when; can be overridden per class", "C": "Strict type equality only", "D": "Compares object identity"},
+      "answer": "B",
+      "explanation": "=== is used in case/when and can be overridden. For example, Range#=== checks inclusion; Class#=== checks kind_of?."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is `(1..5) === 3`?",
+      "options": {"A": "true", "B": "false", "C": "3", "D": "nil"},
+      "answer": "A",
+      "explanation": "Range#=== tests membership. 3 is in 1..5, so the expression is true. This is how case/when works with ranges."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is the result of `\"hello\" =~ /ell/`?",
+      "options": {"A": "1 (index of match)", "B": "true", "C": "\"ell\"", "D": "nil"},
+      "answer": "A",
+      "explanation": "=~ is the pattern match operator. It returns the starting index of the match (1 here), or nil if no match."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What does the **safe navigation** operator `&.` do?",
+      "options": {"A": "Returns nil if the receiver is nil; otherwise calls the method", "B": "Checks if object is not nil", "C": "Bitwise AND", "D": "Logical AND"},
+      "answer": "A",
+      "explanation": "obj&.method returns nil when obj is nil and avoids NoMethodError. Otherwise it calls obj.method. Introduced in Ruby 2.3."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What is `obj &. foo` when `obj` is `nil`?",
+      "options": {"A": "nil", "B": "NoMethodError", "C": "false", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "Safe navigation: when the receiver is nil, the entire expression short-circuits and returns nil without calling the method."
+    },
+    {
+      "id": 17,
+      "type": "multiple",
+      "question": "Which of these are **comparison** operators in Ruby?",
+      "options": {"A": "==", "B": "<=>", "C": "===", "D": "="},
+      "answer": ["A", "B", "C"],
+      "explanation": "==, <=>, and === are comparison operators. = is assignment, not comparison."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 5\nx += 2\nputs x\n```",
+      "options": {"A": "5", "B": "7", "C": "52", "D": "Error"},
+      "answer": "B",
+      "explanation": "+= is shorthand: x += 2 is x = x + 2. So x becomes 7."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What does `!~` do?",
+      "options": {"A": "Negated pattern match (true if no match)", "B": "Bitwise NOT", "C": "Logical NOT", "D": "Invalid operator"},
+      "answer": "A",
+      "explanation": "!~ is the negative pattern match: true when =~ would return nil (no match), false when there is a match."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is `(2..5) === 6`?",
+      "options": {"A": "true", "B": "false", "C": "nil", "D": "6"},
+      "answer": "B",
+      "explanation": "Range#=== returns false because 6 is not in 2..5. So the result is false."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "Which operator has **highest** precedence among these?",
+      "options": {"A": "+", "B": "*", "C": "**", "D": "=="},
+      "answer": "C",
+      "explanation": "** (exponentiation) has higher precedence than * and +, and comparison (==) has lower precedence than arithmetic."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is `\"a\" * 3` in Ruby?",
+      "options": {"A": "\"aaa\"", "B": "\"a a a\"", "C": "Error (String * Integer invalid)", "D": "3"},
+      "answer": "A",
+      "explanation": "String#* with an integer repeats the string. \"a\" * 3 => \"aaa\"."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the result of `5 <=> 5`?",
+      "options": {"A": "0", "B": "1", "C": "-1", "D": "true"},
+      "answer": "A",
+      "explanation": "Spaceship returns 0 when the two sides are equal. So 5 <=> 5 is 0."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What does `!!\"hello\"` evaluate to?",
+      "options": {"A": "true", "B": "\"hello\"", "C": "false", "D": "nil"},
+      "answer": "A",
+      "explanation": "!\"hello\" is false (negation of truthy). !!\"hello\" negates twice, converting the value to a boolean true."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What is `nil&.to_s` (safe navigation on nil)?",
+      "options": {"A": "nil", "B": "\"\"", "C": "NoMethodError", "D": "\"nil\""},
+      "answer": "A",
+      "explanation": "nil&.to_s short-circuits: receiver is nil, so the expression returns nil without calling to_s."
+    },
+    {
+      "id": 26,
+      "type": "multiple",
+      "question": "Which are **compound assignment** operators in Ruby?",
+      "options": {"A": "+=", "B": "||=", "C": "**=", "D": "=+"},
+      "answer": ["A", "B", "C"],
+      "explanation": "+=, ||=, **= are compound assignment. =+ is not an operator; it is = followed by unary +."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\narr = [1, 2, 3]\nfirst, *rest = arr\nputs rest.inspect\n```",
+      "options": {"A": "[2, 3]", "B": "2", "C": "[1, 2, 3]", "D": "Error"},
+      "answer": "A",
+      "explanation": "Splat in assignment: first gets 1, *rest collects the rest into [2, 3]. So rest is [2, 3]."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is `3 ** 2`?",
+      "options": {"A": "9", "B": "6", "C": "32", "D": "1"},
+      "answer": "A",
+      "explanation": "** is exponentiation. 3 ** 2 = 3² = 9."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What does `!=` mean in Ruby?",
+      "options": {"A": "Not equal (same as !(a == b))", "B": "Strict not equal (no type coercion)", "C": "Assignment", "D": "Logical NOT"},
+      "answer": "A",
+      "explanation": "!= is \"not equal\". It returns true when == would return false. It uses the receiver's == method."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is the value of `0 && 99`?",
+      "options": {"A": "99", "B": "0", "C": "false", "D": "nil"},
+      "answer": "A",
+      "explanation": "In Ruby, 0 is truthy. && returns the first falsy value or the last value. So 0 && 99 evaluates both and returns 99."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "What is `5 & 3` (bitwise AND) in Ruby?",
+      "options": {"A": "1", "B": "7", "C": "15", "D": "8"},
+      "answer": "A",
+      "explanation": "Bitwise AND: 5 is 101, 3 is 011. 101 & 011 = 001 = 1."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "What is `5 | 3` (bitwise OR)?",
+      "options": {"A": "1", "B": "7", "C": "15", "D": "8"},
+      "answer": "B",
+      "explanation": "Bitwise OR: 101 | 011 = 111 = 7."
+    },
+    {
+      "id": 33,
+      "type": "single",
+      "question": "What does `<<` do when used with an **array**?\n\n```ruby\narr = [1, 2]\narr << 3\n```",
+      "options": {"A": "Appends 3 to the array (mutates)", "B": "Returns new array [1, 2, 3]", "C": "Bitwise left shift", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "Array#<< appends the element to the receiver and returns the array (mutates in place). arr becomes [1, 2, 3]."
+    },
+    {
+      "id": 34,
+      "type": "single",
+      "question": "What is `\"hello\" + \" \" + \"world\"`?",
+      "options": {"A": "\"hello world\"", "B": "\"hello\" \" \" \"world\"", "C": "Error", "D": "\"hello  world\""},
+      "answer": "A",
+      "explanation": "String#+ concatenates strings and returns a new string. Result is \"hello world\"."
+    },
+    {
+      "id": 35,
+      "type": "single",
+      "question": "What is `Integer === 3`?",
+      "options": {"A": "true", "B": "false", "C": "3", "D": "nil"},
+      "answer": "A",
+      "explanation": "Class#=== checks if the argument is an instance of the class. 3 is an Integer, so true. Used in case/when."
+    },
+    {
+      "id": 36,
+      "type": "single",
+      "question": "What does `!` (prefix) do when applied to a value?",
+      "options": {"A": "Returns true if the value is falsy, false otherwise", "B": "Inverts the bits", "C": "Negates the number", "D": "Removes the value"},
+      "answer": "A",
+      "explanation": "! is logical NOT. !x is true when x is falsy (nil or false), false when x is truthy."
+    },
+    {
+      "id": 37,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 10\nresult = x > 5 && x < 15\nputs result\n```",
+      "options": {"A": "true", "B": "false", "C": "10", "D": "nil"},
+      "answer": "A",
+      "explanation": "x > 5 is true, x < 15 is true. true && true is true. So result is true."
+    },
+    {
+      "id": 38,
+      "type": "single",
+      "question": "What is `[1, 2] + [3, 4]`?",
+      "options": {"A": "[1, 2, 3, 4]", "B": "[4, 6]", "C": "[[1, 2], [3, 4]]", "D": "Error"},
+      "answer": "A",
+      "explanation": "Array#+ concatenates arrays and returns a new array. Result is [1, 2, 3, 4]."
+    },
+    {
+      "id": 39,
+      "type": "single",
+      "question": "What is `2 * 3 + 4` (no parentheses)?",
+      "options": {"A": "14", "B": "20", "C": "10", "D": "18"},
+      "answer": "C",
+      "explanation": "* has higher precedence than +. So 2 * 3 + 4 = (2 * 3) + 4 = 6 + 4 = 10."
+    },
+    {
+      "id": 40,
+      "type": "single",
+      "question": "What is `2 ** 3 ** 2` (right to left)?",
+      "options": {"A": "64", "B": "512", "C": "81", "D": "512 (left to right)"},
+      "answer": "B",
+      "explanation": "** is right-associative. 2 ** 3 ** 2 = 2 ** (3 ** 2) = 2 ** 9 = 512."
+    },
+    {
+      "id": 41,
+      "type": "multiple",
+      "question": "Which operators can be used for **string** concatenation or building in Ruby?",
+      "options": {"A": "+ (returns new string)", "B": "<< (mutates receiver)", "C": "* (repeat)", "D": "& (bitwise AND)"},
+      "answer": ["A", "B", "C"],
+      "explanation": "String has + (concat), << (append in place), and * (repeat). & is bitwise AND for integers, not string concat."
+    },
+    {
+      "id": 42,
+      "type": "single",
+      "question": "What is `\"hi\" << \"!\"`?",
+      "options": {"A": "\"hi!\" (same object mutated)", "B": "\"hi!\" (new string)", "C": "Error", "D": "\"hi\""},
+      "answer": "A",
+      "explanation": "String#<< appends to the receiver in place and returns the same string. So the result is \"hi!\" and the original string is mutated."
+    },
+    {
+      "id": 43,
+      "type": "single",
+      "question": "What does `^` do when both operands are integers?",
+      "options": {"A": "Bitwise XOR", "B": "Exponentiation", "C": "Logical XOR", "D": "Not a valid operator"},
+      "answer": "A",
+      "explanation": "For integers, ^ is bitwise XOR. For other types it may be overridden (e.g. Hash#^ in Ruby 3 for symmetric difference)."
+    },
+    {
+      "id": 44,
+      "type": "single",
+      "question": "What is `1 << 4`?",
+      "options": {"A": "16", "B": "4", "C": "5", "D": "14"},
+      "answer": "A",
+      "explanation": "For integers, << is left shift. 1 << 4 = 1 * 2^4 = 16. Often used for powers of 2."
+    },
+    {
+      "id": 45,
+      "type": "single",
+      "question": "What is the result of `a = 1; a = 2 unless a`?",
+      "options": {"A": "a is 1", "B": "a is 2", "C": "Syntax error", "D": "a is nil"},
+      "answer": "A",
+      "explanation": "The modifier attaches to the assignment: execute \"a = 2\" only when a is falsy. Since a is 1 (truthy), the assignment is not executed, so a remains 1."
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "topic": "Ruby 3.1.x Silver - Object Orientation: Mix-in",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "What is a **mix-in** in Ruby?",
+      "options": {"A": "Including or prepending a module into a class to add behavior without single-inheritance limit", "B": "A type of multiple inheritance with classes", "C": "A built-in class", "D": "A way to remove methods from a class"},
+      "answer": "A",
+      "explanation": "Mix-in means adding a module's methods into a class (or object) via include, prepend, or extend. It lets you share behavior from multiple modules without multiple inheritance of classes."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What does **include** do when used inside a class?",
+      "options": {"A": "Adds the module's instance methods as instance methods of the class", "B": "Adds the module as a superclass", "C": "Adds the module's methods as class methods", "D": "Imports the module's constants only"},
+      "answer": "A",
+      "explanation": "include ModuleName adds the module's instance methods to the class as instance methods. The module is inserted in the ancestor chain (after the class). Instances of the class can then call those methods."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule Greet\n  def hi\n    \"hi\"\n  end\nend\nclass Foo\n  include Greet\nend\nputs Foo.new.hi\n```",
+      "options": {"A": "hi", "B": "Error", "C": "nil", "D": "Greet"},
+      "answer": "A",
+      "explanation": "include Greet adds Greet's instance method hi to Foo. So Foo.new.hi calls the mixed-in hi and returns \"hi\"."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What does **extend** do when called on an object?",
+      "options": {"A": "Adds the module's instance methods as singleton (eigenclass) methods of that object", "B": "Adds the module as superclass of the object's class", "C": "Adds the module's methods as instance methods of the object's class", "D": "Inherits the module"},
+      "answer": "A",
+      "explanation": "obj.extend(Module) adds the module's instance methods to the object's singleton class, so they become methods of that single object. Often used in class body: extend M gives the class those methods as class methods."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def x\n    \"M\"\n  end\nend\nclass C\n  extend M\nend\nputs C.x\n```",
+      "options": {"A": "M", "B": "Error (undefined method)", "C": "C", "D": "nil"},
+      "answer": "A",
+      "explanation": "extend M in the class body adds M's methods to C's singleton class, so they become class methods of C. Thus C.x calls M#x and returns \"M\"."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What does **prepend** do compared to **include**?",
+      "options": {"A": "Inserts the module before the class in the ancestor chain, so module methods are looked up first", "B": "Inserts the module after the superclass", "C": "Same as include but for class methods", "D": "Removes the module from the chain"},
+      "answer": "A",
+      "explanation": "prepend puts the module earlier in the ancestor chain than the class. So when you call a method, the prepended module's version is found before the class's. Include inserts the module after the class."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def who\n    \"M\"\n  end\nend\nclass K\n  prepend M\n  def who\n    \"K\"\n  end\nend\nputs K.new.who\n```",
+      "options": {"A": "M", "B": "K", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "prepend M puts M before K in the ancestor chain. So K.new.who is looked up in M first and M#who returns \"M\". The class's who is overridden by the prepended module."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def who\n    \"M\"\n  end\nend\nclass K\n  include M\n  def who\n    \"K\"\n  end\nend\nputs K.new.who\n```",
+      "options": {"A": "K", "B": "M", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "include M inserts M after K in the chain. So the class K's who is found first when we call who on an instance. Result is \"K\"."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "How does Ruby look up a method on an object?",
+      "options": {"A": "Singleton class, then ancestors (prepended modules, class, included modules, superclass chain)", "B": "Only the object's class", "C": "Only the superclass", "D": "Random order"},
+      "answer": "A",
+      "explanation": "Method lookup: first the object's singleton class, then the ancestor chain. In the chain: prepended modules (before the class), the class, included modules (after the class), then superclass and its chain. First matching method wins."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What does **ancestors** return for a class that includes or prepends modules?",
+      "options": {"A": "Array of modules and classes in method lookup order, including prepended/included modules", "B": "Only the class and its superclass", "C": "Only included modules", "D": "Only prepended modules"},
+      "answer": "A",
+      "explanation": "SomeClass.ancestors returns the full lookup chain: the class, its prepended modules (in reverse order of prepend), the class again, included modules (reverse order of include), then superclass and its ancestors. So you see the exact lookup order."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule A; end\nmodule B; end\nclass C\n  include A\n  include B\nend\nputs C.ancestors.take(4).map(&:to_s)\n```",
+      "options": {"A": "C, B, A, Object (or similar: class then included modules then Object)", "B": "C, A, B, Object", "C": "A, B, C, Object", "D": "Error"},
+      "answer": "A",
+      "explanation": "ancestors lists lookup order. For a class with only include: [C, B, A, Object, ...]. Last included (B) is first in the chain after C. So C, B, A, then Object (and Kernel, BasicObject)."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "Can a class **include** more than one module?",
+      "options": {"A": "Yes; each include adds that module's instance methods", "B": "No", "C": "Only two modules", "D": "Only if they have no name clash"},
+      "answer": "A",
+      "explanation": "A class can include multiple modules. Each module's instance methods are added. If two modules define the same method, the one that appears later in the ancestor chain (typically the one included later) is used when there is no override in the class."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  include M\n  def f\n    super + \"C\"\n  end\nend\nputs C.new.f\n```",
+      "options": {"A": "MC", "B": "M", "C": "C", "D": "Error"},
+      "answer": "A",
+      "explanation": "C#f is called. It calls super, which finds M#f (M is in the ancestor chain after C). M#f returns \"M\". Then super + \"C\" => \"MC\"."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is **extend** inside a class body equivalent to?",
+      "options": {"A": "Adding the module's methods to the class's singleton class (so they become class methods)", "B": "Including the module for instances", "C": "Prepending the module", "D": "Inheriting from the module"},
+      "answer": "A",
+      "explanation": "In class C; extend M; end, extend adds M's instance methods to C's singleton class. So they become class methods of C (e.g. C.method_name). It is like doing class << C; include M; end."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def self.say\n    \"M\"\n  end\nend\nclass C\n  include M\nend\nputs C.new.say\n```",
+      "options": {"A": "Error (undefined method say for instance)", "B": "M", "C": "C", "D": "nil"},
+      "answer": "A",
+      "explanation": "def self.say in a module defines a singleton method on the module (M.say), not an instance method. include only adds the module's instance methods. So C.new has no say method and we get NoMethodError."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "How do you add a **module's instance methods** as **class methods** of a class?",
+      "options": {"A": "extend the module in the class body (e.g. extend MyModule)", "B": "include the module in the class body", "C": "prepend the module", "D": "inherit from the module"},
+      "answer": "A",
+      "explanation": "extend MyModule in the class body adds the module's instance methods to the class's singleton class, so they become class methods. include adds them as instance methods."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    1\n  end\nend\nclass C\n  include M\n  def f\n    super + 1\n  end\nend\nclass D < C\n  def f\n    super + 1\n  end\nend\nputs D.new.f\n```",
+      "options": {"A": "3", "B": "1", "C": "2", "D": "Error"},
+      "answer": "A",
+      "explanation": "D.new.f calls D#f => super + 1. super calls C#f => super + 1. That super calls M#f => 1. So C#f returns 2, D#f returns 2+1=3."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "Can you **prepend** more than one module?",
+      "options": {"A": "Yes; prepend order affects lookup (last prepended is searched first)", "B": "No", "C": "Only one", "D": "Only two"},
+      "answer": "A",
+      "explanation": "You can prepend multiple modules. They are inserted before the class in the ancestor chain. The last one prepended is typically first in the chain, so its methods are found first."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def name\n    \"M\"\n  end\nend\nobj = Object.new\nobj.extend(M)\nputs obj.name\n```",
+      "options": {"A": "M", "B": "Error", "C": "Object", "D": "nil"},
+      "answer": "A",
+      "explanation": "extend(M) adds M's instance methods to obj's singleton class. So obj.name calls M#name and returns \"M\"."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is **include** when called on the **class object** (e.g. after the class is defined)?",
+      "options": {"A": "It adds the module to that class's ancestor chain (same as including inside the class)", "B": "It extends the module", "C": "It prepends the module", "D": "It has no effect"},
+      "answer": "A",
+      "explanation": "You can do MyClass.include(MyModule) after the class is defined. It has the same effect as writing include MyModule inside the class: the module is added to the class's ancestors and its instance methods become instance methods of the class."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  prepend M\n  def f\n    \"C\"\n  end\nend\nc = C.new\nputs c.f\nputs c.class.ancestors.first(3).map(&:to_s)\n```",
+      "options": {"A": "M then [M, C, Object] (or M then list where M comes before C)", "B": "C then [C, M, Object]", "C": "M then [C, M, Object]", "D": "Error"},
+      "answer": "A",
+      "explanation": "prepend M puts M before C, so c.f calls M#f => \"M\". ancestors for C starts with the prepended module M, then C, then the rest. So first(3) is typically [M, C, Object] (exact names may vary)."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "Do **included** and **prepended** modules become **ancestors** of the class?",
+      "options": {"A": "Yes; they appear in the class's ancestors in the method lookup order", "B": "No", "C": "Only included", "D": "Only prepended"},
+      "answer": "A",
+      "explanation": "Both included and prepended modules appear in ClassName.ancestors. Prepended modules appear before the class, included modules after the class. So they are all part of the ancestor chain used for method lookup."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def x\n    1\n  end\nend\nclass C\n  include M\nend\nclass D < C\n  def x\n    super + 1\n  end\nend\nputs D.new.x\n```",
+      "options": {"A": "2", "B": "1", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "D.new.x calls D#x => super + 1. super finds the next x in the chain: C has no x, M has M#x => 1. So super returns 1, and D#x returns 2."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is the **hook** method called when a module is **included** into a class?",
+      "options": {"A": "included", "B": "include", "C": "inherited", "D": "extended"},
+      "answer": "A",
+      "explanation": "If a module defines def self.included(base), that callback is run when the module is included into base (the class or module). Similarly, prepend has prepended, extend has extended."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def self.included(base)\n    base.define_method(:hello) { \"hello\" }\n  end\nend\nclass C\n  include M\nend\nputs C.new.hello\n```",
+      "options": {"A": "hello", "B": "Error", "C": "nil", "D": "M"},
+      "answer": "A",
+      "explanation": "When M is included, self.included(C) is called. define_method(:hello) { \"hello\" } adds an instance method hello to C. So C.new.hello returns \"hello\"."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "Can a **module** include or prepend another **module**?",
+      "options": {"A": "Yes; modules can include/prepend other modules", "B": "No", "C": "Only include", "D": "Only prepend"},
+      "answer": "A",
+      "explanation": "A module can include or prepend other modules. When that module is then included/prepended into a class, the full chain (including nested modules) is added to the class's ancestors."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  include M\n  def f\n    super\n  end\nend\nputs C.new.f\n```",
+      "options": {"A": "M", "B": "C", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "C.new.f calls C#f, which calls super. Lookup finds M#f next (M is in the chain after C). M#f returns \"M\", so output is M."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the difference between **include** and **extend** for a class?",
+      "options": {"A": "include adds module methods as instance methods; extend adds them as class (singleton) methods", "B": "include is for classes, extend is for modules only", "C": "extend adds instance methods, include adds class methods", "D": "There is no difference"},
+      "answer": "A",
+      "explanation": "In a class: include Module adds the module's instance methods to instances of the class. extend Module adds the module's instance methods to the class object itself (as class methods)."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  prepend M\n  def f\n    \"C\"\n  end\nend\nclass D < C\n  def f\n    super\n  end\nend\nputs D.new.f\n```",
+      "options": {"A": "C", "B": "M", "C": "Error", "D": "D"},
+      "answer": "B",
+      "explanation": "D.ancestors is [D, M, C, Object, ...] because M was prepended to C. D.new.f calls D#f => super. The next f in the chain is M#f (M comes before C). So super calls M#f and returns \"M\"."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "Which method can add a module so that the **module's methods are found before the class's methods**?",
+      "options": {"A": "prepend", "B": "include", "C": "extend", "D": "inherit"},
+      "answer": "A",
+      "explanation": "prepend inserts the module before the class in the ancestor chain, so when you call a method, the prepended module's version is found first. include inserts after the class, so the class's methods take precedence over the module's for the same name."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  include M\nend\nputs C.ancestors.include?(M)\n```",
+      "options": {"A": "true", "B": "false", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "C includes M, so M is in C's ancestor chain. C.ancestors.include?(M) returns true."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "What is the **extended** hook used for?",
+      "options": {"A": "Callback when a module is extended into a class or object", "B": "Callback when a module is included", "C": "Callback when a class is inherited", "D": "To extend the ancestor chain"},
+      "answer": "A",
+      "explanation": "def self.extended(base) in a module is called when that module is extended into base (e.g. base.extend(M)). base is the class or object that extended the module."
+    },
+    {
+      "id": 33,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  extend M\nend\nputs C.new.f\n```",
+      "options": {"A": "Error (undefined method f)", "B": "M", "C": "C", "D": "nil"},
+      "answer": "A",
+      "explanation": "extend M adds M's methods to C's singleton class (class methods), not to instances. C.new is an instance and has no f. So C.new.f raises NoMethodError."
+    },
+    {
+      "id": 34,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule A\n  def x\n    \"A\"\n  end\nend\nmodule B\n  def x\n    \"B\"\n  end\nend\nclass C\n  include A\n  include B\nend\nputs C.new.x\n```",
+      "options": {"A": "B", "B": "A", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "Last included module (B) is first in the chain after C. So C.new.x finds B#x and returns \"B\"."
+    },
+    {
+      "id": 35,
+      "type": "single",
+      "question": "What does **prepended** hook do?",
+      "options": {"A": "Callback when the module is prepended into a class or module", "B": "Callback when the module is included", "C": "Callback when the module is extended", "D": "Prepends a module"},
+      "answer": "A",
+      "explanation": "def self.prepended(base) in a module is invoked when that module is prepended into base. It is the prepend counterpart of included."
+    },
+    {
+      "id": 36,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  prepend M\n  def f\n    \"C\"\n  end\nend\nputs C.ancestors.first(2).map(&:to_s)\n```",
+      "options": {"A": "[M, C] or similar with M before C", "B": "[C, M]", "C": "Error", "D": "[C, Object]"},
+      "answer": "A",
+      "explanation": "prepend M puts M before C in the chain. So ancestors starts with the prepended module then the class: [M, C, ...]."
+    },
+    {
+      "id": 37,
+      "type": "single",
+      "question": "Can you use **super** inside a method defined in a **module** that is included?",
+      "options": {"A": "Yes; super finds the next method in the ancestor chain", "B": "No", "C": "Only if the class defines the method", "D": "Only in prepended modules"},
+      "answer": "A",
+      "explanation": "Methods in an included (or prepended) module can call super. Ruby looks for the next definition of the same method in the ancestor chain and calls it. The class or a superclass might define it."
+    },
+    {
+      "id": 38,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\" + (super rescue \"\")\n  end\nend\nclass C\n  include M\n  def f\n    \"C\"\n  end\nend\nputs C.new.f\n```",
+      "options": {"A": "MC", "B": "C", "C": "M", "D": "Error"},
+      "answer": "B",
+      "explanation": "Method lookup finds C#f first (C comes before M in ancestors). C#f returns \"C\". So output is C."
+    },
+    {
+      "id": 39,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  CONST = 42\nend\nclass C\n  include M\nend\nputs C::CONST\n```",
+      "options": {"A": "42", "B": "Error", "C": "nil", "D": "M"},
+      "answer": "A",
+      "explanation": "include M also brings in the module's constants. So C::CONST looks up CONST in M (via ancestors or constant lookup) and gets 42."
+    },
+    {
+      "id": 40,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  include M\n  private\n  def f\n    \"C\"\n  end\nend\nputs C.new.f\n```",
+      "options": {"A": "Error (private method)", "B": "M", "C": "C", "D": "nil"},
+      "answer": "A",
+      "explanation": "Ancestor order is C then M. The first f found is C#f, which is private. Calling C.new.f from outside raises a private method error (NoMethodError)."
+    },
+    {
+      "id": 41,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  include M\nend\nclass D < C\n  def f\n    \"D\"\n  end\nend\nputs D.new.f\n```",
+      "options": {"A": "D", "B": "M", "C": "C", "D": "Error"},
+      "answer": "A",
+      "explanation": "D.new.f finds D#f first (D is before C and M in the chain). D#f returns \"D\"."
+    },
+    {
+      "id": 42,
+      "type": "single",
+      "question": "What does **Module#instance_methods** return for a class that includes modules?",
+      "options": {"A": "Names of instance methods available on the class (including from included modules)", "B": "Only methods defined in the class itself", "C": "Only methods from modules", "D": "Class methods"},
+      "answer": "A",
+      "explanation": "ClassName.instance_methods (or instance_methods(false) for only the class) lists instance method names. By default it includes methods from the class and from ancestors (superclass and included modules)."
+    },
+    {
+      "id": 43,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    \"M\"\n  end\nend\nclass C\n  prepend M\nend\nputs C.new.f\n```",
+      "options": {"A": "M", "B": "Error", "C": "C", "D": "nil"},
+      "answer": "A",
+      "explanation": "prepend M puts M before C. C does not define f, so lookup finds M#f and returns \"M\"."
+    },
+    {
+      "id": 44,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    super + \"M\"\n  end\nend\nclass C\n  include M\n  def f\n    \"C\"\n  end\nend\nputs C.new.f\n```",
+      "options": {"A": "C", "B": "CM", "C": "Error", "D": "M"},
+      "answer": "A",
+      "explanation": "C.new.f finds C#f first (C before M in ancestors). C#f returns \"C\". M#f is never called, so output is C."
+    },
+    {
+      "id": 45,
+      "type": "single",
+      "question": "To add a module's methods as **both** instance and class methods of a class, a common pattern is:",
+      "options": {"A": "include the module for instance methods and extend it for class methods", "B": "prepend the module twice", "C": "include the module only", "D": "extend the module only"},
+      "answer": "A",
+      "explanation": "include MyModule adds instance methods; extend MyModule in the class body adds class methods. So both include and extend the same module is a common pattern when the module defines instance methods you want in both roles."
+    }
+  ]
+}

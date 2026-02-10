@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Method Calls",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which keyword defines a **method** in Ruby?",
+      "options": {"A": "def", "B": "function", "C": "method", "D": "define"},
+      "answer": "A",
+      "explanation": "Methods are defined with def method_name ... end. There is no function or method keyword for definition."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the **implicit return value** of a method when no explicit **return** is used?",
+      "options": {"A": "The value of the last expression evaluated", "B": "nil", "C": "self", "D": "The first expression"},
+      "answer": "A",
+      "explanation": "A method returns the value of the last expression in the method body. You can use return explicitly, but it is optional."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef greet\n  \"Hello\"\nend\nputs greet\n```",
+      "options": {"A": "Hello", "B": "nil", "C": "greet", "D": "Error"},
+      "answer": "A",
+      "explanation": "The last expression is the string \"Hello\", so the method returns \"Hello\". puts greet prints Hello."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "How do you define a method with a **default argument** value?",
+      "options": {"A": "def foo(x = 10)", "B": "def foo(x: 10)", "C": "def foo(x default 10)", "D": "def foo(optional x = 10)"},
+      "answer": "A",
+      "explanation": "def foo(x = 10) gives x a default of 10. When the caller omits the argument, x is 10. x: 10 is keyword argument syntax."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef add(a, b = 1)\n  a + b\nend\nputs add(3)\nputs add(3, 2)\n```",
+      "options": {"A": "4 then 5", "B": "3 then 5", "C": "Error (wrong arity)", "D": "4 then 4"},
+      "answer": "A",
+      "explanation": "add(3) uses b=1, so 3+1=4. add(3, 2) uses both args, so 3+2=5. Output: 4, then 5."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What does **splat** (*) in a parameter list do?",
+      "options": {"A": "Collects remaining arguments into an array", "B": "Makes the argument optional", "C": "Passes by reference", "D": "Unpacks an array"},
+      "answer": "A",
+      "explanation": "def foo(a, *rest) makes rest an array of all arguments after the first. So foo(1, 2, 3) gives a=1, rest=[2, 3]. In a call, * unpacks an array."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef bar(*args)\n  args.size\nend\nputs bar(1, 2, 3)\n```",
+      "options": {"A": "3", "B": "[1, 2, 3]", "C": "1", "D": "Error"},
+      "answer": "A",
+      "explanation": "args collects all arguments as an array [1, 2, 3]. args.size is 3."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "Are **parentheses required** when calling a method with arguments?",
+      "options": {"A": "Yes, always", "B": "No; they are optional in many cases", "C": "Only for zero arguments", "D": "Only for keyword arguments"},
+      "answer": "B",
+      "explanation": "Parentheses are often optional: puts \"hi\" and puts(\"hi\") are both valid. They can be required to resolve ambiguity (e.g. method call vs local variable)."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What is the **receiver** when you call a method like `puts \"hi\"`?",
+      "options": {"A": "main (top-level object)", "B": "Kernel", "C": "self (main includes Kernel)", "D": "Object"},
+      "answer": "C",
+      "explanation": "puts is called on the current receiver (self). At top level, self is main, which includes Kernel where puts is defined. So the receiver is self (main)."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef double(x)\n  return x * 2\n  puts \"done\"\nend\nputs double(5)\n```",
+      "options": {"A": "10 then done", "B": "10", "C": "done then 10", "D": "5"},
+      "answer": "B",
+      "explanation": "return x * 2 exits the method immediately with value 10. The puts \"done\" line is never executed. So we only print 10."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "How do you pass a **block** to a method?",
+      "options": {"A": "After the argument list, with do...end or { }", "B": "As the last argument with &block", "C": "With the block keyword", "D": "Blocks cannot be passed"},
+      "answer": "A",
+      "explanation": "You pass a block by writing it after the method call: foo(1) { ... } or foo(1) do ... end. Inside the method you capture it with &block if needed, or use yield."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What does **yield** do inside a method?",
+      "options": {"A": "Returns from the method", "B": "Calls the block passed to the method", "C": "Raises an error if no block given", "D": "B, and LocalJumpError if no block given"},
+      "answer": "D",
+      "explanation": "yield invokes the block passed to the method. If no block was given, yield raises LocalJumpError (unless you check with block_given?)."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef run\n  yield 1 if block_given?\nend\nrun { |x| puts x * 2 }\n```",
+      "options": {"A": "2", "B": "1", "C": "nil", "D": "LocalJumpError"},
+      "answer": "A",
+      "explanation": "run is called with a block. block_given? is true. yield 1 passes 1 to the block; the block computes 1*2 and puts 2. So output: 2."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What does **block_given?** return?",
+      "options": {"A": "true if a block was passed to the current method", "B": "The block object", "C": "true if the block has arguments", "D": "The number of block arguments"},
+      "answer": "A",
+      "explanation": "block_given? (or iterator?) returns true if the current method was called with a block, false otherwise. Used to make blocks optional."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\narr = [1, 2, 3]\nresult = arr.map { |n| n * 2 }\nputs result.inspect\n```",
+      "options": {"A": "[2, 4, 6]", "B": "[1, 2, 3]", "C": "6", "D": "[1, 2, 3, 1, 2, 3]"},
+      "answer": "A",
+      "explanation": "map calls the block for each element and collects the results. So we get [2, 4, 6]."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "How do you **unpack an array** as arguments in a method call?",
+      "options": {"A": "foo(*arr)", "B": "foo(arr)", "C": "foo(unpack arr)", "D": "foo(...arr)"},
+      "answer": "A",
+      "explanation": "foo(*arr) expands arr into individual arguments. So if arr = [1, 2, 3], foo(*arr) is like foo(1, 2, 3)."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef sum(a, b)\n  a + b\nend\nputs sum(*[2, 3])\n```",
+      "options": {"A": "5", "B": "[2, 3]", "C": "23", "D": "Error"},
+      "answer": "A",
+      "explanation": "sum(*[2, 3]) is equivalent to sum(2, 3). So a=2, b=3, and the method returns 5."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What is the convention for method names ending in **?**?",
+      "options": {"A": "Predicate; should return true or false", "B": "Required for boolean return", "C": "Same as ! (dangerous)", "D": "No special meaning"},
+      "answer": "A",
+      "explanation": "Methods ending in ? are predicates and by convention return a boolean (true/false). Examples: empty?, nil?, include?. The ? is part of the name."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the convention for method names ending in **!**?",
+      "options": {"A": "Dangerous or in-place version; may mutate the receiver", "B": "Required for mutation", "C": "Same as ?", "D": "Raises an error"},
+      "answer": "A",
+      "explanation": "! often marks a \"dangerous\" or in-place variant (e.g. sort vs sort!). It does not force mutation; it is a naming convention. No special behavior from Ruby."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef f(a, b = 2, c = 3)\n  a + b + c\nend\nputs f(1)\nputs f(1, 5)\n```",
+      "options": {"A": "6 then 9", "B": "6 then 8", "C": "1 then 6", "D": "Error"},
+      "answer": "A",
+      "explanation": "f(1) uses b=2, c=3 → 1+2+3=6. f(1, 5) uses a=1, b=5, c=3 → 1+5+3=9. Defaults fill from left to right for missing args."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which are valid **method name** styles in Ruby?",
+      "options": {"A": "snake_case", "B": "name?", "C": "name!", "D": "name="},
+      "answer": ["A", "B", "C", "D"],
+      "explanation": "Methods use snake_case. name? (predicate), name! (dangerous), and name= (setter) are all valid. No spaces; ? and ! and = are part of the name."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef one; 1; end\ndef two; 2; end\nputs one, two\n```",
+      "options": {"A": "1 then 2 (two lines)", "B": "12", "C": "2 then 1", "D": "Error"},
+      "answer": "A",
+      "explanation": "puts one, two is puts(one(), two()). Both methods are called; one returns 1, two returns 2. puts prints each argument on its own line: 1, then 2."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef foo(a, *b)\n  [a, b]\nend\np foo(1, 2, 3)\n```",
+      "options": {"A": "[1, [2, 3]]", "B": "[1, 2, 3]", "C": "[[1, 2], 3]", "D": "Error"},
+      "answer": "A",
+      "explanation": "Splat *b collects remaining arguments. So a=1, b=[2, 3]. The method returns [1, [2, 3]]."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "How do you capture a **block** as a **Proc** in a method?",
+      "options": {"A": "def foo(&block)", "B": "def foo(block)", "C": "def foo(*block)", "D": "def foo(block:)"},
+      "answer": "A",
+      "explanation": "&block in the parameter list converts the passed block to a Proc. You can then call block.call(args) or yield."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef test\n  return 1, 2\nend\nx, y = test\nputs \"#{x} #{y}\"\n```",
+      "options": {"A": "1 2", "B": "[1, 2]", "C": "1", "D": "Error"},
+      "answer": "A",
+      "explanation": "return 1, 2 returns the array [1, 2]. With x, y = test we assign x=1, y=2. So we print \"1 2\"."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What does **keyword argument** syntax look like in a method definition?",
+      "options": {"A": "def foo(a:, b: 2)", "B": "def foo(a, b: 2)", "C": "def foo(a: 1, b: 2)", "D": "A and C"},
+      "answer": "D",
+      "explanation": "Keyword args use name: or name: default. def foo(a:, b: 2) and def foo(a: 1, b: 2) are both valid."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef f(x)\n  x\nend\nputs f 1 + 2\n```",
+      "options": {"A": "3", "B": "1", "C": "12", "D": "Error"},
+      "answer": "A",
+      "explanation": "f 1 + 2 is parsed as f(1 + 2), so the argument is 3. The method returns 3."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is **self** inside an instance method?",
+      "options": {"A": "The object that received the method call", "B": "The class", "C": "Always main", "D": "The superclass"},
+      "answer": "A",
+      "explanation": "self in an instance method is the receiver (the object on which the method was called)."
+    },
+    {
+      "id": 29,
+      "type": "multiple",
+      "question": "Which are true about **return** in Ruby methods?",
+      "options": {"A": "return is optional; last expression is returned", "B": "return can return multiple values", "C": "return without value returns nil", "D": "return exits only the current block"},
+      "answer": ["A", "B", "C"],
+      "explanation": "Last expression is the return value if no return (A). return 1, 2 returns multiple values (B). return with no value returns nil (C). return exits the method, not just a block (D false)."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef greet(name = \"World\")\n  \"Hello, #{name}!\"\nend\nputs greet\nputs greet(\"Ruby\")\n```",
+      "options": {"A": "Hello, World! then Hello, Ruby!", "B": "Hello, ! then Hello, Ruby!", "C": "Hello, World! only", "D": "Error"},
+      "answer": "A",
+      "explanation": "greet with no args uses default name World; greet(\"Ruby\") uses name Ruby. Both lines are printed."
+    }
+  ]
+}

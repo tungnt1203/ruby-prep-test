@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Variables, Constants, and Scope",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which of the following is a **local variable** in Ruby?",
+      "options": {"A": "count", "B": "@count", "C": "@@count", "D": "$count"},
+      "answer": "A",
+      "explanation": "Local variables start with a lowercase letter or underscore. @ is instance, @@ is class, $ is global."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What prefix denotes an **instance variable**?",
+      "options": {"A": "@", "B": "@@", "C": "$", "D": "No prefix"},
+      "answer": "A",
+      "explanation": "Instance variables start with a single @. Each object has its own copy. @@ is class variable; $ is global."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What happens when you reference an **uninitialized local variable**?\n\n```ruby\nputs x  # x never assigned\n```",
+      "options": {"A": "nil", "B": "NameError", "C": "0", "D": "undefined"},
+      "answer": "B",
+      "explanation": "Referencing an unassigned local variable raises NameError. Instance and global variables return nil if not set."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the value of an **uninitialized instance variable**?",
+      "options": {"A": "nil", "B": "NameError", "C": "0", "D": "undefined"},
+      "answer": "A",
+      "explanation": "Instance variables are nil until assigned. Only local variables raise NameError when uninitialized."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "Which describes a **class variable** in Ruby?",
+      "options": {"A": "Prefixed with @@, shared by class and subclasses", "B": "Prefixed with @, one per instance", "C": "Prefixed with $, global", "D": "Uppercase name"},
+      "answer": "A",
+      "explanation": "Class variables (@@) are shared across the class and its subclasses. They are visible in the class and all instances."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What prefix denotes a **global variable**?",
+      "options": {"A": "$", "B": "@", "C": "@@", "D": "global_"},
+      "answer": "A",
+      "explanation": "Global variables start with $. They are visible everywhere (e.g. $stdin, $VERBOSE, $!)."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "How are **constants** typically named in Ruby?",
+      "options": {"A": "Starting with an uppercase letter", "B": "ALL_CAPS", "C": "Prefixed with const_", "D": "Both A and B are valid"},
+      "answer": "D",
+      "explanation": "Constants start with an uppercase letter. Convention is either CamelCase or ALL_CAPS. Both are valid."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What happens when you **reassign a constant** that already exists?",
+      "options": {"A": "Syntax error", "B": "Warning only; assignment succeeds", "C": "Runtime error", "D": "Creates a new constant"},
+      "answer": "B",
+      "explanation": "Reassigning a constant triggers a warning but the assignment still succeeds. Ruby allows it for flexibility."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What is the **scope** of a local variable defined inside a method?",
+      "options": {"A": "Only inside that method", "B": "The whole class", "C": "The whole file", "D": "Global"},
+      "answer": "A",
+      "explanation": "Local variables are scoped to the block or method where they are defined. They are not visible outside."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "Where is an **instance variable** visible?",
+      "options": {"A": "Only in the instance that owns it", "B": "In the class and all instances", "C": "Globally", "D": "Only in the defining method"},
+      "answer": "A",
+      "explanation": "Instance variables belong to a single object (instance). They are accessible in that instance's methods, not in other instances or the class body without an instance."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\na = 1\n[1, 2, 3].each { |a| a += 10 }\nputs a\n```",
+      "options": {"A": "1", "B": "11", "C": "13", "D": "NameError"},
+      "answer": "A",
+      "explanation": "The block parameter |a| shadows the outer a. The outer a is never modified; it stays 1. The block's a is local to the block."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What does `defined?(foo)` return when `foo` is an undefined local variable?",
+      "options": {"A": "nil", "B": "\"local-variable\"", "C": "false", "D": "Raises NameError"},
+      "answer": "A",
+      "explanation": "defined?(undefined_local) returns nil. For defined variables it returns a string like \"local-variable\". defined? never raises."
+    },
+    {
+      "id": 13,
+      "type": "multiple",
+      "question": "Which of the following are **built-in global variables** (or special globals) in Ruby?",
+      "options": {"A": "$!", "B": "$?", "C": "$stdin", "D": "$my_global"},
+      "answer": ["A", "B", "C"],
+      "explanation": "$! is the last exception, $? is the last process status, $stdin is standard input. $my_global is just a user-defined global."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 10\ndef foo\n  puts x\nend\nfoo\n```",
+      "options": {"A": "10", "B": "nil", "C": "NameError", "D": "0"},
+      "answer": "C",
+      "explanation": "Methods have their own local scope. The local variable x from the outer scope is not visible inside the method, so NameError."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 5\n3.times { puts x; x += 1 }\nputs x\n```",
+      "options": {"A": "5 6 7 then 8", "B": "5 5 5 then 5", "C": "5 6 7 then 5", "D": "NameError"},
+      "answer": "A",
+      "explanation": "Blocks see the enclosing scope. The block can read and modify x, so x becomes 6, 7, 8; final puts x is 8."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "Where are **constants** looked up first (lexical scope)?",
+      "options": {"A": "At the place where the constant is written (lexical scope)", "B": "Only in the current class", "C": "Only in Object", "D": "Only in the superclass"},
+      "answer": "A",
+      "explanation": "Constant lookup is lexical first: Ruby looks at the place in the code where the constant is written, then the nesting (module/class), then inheritance."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "Can you assign to a **constant** that was never defined before (in current scope)?",
+      "options": {"A": "No, constants must be defined with CONST = value at top level", "B": "Yes; first assignment defines it", "C": "Only inside a class", "D": "Only with const_set"},
+      "answer": "B",
+      "explanation": "The first assignment to a constant name defines that constant in the current scope. No special declaration is required."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What is the scope of a variable defined in a **block** (e.g. `each { |x| ... }`)?",
+      "options": {"A": "Only inside the block", "B": "The method containing the block", "C": "The whole class", "D": "Global"},
+      "answer": "A",
+      "explanation": "Variables created inside a block (including block parameters like |x|) are local to that block. The block can read outer locals but block-local vars do not leak out."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What does **reassigning a constant** do to the object it pointed to?",
+      "options": {"A": "The old object is unchanged; the constant now points to a new object", "B": "The old object is destroyed", "C": "Both old and new objects are modified", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "Reassigning a constant only changes what the constant name refers to. The previous object is not modified or destroyed (unless nothing else references it and GC collects it)."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "Is the **object** referenced by a constant **mutable**?",
+      "options": {"A": "Yes; you can mutate the object (e.g. add to an array)", "B": "No; the object becomes frozen", "C": "Only if it was created with Constant = ...", "D": "Only for strings"},
+      "answer": "A",
+      "explanation": "The constant holds a reference to an object. The object itself can still be mutated (e.g. MY_ARR << 1) unless the object is frozen. The \"constant\" is the binding, not the object's contents."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nVAR = 1\nmodule M\n  VAR = 2\n  class C\n    puts VAR\n  end\nend\n```",
+      "options": {"A": "1", "B": "2", "C": "NameError", "D": "nil"},
+      "answer": "B",
+      "explanation": "Constant lookup is lexical. Inside C, the nesting is M::C inside M, so VAR is first found in M (VAR = 2)."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "Which variable type is **shared** by a class and its subclasses (and their instances)?",
+      "options": {"A": "Class variable (@@)", "B": "Instance variable (@)", "C": "Local variable", "D": "Constant"},
+      "answer": "A",
+      "explanation": "Class variables (@@) are shared by the class that defines them and all subclasses (and all instances of those classes). Changing @@var in a subclass affects the superclass and siblings."
+    },
+    {
+      "id": 23,
+      "type": "multiple",
+      "question": "Which statements about **local variable scope** in Ruby are true?",
+      "options": {"A": "Local variables are visible only in the block/method where they are defined", "B": "A block can read and modify local variables from the enclosing scope", "C": "Local variables are visible in all methods of the same class", "D": "Block parameters can shadow outer local variables"},
+      "answer": ["A", "B", "D"],
+      "explanation": "Locals are scoped to their defining block/method (A). Blocks close over and can modify outer locals (B). Block params (e.g. |x|) shadow outer x (D). Methods do not see other methods' locals (C false)."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is **$VERBOSE** used for?",
+      "options": {"A": "Controls warning level (nil, false, true)", "B": "Enables debug mode", "C": "Sets log level", "D": "Not a built-in global"},
+      "answer": "A",
+      "explanation": "$VERBOSE (or $-w) controls warning level: nil = no warnings, false = only serious, true = verbose warnings. Often set via -w flag."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nv = 0\n1.times { v = 1 }\nputs v\n```",
+      "options": {"A": "0", "B": "1", "C": "nil", "D": "NameError"},
+      "answer": "B",
+      "explanation": "The block shares the enclosing scope. Assignment v = 1 inside the block modifies the outer v, so puts v outputs 1."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "How do you reference the **top-level constant** (e.g. from inside a nested class)?",
+      "options": {"A": "::ConstantName", "B": "Object::ConstantName", "C": "top::ConstantName", "D": "A and B"},
+      "answer": "D",
+      "explanation": "::ConstantName starts lookup from the top-level (Object). Object::ConstantName is explicit. Both refer to the top-level constant."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What is the default value of an **uninitialized global variable**?",
+      "options": {"A": "nil", "B": "NameError", "C": "0", "D": "undefined"},
+      "answer": "A",
+      "explanation": "Global variables, like instance variables, default to nil when first read if never assigned."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "Can a **method** access an instance variable defined in the same class?",
+      "options": {"A": "Yes, when the method is called on an instance that has that variable", "B": "No, instance variables are private", "C": "Only with attr_reader", "D": "Only in initialize"},
+      "answer": "A",
+      "explanation": "Instance methods can read and write instance variables of the receiving object (self). They are not \"private\" in the sense of method visibility; they are per-instance storage."
+    },
+    {
+      "id": 29,
+      "type": "multiple",
+      "question": "Which are valid **variable names** in Ruby?",
+      "options": {"A": "_private", "B": "user_name", "C": "2nd_value", "D": "my_var"},
+      "answer": ["A", "B", "D"],
+      "explanation": "Local names can start with a letter or _. _private, user_name, my_var are valid. 2nd_value is invalid because it starts with a digit."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What does **nesting** refer to in constant lookup?",
+      "options": {"A": "The module/class hierarchy at the point the constant is written", "B": "The inheritance hierarchy only", "C": "The file path", "D": "The call stack"},
+      "answer": "A",
+      "explanation": "Nesting is the lexical module/class nesting where the constant appears (e.g. module M; class C; X end end). Ruby uses this for constant lookup before inheritance."
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "topic": "Ruby 3.1.x Silver - Loops",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which keyword starts a **while** loop in Ruby?",
+      "options": {"A": "while", "B": "when", "C": "loop", "D": "repeat"},
+      "answer": "A",
+      "explanation": "while condition ... end repeats the block while the condition is truthy. when is used in case; loop is for infinite loops."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ni = 0\nwhile i < 3\n  puts i\n  i += 1\nend\n```",
+      "options": {"A": "0 1 2", "B": "0 1 2 3", "C": "1 2 3", "D": "Infinite loop"},
+      "answer": "A",
+      "explanation": "The loop runs while i < 3. i is 0, 1, 2 in turn (each time we print then increment). When i becomes 3, the condition fails and the loop exits."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What does **until** do?",
+      "options": {"A": "Repeats the block until the condition becomes true", "B": "Repeats the block while the condition is true", "C": "Same as while not", "D": "A and C"},
+      "answer": "D",
+      "explanation": "until condition runs the block while the condition is false; it stops when the condition becomes true. Equivalent to while !condition."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n3.times { |i| puts i }\n```",
+      "options": {"A": "0 1 2", "B": "1 2 3", "C": "3 3 3", "D": "0 1 2 3"},
+      "answer": "A",
+      "explanation": "Integer#times yields 0, 1, 2 to the block (count from 0 up to n-1). So the output is 0, 1, 2."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "Which method is the **idiomatic** way to iterate over an array in Ruby?",
+      "options": {"A": "each", "B": "for...in", "C": "while with index", "D": "loop with break"},
+      "answer": "A",
+      "explanation": "each is the standard, idiomatic way to iterate over collections in Ruby. for...in exists but is rarely used; it uses each internally."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What does **break** do inside a loop or block?",
+      "options": {"A": "Exits the loop/iterator immediately", "B": "Skips to the next iteration", "C": "Restarts the loop", "D": "Returns from the method"},
+      "answer": "A",
+      "explanation": "break terminates the innermost loop or iterator (e.g. each) and exits. Optional: break value sets the return value of the loop."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What does **next** do inside a loop or block?",
+      "options": {"A": "Exits the loop", "B": "Skips the rest of the current iteration and continues to the next", "C": "Restarts from the beginning", "D": "Returns nil"},
+      "answer": "B",
+      "explanation": "next skips the remainder of the current iteration and proceeds to the next one. Similar to continue in other languages."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n[1, 2, 3].each do |x|\n  next if x == 2\n  puts x\nend\n```",
+      "options": {"A": "1 2 3", "B": "1 3", "C": "2", "D": "1 2"},
+      "answer": "B",
+      "explanation": "next if x == 2 skips the iteration when x is 2. So we print 1 and 3 only."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nresult = (1..3).each do |n|\n  break 10 if n == 2\nend\nputs result\n```",
+      "options": {"A": "1..3", "B": "10", "C": "2", "D": "nil"},
+      "answer": "B",
+      "explanation": "break 10 exits the each and makes the loop's return value 10. So result is 10. Without an argument, break returns nil."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What does **loop** do (without a condition)?",
+      "options": {"A": "Runs forever until break is executed", "B": "Runs once", "C": "Syntax error", "D": "Runs while true"},
+      "answer": "A",
+      "explanation": "loop do ... end is an infinite loop. It runs until break is executed (or an exception). Common pattern: loop { break if condition }."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n1.upto(3) { |n| puts n }\n```",
+      "options": {"A": "1 2 3", "B": "0 1 2 3", "C": "0 1 2", "D": "3 2 1"},
+      "answer": "A",
+      "explanation": "Integer#upto(n) yields from the receiver up to n (inclusive). So 1.upto(3) yields 1, 2, 3."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n3.downto(1) { |n| puts n }\n```",
+      "options": {"A": "1 2 3", "B": "3 2 1", "C": "0 1 2", "D": "3 2 1 0"},
+      "answer": "B",
+      "explanation": "Integer#downto(n) yields from the receiver down to n (inclusive). So 3.downto(1) yields 3, 2, 1."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What does **redo** do inside a loop?",
+      "options": {"A": "Exits the loop", "B": "Skips to the next iteration", "C": "Repeats the current iteration from the top (no re-evaluation of condition)", "D": "Restarts the loop from the beginning"},
+      "answer": "C",
+      "explanation": "redo restarts the current iteration from the beginning of the block. It does not re-evaluate the loop condition or advance the iterator."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nfor x in [1, 2, 3]\n  puts x\nend\nputs x\n```",
+      "options": {"A": "1 2 3 then NameError", "B": "1 2 3 then 3", "C": "1 2 3 then nil", "D": "1 2 3 (x not defined)"},
+      "answer": "B",
+      "explanation": "for...in leaves the loop variable in scope after the loop. So x remains 3 (the last value) and puts x prints 3. Unlike each, which keeps the block variable local."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n[10, 20].each do |x|\n  puts x\nend\nputs x\n```",
+      "options": {"A": "10 20 then 20", "B": "10 20 then NameError", "C": "10 20 then nil", "D": "10 20 (x undefined)"},
+      "answer": "B",
+      "explanation": "Block parameters (e.g. |x|) are local to the block. After the each ends, x is not defined in the outer scope, so puts x raises NameError."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What does **while** return when the loop completes normally (no break)?",
+      "options": {"A": "nil", "B": "true", "C": "The last value of the block", "D": "The condition"},
+      "answer": "A",
+      "explanation": "while and until return nil when they terminate normally. If you use break value, the loop returns that value."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nn = 0\nloop do\n  n += 1\n  break if n >= 3\n  puts n\nend\n```",
+      "options": {"A": "1 2", "B": "1 2 3", "C": "0 1 2", "D": "Infinite loop"},
+      "answer": "A",
+      "explanation": "We increment first (n becomes 1, 2, 3). We break when n >= 3. So we print n when it is 1 and 2, then break before printing 3."
+    },
+    {
+      "id": 18,
+      "type": "multiple",
+      "question": "Which are valid **loop** constructs in Ruby?",
+      "options": {"A": "while condition ... end", "B": "until condition ... end", "C": "loop do ... end", "D": "do ... while condition"},
+      "answer": ["A", "B", "C"],
+      "explanation": "Ruby has while, until, and loop. There is no do...while; use loop with break if condition at the end to mimic it."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n(1..4).step(2) { |n| puts n }\n```",
+      "options": {"A": "1 3", "B": "1 2 3 4", "C": "2 4", "D": "1 4"},
+      "answer": "A",
+      "explanation": "Range#step(2) yields every 2nd element: 1, then 3. So we print 1 and 3."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What does **each** return?",
+      "options": {"A": "The receiver (the collection)", "B": "An array of block return values", "C": "nil", "D": "The last element"},
+      "answer": "A",
+      "explanation": "each returns the receiver (the object it was called on). It does not collect the block's return values; use map for that."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncount = 0\nuntil count >= 2\n  puts count\n  count += 1\nend\n```",
+      "options": {"A": "0 1", "B": "0 1 2", "C": "1 2", "D": "2"},
+      "answer": "A",
+      "explanation": "until count >= 2 runs while count < 2. We print 0, 1, then count becomes 2 and the condition is true, so we stop."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "How do you get the **index** while iterating with **each**?",
+      "options": {"A": "each_with_index or each.with_index", "B": "each_index only", "C": "each with a counter variable", "D": "for i in 0...arr.size"},
+      "answer": "A",
+      "explanation": "each_with_index yields (element, index). Enumerable#each.with_index also works. each_index exists for arrays (index only)."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n[\"a\", \"b\"].each_with_index do |letter, i|\n  puts \"#{i}: #{letter}\"\nend\n```",
+      "options": {"A": "0: a 1: b", "B": "1: a 2: b", "C": "a: 0 b: 1", "D": "0: a\\n1: b"},
+      "answer": "A",
+      "explanation": "each_with_index yields (element, index). So we get (\"a\", 0) and (\"b\", 1), producing \"0: a\" and \"1: b\"."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 0\nwhile x < 2\n  x += 1\n  puts x\nend\n```",
+      "options": {"A": "1 2", "B": "0 1", "C": "1 2 3", "D": "0 1 2"},
+      "answer": "A",
+      "explanation": "First iteration: x becomes 1, we print 1. Second: x becomes 2, we print 2. Then x < 2 is false, loop ends. Output: 1, 2."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What does **for...in** use internally?",
+      "options": {"A": "each", "B": "while", "C": "loop", "D": "C-style for"},
+      "answer": "A",
+      "explanation": "for x in collection is syntactic sugar; it calls each on the collection. So for uses each internally. Idiomatic Ruby prefers each directly."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nr = 0\n3.times { r += 1 }\nputs r\n```",
+      "options": {"A": "0", "B": "3", "C": "1", "D": "2"},
+      "answer": "B",
+      "explanation": "The block runs 3 times. Each time we do r += 1. So r becomes 1, 2, 3. After the loop, r is 3."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "Can you use **break** inside a **while** loop?",
+      "options": {"A": "Yes", "B": "No", "C": "Only with a value", "D": "Only in block form"},
+      "answer": "A",
+      "explanation": "break can be used in while, until, loop, and in iterators (each, etc.) to exit immediately. Optional: break value sets the loop's return value."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nsum = 0\n[1, 2, 3].each do |n|\n  sum += n\n  break sum if sum >= 3\nend\nputs sum\n```",
+      "options": {"A": "6", "B": "3", "C": "1", "D": "0"},
+      "answer": "B",
+      "explanation": "First: sum=1, 1>=3 false. Second: sum=3, 3>=3 true, we break. break sum returns 3 but we're not assigning the each result. sum is 3, so puts sum prints 3."
+    },
+    {
+      "id": 29,
+      "type": "multiple",
+      "question": "Which **Integer** methods can be used to iterate a fixed number of times or over a range?",
+      "options": {"A": "times", "B": "upto", "C": "downto", "D": "step"},
+      "answer": ["A", "B", "C"],
+      "explanation": "times, upto, and downto are Integer methods. step is a Range method (e.g. (1..10).step(2))."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n(1..3).each { |n| puts n * 2 }\n```",
+      "options": {"A": "2 4 6", "B": "1 2 3", "C": "2 3 4", "D": "1 4 9"},
+      "answer": "A",
+      "explanation": "Range#each yields 1, 2, 3. The block prints n*2: 2, 4, 6."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nresult = [1, 2, 3].each do |n|\n  break 99 if n == 2\nend\nputs result\n```",
+      "options": {"A": "[1, 2, 3]", "B": "99", "C": "2", "D": "nil"},
+      "answer": "B",
+      "explanation": "break 99 makes the each return 99 (not the receiver). So result is 99 and we print 99."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "What is the **modifier** form of **while**?",
+      "options": {"A": "begin ... end while condition", "B": "code while condition (at end of line)", "C": "while condition: code", "D": "Ruby has no while modifier"},
+      "answer": "B",
+      "explanation": "You can write \"code while condition\" at the end of a line. The code runs while the condition is true. begin...end while runs at least once then checks."
+    },
+    {
+      "id": 33,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ni = 0\nloop do\n  i += 1\n  next if i < 2\n  puts i\n  break if i >= 3\nend\n```",
+      "options": {"A": "2 3", "B": "1 2 3", "C": "2", "D": "1 2"},
+      "answer": "A",
+      "explanation": "next if i < 2 skips printing when i is 1. We print when i is 2 and 3, then break when i >= 3. Output: 2, 3."
+    },
+    {
+      "id": 34,
+      "type": "single",
+      "question": "What does **begin...end while condition** do?",
+      "options": {"A": "Runs the block at least once, then repeats while condition is true", "B": "Same as while condition begin...end", "C": "Runs once only", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "begin...end while condition executes the block first, then checks the condition. So it runs at least once (like do...while in other languages)."
+    },
+    {
+      "id": 35,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\narr = []\n1.upto(2) do |i|\n  1.upto(2) do |j|\n    arr << [i, j]\n  end\nend\nputs arr.size\n```",
+      "options": {"A": "2", "B": "4", "C": "1", "D": "3"},
+      "answer": "B",
+      "explanation": "Nested loops: for i in 1,2 and j in 1,2 we push [i,j]. So [1,1],[1,2],[2,1],[2,2] — 4 elements. arr.size is 4."
+    },
+    {
+      "id": 36,
+      "type": "single",
+      "question": "What does **each** return when **break** is used with a value?",
+      "options": {"A": "The break value", "B": "The receiver", "C": "nil", "D": "An array of yielded values"},
+      "answer": "A",
+      "explanation": "When you use break value inside each, the each returns that value (not the receiver). Without break value, each returns the receiver."
+    },
+    {
+      "id": 37,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nn = 0\nwhile n < 2\n  puts n\n  n += 1\nend\nputs \"done\"\n```",
+      "options": {"A": "0 1 done", "B": "0 1 2 done", "C": "0 1", "D": "done"},
+      "answer": "A",
+      "explanation": "Loop runs for n=0 and n=1 (we print then increment). When n becomes 2, condition fails and we exit, then print \"done\"."
+    },
+    {
+      "id": 38,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n(1..5).step(2).each { |n| puts n }\n```",
+      "options": {"A": "1 3 5", "B": "1 2 3 4 5", "C": "2 4", "D": "1 4"},
+      "answer": "A",
+      "explanation": "Range#step(2) yields 1, 3, 5. So we print 1, 3, 5."
+    },
+    {
+      "id": 39,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 0\nbegin\n  x += 1\n  puts x\nend while x < 2\n```",
+      "options": {"A": "1 2", "B": "1 2 3", "C": "0 1", "D": "1"},
+      "answer": "A",
+      "explanation": "begin...end while: we run the block first (x=1, print 1), then check x<2 (true). Run again (x=2, print 2), then x<2 is false. Stop. Output: 1, 2."
+    },
+    {
+      "id": 40,
+      "type": "single",
+      "question": "What does **redo** do in relation to the loop **condition**?",
+      "options": {"A": "Re-evaluates the condition", "B": "Does not re-evaluate the condition; restarts current iteration", "C": "Exits the loop", "D": "Skips to next iteration"},
+      "answer": "B",
+      "explanation": "redo jumps back to the start of the current iteration. It does not re-evaluate the while/until condition or advance the iterator in each."
+    },
+    {
+      "id": 41,
+      "type": "multiple",
+      "question": "Which can be used to **exit** or **skip** within a loop or iterator?",
+      "options": {"A": "break", "B": "next", "C": "redo", "D": "return"},
+      "answer": ["A", "B", "C"],
+      "explanation": "break exits the loop; next skips to the next iteration; redo restarts the current iteration. return exits the enclosing method, not just the loop (so not \"within loop\" in the same sense)."
+    },
+    {
+      "id": 42,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n[1, 2, 3].each do |x|\n  puts x\n  break\nend\n```",
+      "options": {"A": "1 2 3", "B": "1", "C": "3", "D": "nil"},
+      "answer": "B",
+      "explanation": "We print 1, then break. So only 1 is printed. break without a value; the each would return the receiver, but we don't use it."
+    },
+    {
+      "id": 43,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n0.upto(2) { |i| puts i }\n```",
+      "options": {"A": "0 1 2", "B": "1 2", "C": "0 1", "D": "Error (Float has no upto)"},
+      "answer": "A",
+      "explanation": "0 is an Integer. Integer#upto(2) yields 0, 1, 2. So we print 0, 1, 2. (If it were 0.0, Float does have upto in Ruby.)"
+    },
+    {
+      "id": 44,
+      "type": "single",
+      "question": "What does **until** return when the loop ends normally?",
+      "options": {"A": "nil", "B": "true", "C": "The last value in the block", "D": "false"},
+      "answer": "A",
+      "explanation": "until, like while, returns nil when it terminates without break. Use break value to return a value from the loop."
+    },
+    {
+      "id": 45,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncount = 0\nwhile true\n  count += 1\n  break if count == 2\n  puts count\nend\n```",
+      "options": {"A": "1", "B": "1 2", "C": "2", "D": "Infinite loop"},
+      "answer": "A",
+      "explanation": "First iteration: count=1, break if count==2 is false, we print 1. Second: count=2, break if count==2 is true, we break without printing. Output: 1."
+    }
+  ]
+}

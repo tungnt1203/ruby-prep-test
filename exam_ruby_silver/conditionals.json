@@ -1,0 +1,365 @@
+{
+  "topic": "Ruby 3.1.x Silver - Conditional Branching",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which keyword is used for **else-if** (multiple conditions) in Ruby?",
+      "options": {"A": "elsif", "B": "elseif", "C": "elif", "D": "else if"},
+      "answer": "A",
+      "explanation": "Ruby uses elsif (one word, no 'e' after 'els'). elseif and elif are used in other languages."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 0\nif x\n  puts \"yes\"\nelse\n  puts \"no\"\nend\n```",
+      "options": {"A": "yes", "B": "no", "C": "nil", "D": "Error"},
+      "answer": "A",
+      "explanation": "In Ruby, 0 is truthy. Only false and nil are falsy. So the if branch runs and prints \"yes\"."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What does **unless** mean?",
+      "options": {"A": "Execute block when condition is false", "B": "Execute block when condition is true", "C": "Same as if not", "D": "A and C"},
+      "answer": "D",
+      "explanation": "unless condition runs the block when the condition is false. It is equivalent to if !condition (or if not condition)."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nresult = if 1 > 2 then \"a\" else \"b\" end\nputs result\n```",
+      "options": {"A": "a", "B": "b", "C": "nil", "D": "Error"},
+      "answer": "B",
+      "explanation": "if/end is an expression; it returns the value of the branch that runs. 1 > 2 is false, so \"b\" is returned and assigned to result."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What is the **ternary** operator syntax in Ruby?",
+      "options": {"A": "condition ? then_value : else_value", "B": "condition : then_value ? else_value", "C": "if condition then value else other", "D": "condition if value else other"},
+      "answer": "A",
+      "explanation": "condition ? then_value : else_value. If condition is truthy, then_value is returned; otherwise else_value."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs 5 > 3 ? \"big\" : \"small\"\n```",
+      "options": {"A": "big", "B": "small", "C": "true", "D": "5"},
+      "answer": "A",
+      "explanation": "5 > 3 is true, so the ternary returns \"big\"."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "Which values are **falsy** in Ruby (cause if to take the else branch)?",
+      "options": {"A": "false and nil only", "B": "false, nil, 0, and \"\"", "C": "false only", "D": "nil only"},
+      "answer": "A",
+      "explanation": "Only false and nil are falsy. 0, \"\", and [] are all truthy in Ruby."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncase 2\nwhen 1 then puts \"one\"\nwhen 2 then puts \"two\"\nwhen 3 then puts \"three\"\nend\n```",
+      "options": {"A": "one", "B": "two", "C": "three", "D": "Nothing (nil)"},
+      "answer": "B",
+      "explanation": "case uses === for matching. 2 === 2 is true for Integer, so the when 2 branch runs and prints \"two\"."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "How does **case** match the value against each **when**?",
+      "options": {"A": "Uses === (case equality)", "B": "Uses == only", "C": "Uses =~ for all", "D": "Uses eql?"},
+      "answer": "A",
+      "explanation": "case uses === to compare the case value with each when. So Range#===, Class#===, regex#===, etc. are used."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nscore = 85\ncase score\nwhen 0..59 then puts \"F\"\nwhen 60..79 then puts \"C\"\nwhen 80..100 then puts \"A\"\nelse puts \"?\"; end\n```",
+      "options": {"A": "F", "B": "C", "C": "A", "D": "?"},
+      "answer": "C",
+      "explanation": "Range#=== checks membership. 85 is in 80..100, so the third when matches and \"A\" is printed."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the **modifier** form of if?\n\n(One-line: execute expression when condition is true)",
+      "options": {"A": "expression if condition", "B": "if condition expression", "C": "expression when condition", "D": "if condition then expression"},
+      "answer": "A",
+      "explanation": "Ruby allows \"expression if condition\" at the end of a line. The expression runs only when the condition is true."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 10\nputs \"big\" if x > 5\nputs \"small\" unless x > 5\n```",
+      "options": {"A": "big then small", "B": "big", "C": "small", "D": "big\\nsmall"},
+      "answer": "B",
+      "explanation": "x > 5 is true, so \"big\" is printed. unless x > 5 is false (we don't run when condition is true), so \"small\" is not printed. Only \"big\"."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "Can you use **else** with **unless**?",
+      "options": {"A": "Yes", "B": "No", "C": "Only with then", "D": "Only in modifier form"},
+      "answer": "A",
+      "explanation": "unless can have an else branch. The else block runs when the unless condition is true (i.e. when we don't take the main unless block)."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncase \"hello\"\nwhen String then puts \"S\"\nwhen /hel/ then puts \"R\"\nend\n```",
+      "options": {"A": "S", "B": "R", "C": "S then R", "D": "Nothing"},
+      "answer": "A",
+      "explanation": "case matches the first when that === the value. String === \"hello\" is true (kind_of?), so \"S\" is printed and the case ends."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What does **when** with multiple values do?\n\n```ruby\ncase x\nwhen 1, 2, 3 then puts \"low\"\nwhen 4, 5, 6 then puts \"high\"\nend\n```",
+      "options": {"A": "Matches if x equals any of 1, 2, or 3", "B": "Matches only if x == 1", "C": "Syntax error", "D": "Matches all three in sequence"},
+      "answer": "A",
+      "explanation": "when 1, 2, 3 is like multiple when clauses; it matches if x === 1 or x === 2 or x === 3."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What is the return value of an **if** that does not run any branch?\n\n```ruby\nx = if false then 1 end\n```",
+      "options": {"A": "nil", "B": "false", "C": "No return value (error)", "D": "0"},
+      "answer": "A",
+      "explanation": "if is an expression. If no branch runs (or the branch has no value), the if returns nil."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nif nil\n  puts \"a\"\nelsif false\n  puts \"b\"\nelse\n  puts \"c\"\nend\n```",
+      "options": {"A": "a", "B": "b", "C": "c", "D": "Nothing"},
+      "answer": "C",
+      "explanation": "nil is falsy, so we skip the first branch. false is falsy, so we skip elsif. We hit else and print \"c\"."
+    },
+    {
+      "id": 18,
+      "type": "multiple",
+      "question": "Which are valid **conditional** constructs in Ruby?",
+      "options": {"A": "if / elsif / else / end", "B": "unless / else / end", "C": "case / when / else / end", "D": "switch / case / end"},
+      "answer": ["A", "B", "C"],
+      "explanation": "Ruby has if, unless, and case. There is no switch keyword; case fills that role."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nval = nil\nout = val || \"default\"\nputs out\n```",
+      "options": {"A": "nil", "B": "default", "C": "val", "D": "Error"},
+      "answer": "B",
+      "explanation": "|| returns the first truthy value. nil is falsy, so \"default\" is returned. Common pattern for default values."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 3\nunless x == 3\n  puts \"no\"\nelse\n  puts \"yes\"\nend\n```",
+      "options": {"A": "no", "B": "yes", "C": "Nothing", "D": "Error"},
+      "answer": "B",
+      "explanation": "unless x == 3: we run the unless block only when x == 3 is false. Here x == 3 is true, so we skip the unless block and run else, printing \"yes\"."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "What is the value of `if true; 1; end`?",
+      "options": {"A": "1", "B": "true", "C": "nil", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "if is an expression. The last value in the chosen branch is the result. Here the branch returns 1."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncase\nwhen 1 == 1 then puts \"ok\"\nwhen 2 == 2 then puts \"also\"\nend\n```",
+      "options": {"A": "ok", "B": "also", "C": "ok then also", "D": "Error (case needs value)"},
+      "answer": "A",
+      "explanation": "case without a value evaluates each when condition in order. The first true when runs (1 == 1), so \"ok\" is printed and case exits."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "In Ruby, is **then** required after **if** condition?",
+      "options": {"A": "No; newline or semicolon is enough", "B": "Yes, always", "C": "Only in one-line form", "D": "Only with else"},
+      "answer": "A",
+      "explanation": "then is optional. You can use \"if cond then body\" on one line, or \"if cond\\n  body\\nend\" with newline."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs \"\" ? \"truthy\" : \"falsy\"\n```",
+      "options": {"A": "truthy", "B": "falsy", "C": "nil", "D": "Error"},
+      "answer": "A",
+      "explanation": "Empty string \"\" is truthy in Ruby. Only false and nil are falsy. So the ternary returns \"truthy\"."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What does **case** return when no **when** matches and there is no **else**?",
+      "options": {"A": "nil", "B": "false", "C": "The case value", "D": "Error"},
+      "answer": "A",
+      "explanation": "case is an expression. If no when matches and there is no else, the case returns nil."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 0\nif x then puts \"zero\" else puts \"other\" end\n```",
+      "options": {"A": "zero", "B": "other", "C": "nil", "D": "0"},
+      "answer": "A",
+      "explanation": "0 is truthy in Ruby. So the if branch runs and \"zero\" is printed."
+    },
+    {
+      "id": 27,
+      "type": "multiple",
+      "question": "Which expressions are **truthy** in Ruby?",
+      "options": {"A": "0", "B": "\"\"", "C": "[]", "D": "false"},
+      "answer": ["A", "B", "C"],
+      "explanation": "0, \"\", and [] are all truthy. Only false and nil are falsy."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncase 3\nwhen 1..5 then puts \"in range\"\nwhen Integer then puts \"integer\"\nend\n```",
+      "options": {"A": "in range", "B": "integer", "C": "in range then integer", "D": "Nothing"},
+      "answer": "A",
+      "explanation": "First when: (1..5) === 3 is true (range membership). So \"in range\" is printed. The second when is not evaluated."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nresult = case 2\nwhen 1 then \"one\"\nwhen 2 then \"two\"\nend\nputs result\n```",
+      "options": {"A": "one", "B": "two", "C": "nil", "D": "2"},
+      "answer": "B",
+      "explanation": "case is an expression. The matching when returns \"two\", which is assigned to result and printed."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "Which is the correct way to write a **one-line if** (modifier) that runs one statement?",
+      "options": {"A": "puts \"hi\" if true", "B": "if true puts \"hi\"", "C": "if true: puts \"hi\"", "D": "puts \"hi\" when true"},
+      "answer": "A",
+      "explanation": "Modifier form: statement if condition. So \"puts \\\"hi\\\" if true\" runs puts when the condition is true."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncase \"ruby\"\nwhen /^r/ then puts \"R\"\nwhen /y$/ then puts \"Y\"\nend\n```",
+      "options": {"A": "R", "B": "Y", "C": "R then Y", "D": "Nothing"},
+      "answer": "A",
+      "explanation": "case matches the first when. /^r/ === \"ruby\" is true (regex match), so \"R\" is printed and case stops."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "What is the value of `if false; 1; else; 2; end`?",
+      "options": {"A": "1", "B": "2", "C": "nil", "D": "false"},
+      "answer": "B",
+      "explanation": "if is an expression. The condition is false, so the else branch runs and returns 2."
+    },
+    {
+      "id": 33,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = nil\nif x.nil?\n  puts \"nil\"\nelsif x == false\n  puts \"false\"\nelse\n  puts \"other\"\nend\n```",
+      "options": {"A": "nil", "B": "false", "C": "other", "D": "Error"},
+      "answer": "A",
+      "explanation": "x is nil, so x.nil? is true. The first branch runs and \"nil\" is printed."
+    },
+    {
+      "id": 34,
+      "type": "single",
+      "question": "Can you use **elsif** with **unless**?",
+      "options": {"A": "No; unless has no elsif", "B": "Yes", "C": "Only with then", "D": "Only in modifier form"},
+      "answer": "A",
+      "explanation": "unless does not have elsif. Use \"unless ... elsif\" is invalid. For multiple conditions with unless, use if !cond1; ... elsif cond2; ... end or nested unless."
+    },
+    {
+      "id": 35,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nresult = if true\n  1\n  2\nend\nputs result\n```",
+      "options": {"A": "1", "B": "2", "C": "nil", "D": "1 2"},
+      "answer": "B",
+      "explanation": "The if block's value is the last expression in the branch. So 2 is returned (1 is evaluated but 2 is the result)."
+    },
+    {
+      "id": 36,
+      "type": "single",
+      "question": "What is `[] ? 1 : 2`?",
+      "options": {"A": "1", "B": "2", "C": "[]", "D": "nil"},
+      "answer": "A",
+      "explanation": "Empty array [] is truthy in Ruby. So the ternary returns 1."
+    },
+    {
+      "id": 37,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 10\ny = 20\nputs \"big\" if x > 5 && y > 10\n```",
+      "options": {"A": "big", "B": "Nothing", "C": "true", "D": "Error"},
+      "answer": "A",
+      "explanation": "x > 5 is true and y > 10 is true, so the condition is true. \"big\" is printed."
+    },
+    {
+      "id": 38,
+      "type": "single",
+      "question": "What does **else** in a **case** do?",
+      "options": {"A": "Runs when no when clause matches", "B": "Same as when true", "C": "Optional; runs last", "D": "A and C"},
+      "answer": "D",
+      "explanation": "else in case is like default: it runs when no when matches. It is optional and typically last."
+    },
+    {
+      "id": 39,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nval = false\nout = val ? \"a\" : \"b\"\nputs out\n```",
+      "options": {"A": "a", "B": "b", "C": "false", "D": "nil"},
+      "answer": "B",
+      "explanation": "false is falsy, so the ternary takes the else branch and returns \"b\"."
+    },
+    {
+      "id": 40,
+      "type": "single",
+      "question": "What is the value of `unless true; 1; else; 2; end`?",
+      "options": {"A": "1", "B": "2", "C": "nil", "D": "true"},
+      "answer": "B",
+      "explanation": "unless true means the main block is skipped (we run when condition is false). So the else branch runs and returns 2."
+    },
+    {
+      "id": 41,
+      "type": "multiple",
+      "question": "Which are **falsy** in Ruby?",
+      "options": {"A": "false", "B": "nil", "C": "0", "D": "\"\""},
+      "answer": ["A", "B"],
+      "explanation": "Only false and nil are falsy. 0 and \"\" are truthy."
+    },
+    {
+      "id": 42,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ncase\nwhen false then puts \"A\"\nwhen nil then puts \"B\"\nelse puts \"C\"\nend\n```",
+      "options": {"A": "A", "B": "B", "C": "C", "D": "Nothing"},
+      "answer": "C",
+      "explanation": "case without value: each when is a condition. When false and when nil are both falsy, so neither branch runs. The else runs and prints \"C\"."
+    },
+    {
+      "id": 43,
+      "type": "single",
+      "question": "In **case value**, which **when** is chosen if several match?",
+      "options": {"A": "The first matching when", "B": "The last matching when", "C": "All matching whens", "D": "Error"},
+      "answer": "A",
+      "explanation": "case evaluates whens in order and runs only the first one that === the value. No fall-through like C switch."
+    },
+    {
+      "id": 44,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 5\nif x == 5 then puts \"five\" end\n```",
+      "options": {"A": "five", "B": "nil", "C": "5", "D": "true"},
+      "answer": "A",
+      "explanation": "then is optional; it separates condition from body. x == 5 is true, so \"five\" is printed."
+    },
+    {
+      "id": 45,
+      "type": "single",
+      "question": "What is the value of `if 0; 1; end`?",
+      "options": {"A": "1", "B": "0", "C": "nil", "D": "true"},
+      "answer": "A",
+      "explanation": "0 is truthy, so the if branch runs. The last (and only) expression is 1, so the if returns 1."
+    }
+  ]
+}

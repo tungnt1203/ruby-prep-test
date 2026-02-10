@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Module Definition",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which keyword defines a **module** in Ruby?",
+      "options": {"A": "module", "B": "Module", "C": "mixin", "D": "namespace"},
+      "answer": "A",
+      "explanation": "Modules are defined with module ModuleName ... end. Module names are constants (uppercase). Modules cannot be instantiated (no .new)."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "Can you call **.new** on a module?",
+      "options": {"A": "Yes", "B": "No; modules cannot be instantiated", "C": "Only if it includes Class", "D": "Only with new defined"},
+      "answer": "B",
+      "explanation": "Modules are not classes; they have no .new. You include or extend them into classes or objects. Only classes (and their subclasses) can be instantiated."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What does **include** do when used in a class?",
+      "options": {"A": "Adds the module's instance methods as instance methods of the class", "B": "Adds the module as a superclass", "C": "Adds the module's methods as class methods", "D": "Imports the module's constants only"},
+      "answer": "A",
+      "explanation": "include ModuleName mixes in the module's instance methods into the class. Instances of the class can call those methods. The module is inserted in the ancestor chain."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule Greet\n  def say_hi\n    \"Hi!\"\n  end\nend\nclass Person\n  include Greet\nend\nputs Person.new.say_hi\n```",
+      "options": {"A": "Hi!", "B": "Error", "C": "nil", "D": "Person"},
+      "answer": "A",
+      "explanation": "include Greet adds Greet's instance methods to Person. So Person.new has say_hi and we get \"Hi!\"."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What does **extend** do when used on an object?",
+      "options": {"A": "Adds the module's methods as instance methods", "B": "Adds the module's methods as singleton methods of that object", "C": "Inherits from the module", "D": "Includes the module in the class"},
+      "answer": "B",
+      "explanation": "obj.extend(Module) adds the module's instance methods as singleton methods of obj. So only that object gets those methods. Extending a class gives the class those methods as class methods."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def foo\n    \"M#foo\"\n  end\nend\nclass C\n  extend M\nend\nputs C.foo\n```",
+      "options": {"A": "M#foo", "B": "Error (foo not found)", "C": "nil", "D": "C"},
+      "answer": "A",
+      "explanation": "extend M adds M's methods to the singleton class of C (the class object). So C.foo is a class method and returns \"M#foo\"."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What is **prepend** used for?",
+      "options": {"A": "Same as include", "B": "Inserts the module before the class in the method lookup chain", "C": "Adds methods after the class", "D": "Only for class methods"},
+      "answer": "B",
+      "explanation": "prepend Module inserts the module before the class in the ancestor chain. So when you call a method, the module's version is looked up before the class's. Used to override and call super."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the **lookup order** for methods (ancestor chain) when a class **includes** a module?",
+      "options": {"A": "Class first, then module, then superclass", "B": "Module first, then class, then superclass", "C": "Class, then superclass, then included modules", "D": "Depends on include vs prepend"},
+      "answer": "D",
+      "explanation": "With include, the module comes after the class in the chain (class before module). With prepend, the module comes before the class. So lookup order depends on include vs prepend."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What is a module often used as (besides a mixin)?",
+      "options": {"A": "A namespace for constants and classes", "B": "A replacement for class", "C": "A global scope", "D": "A type"},
+      "answer": "A",
+      "explanation": "Modules are used as namespaces: module Math; PI = 3.14; end. You refer to Math::PI or define classes inside: module MyApp; class User; end; end (MyApp::User)."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule N\n  X = 100\nend\nclass K\n  include N\nend\nputs K::X\n```",
+      "options": {"A": "100", "B": "Error", "C": "nil", "D": "N"},
+      "answer": "A",
+      "explanation": "Including a module also makes the module's constants available via the class. So K::X looks up the constant in the included module N and finds 100."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "Can a **class** include **multiple** modules?",
+      "options": {"A": "Yes", "B": "No", "C": "Only two", "D": "Only if they have no name clash"},
+      "answer": "A",
+      "explanation": "A class can include many modules: include A, B, C. Each is added to the ancestor chain. Order of inclusion affects lookup (later includes are typically earlier in the chain for the included modules)."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What does **ancestors** return?",
+      "options": {"A": "An array of modules and classes in the method lookup order", "B": "Only the superclass", "C": "Only included modules", "D": "The class and its subclasses"},
+      "answer": "A",
+      "explanation": "SomeClass.ancestors returns the list of classes and modules in the order used for method lookup (prepended modules, the class, included modules, superclass, etc.)."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule A\n  def who\n    \"A\"\n  end\nend\nmodule B\n  def who\n    \"B\"\n  end\nend\nclass C\n  include A\n  include B\nend\nputs C.new.who\n```",
+      "options": {"A": "B", "B": "A", "C": "Error", "D": "C"},
+      "answer": "A",
+      "explanation": "With include, the last included module (B) is looked up first in the ancestor chain (for included modules). So B#who is found and returns \"B\"."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is **module_function**?",
+      "options": {"A": "Makes the following instance methods also available as module/class methods", "B": "Defines a function", "C": "Same as private", "D": "Creates a singleton module"},
+      "answer": "A",
+      "explanation": "module_function :method_name (or after def method_name) makes that instance method also callable on the module itself (e.g. Math.sqrt). So both obj.method and Module.method work for included objects."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule P\n  def say\n    \"P\"\n  end\nend\nclass Q\n  prepend P\n  def say\n    \"Q\"\n  end\nend\nputs Q.new.say\n```",
+      "options": {"A": "P", "B": "Q", "C": "Error", "D": "PQ"},
+      "answer": "A",
+      "explanation": "prepend P puts P before Q in the ancestor chain. So when we call say, P#say is found first and returns \"P\". To get \"Q\" we would call super from P."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "How do you **refer to a constant** inside another module (namespace)?",
+      "options": {"A": "ModuleName::ConstantName", "B": "ModuleName.ConstantName", "C": "ModuleName->ConstantName", "D": "ModuleName[ConstantName]"},
+      "answer": "A",
+      "explanation": "The scope operator :: is used: ModuleName::ConstantName or ModuleName::NestedClass. So File::SEPARATOR, Math::PI."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "Can a **module** include another **module**?",
+      "options": {"A": "Yes", "B": "No", "C": "Only one", "D": "Only if it has no methods"},
+      "answer": "A",
+      "explanation": "Modules can include other modules: module A; include B; end. When a class includes A, it gets both A's and B's methods (through the ancestor chain)."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule Helper\n  def self.info\n    \"Helper module\"\n  end\nend\nputs Helper.info\n```",
+      "options": {"A": "Helper module", "B": "Error", "C": "nil", "D": "Helper"},
+      "answer": "A",
+      "explanation": "def self.info inside a module defines a method on the module itself (singleton method). So Helper.info is valid and returns \"Helper module\"."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the difference between **include** and **extend** on a **class**?",
+      "options": {"A": "include adds instance methods; extend adds class (singleton) methods", "B": "They are the same", "C": "include is for constants; extend is for methods", "D": "extend adds instance methods"},
+      "answer": "A",
+      "explanation": "In a class: include M adds M's methods as instance methods (for instances of the class). extend M adds M's methods as class methods (singleton methods of the class object)."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What does **prepend** do to the **ancestor chain**?",
+      "options": {"A": "Inserts the module between the class and its superclass", "B": "Inserts the module before the class (so module methods are found first)", "C": "Appends the module after the superclass", "D": "Replaces the class"},
+      "answer": "B",
+      "explanation": "prepend inserts the module before the class in the ancestor chain. So when you call a method on an instance, the prepended module's version is looked up before the class's."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which can you do with a **module**?",
+      "options": {"A": "Define instance methods", "B": "Define constants", "C": "include it in a class", "D": "Call .new on it"},
+      "answer": ["A", "B", "C"],
+      "explanation": "Modules can have instance methods, constants, and be included or extended. They do not have .new (D is false)."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def self.x\n    1\n  end\nend\nclass C\n  include M\nend\nputs C.new.x\n```",
+      "options": {"A": "1", "B": "Error (undefined method x)", "C": "nil", "D": "M"},
+      "answer": "B",
+      "explanation": "def self.x defines a method on the module M (M.x), not an instance method. include M only adds instance methods. So C.new has no x. We get NoMethodError (or undefined method x)."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is **Kernel** in Ruby?",
+      "options": {"A": "A module included in Object; provides methods like puts, p, raise", "B": "A class", "C": "The root module", "D": "A built-in that cannot be included"},
+      "answer": "A",
+      "explanation": "Kernel is a module included by Object. So every object has Kernel's instance methods (puts, p, raise, gets, etc.). They appear as global functions because main is the receiver."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule X\n  PI = 3\nend\nmodule Y\n  include X\n  def value\n    PI\n  end\nend\nclass Z\n  include Y\nend\nputs Z.new.value\n```",
+      "options": {"A": "3", "B": "Error", "C": "nil", "D": "X"},
+      "answer": "A",
+      "explanation": "Y includes X, so Y (and classes that include Y) have access to X's constants. Z.new.value runs in context where PI is resolved; it finds X::PI = 3."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "How do you define a **nested module**?",
+      "options": {"A": "module Outer; module Inner; end; end (then Outer::Inner)", "B": "module Outer.Inner", "C": "nested module Inner in Outer", "D": "Ruby does not support nested modules"},
+      "answer": "A",
+      "explanation": "module Outer; module Inner; end; end defines Outer and Outer::Inner. You can also write module Outer::Inner ... end if Outer already exists."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule A\n  def m\n    \"A\"\n  end\nend\nclass B\n  include A\n  def m\n    super + \"B\"\n  end\nend\nputs B.new.m\n```",
+      "options": {"A": "AB", "B": "A", "C": "B", "D": "Error"},
+      "answer": "A",
+      "explanation": "B#m overrides and calls super, which invokes A#m (returns \"A\"). Then we add \"B\", so the result is \"AB\"."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "Can the same **module** be **included** in a class more than once?",
+      "options": {"A": "No; Ruby ignores duplicate includes", "B": "Yes; it appears twice in ancestors", "C": "Yes; it raises an error", "D": "Only with extend"},
+      "answer": "A",
+      "explanation": "Including the same module again has no effect; Ruby keeps a single copy in the ancestor chain. So include M; include M is the same as include M."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is **Enumerable**?",
+      "options": {"A": "A module that can be included to get each, map, select, etc. (needs each)", "B": "A class", "C": "A keyword", "D": "Part of Kernel"},
+      "answer": "A",
+      "explanation": "Enumerable is a module. You include it in your class and define each; then you get map, select, find, reduce, etc. Array and Hash include Enumerable."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nmodule M\n  def f\n    1\n  end\nend\nobj = Object.new\nobj.extend M\nputs obj.f\n```",
+      "options": {"A": "1", "B": "Error", "C": "nil", "D": "M"},
+      "answer": "A",
+      "explanation": "extend M adds M's instance methods as singleton methods of obj. So obj.f calls M#f and returns 1."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is **Comparable**?",
+      "options": {"A": "A module; include it and define <=> to get <, <=, ==, >=, >, between?", "B": "A class", "C": "An operator", "D": "Part of Object"},
+      "answer": "A",
+      "explanation": "Comparable is a module. You define <=> (spaceship) and include Comparable; you get <, <=, ==, >=, >, and between?. Used by Numeric, String, Time, etc."
+    }
+  ]
+}

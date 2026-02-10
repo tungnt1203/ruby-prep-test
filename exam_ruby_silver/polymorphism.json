@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Object Orientation: Polymorphism",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "What is **polymorphism** in object-oriented programming?",
+      "options": {"A": "The ability of different objects to respond to the same message in their own way", "B": "Having many classes in a program", "C": "Inheritance from multiple parents", "D": "The same class having many methods"},
+      "answer": "A",
+      "explanation": "Polymorphism means \"many forms\": different objects can respond to the same method name (message) with behavior appropriate to their type. Same interface, different implementations."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "In Ruby, how is polymorphism often achieved?",
+      "options": {"A": "Method overriding and duck typing", "B": "Only through inheritance", "C": "Only through interfaces (like Java)", "D": "Through abstract classes only"},
+      "answer": "A",
+      "explanation": "Ruby uses method overriding (subclass redefines a method) and duck typing: objects of unrelated classes can respond to the same method name. There are no formal interfaces; if an object responds to the message, it can be used polymorphically."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is **duck typing**?",
+      "options": {"A": "\"If it walks like a duck and quacks like a duck\" — we care about behavior (methods), not class", "B": "A type of inheritance", "C": "Using the Duck class", "D": "Static type checking"},
+      "answer": "A",
+      "explanation": "Duck typing: we don't check the object's class; we use it if it responds to the methods we need. So any object with a to_s method can be used where we call to_s. No need for a common base class or interface."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Animal\n  def speak\n    \"sound\"\n  end\nend\nclass Dog < Animal\n  def speak\n    \"woof\"\n  end\nend\nputs Dog.new.speak\n```",
+      "options": {"A": "woof", "B": "sound", "C": "Error", "D": "Dog"},
+      "answer": "A",
+      "explanation": "Dog overrides speak. When we call speak on a Dog instance, the overriding method (Dog#speak) is used. This is polymorphism via inheritance and overriding."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What is **method overriding**?",
+      "options": {"A": "A subclass defining a method with the same name as the superclass", "B": "Replacing a method with a variable", "C": "Making a method private", "D": "Calling a method with different arguments"},
+      "answer": "A",
+      "explanation": "Overriding: a subclass defines a method with the same name as the superclass. When called on an instance of the subclass, the subclass's version is used (polymorphism)."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\n[1, \"hi\", 3.14].each { |x| puts x.to_s }\n```",
+      "options": {"A": "1 then hi then 3.14", "B": "Error (different types)", "C": "Integer String Float", "D": "123.14"},
+      "answer": "A",
+      "explanation": "Each object (Integer, String, Float) responds to to_s in its own way. We don't check the class; we just call to_s. This is polymorphism (and duck typing): same message, different behavior."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "How can you call the **overridden** method from the subclass?",
+      "options": {"A": "super", "B": "parent.method", "C": "base.call", "D": "override"},
+      "answer": "A",
+      "explanation": "super calls the same-named method in the superclass (or next in the ancestor chain). So you can override and still use the parent's implementation, then add or change behavior."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef describe(obj)\n  obj.to_s\nend\nputs describe(42)\nputs describe(\"hello\")\nputs describe([1, 2])\n```",
+      "options": {"A": "42 then hello then [1, 2]", "B": "Error (different types)", "C": "Integer then String then Array", "D": "Same output for all"},
+      "answer": "A",
+      "explanation": "describe accepts any object and calls to_s. Each type implements to_s differently. Polymorphism: one method (describe), many behaviors depending on the object passed."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "Do objects need to **share a common superclass** to be used polymorphically in Ruby?",
+      "options": {"A": "No; duck typing allows unrelated classes to respond to the same message", "B": "Yes", "C": "Only for built-in classes", "D": "Only when using super"},
+      "answer": "A",
+      "explanation": "In Ruby, polymorphism does not require a common superclass or interface. If two classes both define a method with the same name, we can call that method on either (duck typing)."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass A\n  def m\n    \"A\"\n  end\nend\nclass B < A\n  def m\n    super + \"B\"\n  end\nend\nputs B.new.m\n```",
+      "options": {"A": "AB", "B": "A", "C": "B", "D": "Error"},
+      "answer": "A",
+      "explanation": "B#m overrides and calls super, which runs A#m (returns \"A\"). Then we add \"B\", so the result is \"AB\". Overriding with extension of behavior."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What does **respond_to?** do?",
+      "options": {"A": "Returns true if the object has the given method", "B": "Calls the method", "C": "Returns the method object", "D": "Checks if the object is nil"},
+      "answer": "A",
+      "explanation": "obj.respond_to?(:method_name) returns true if the object has that method (public or depending on second arg). Used to check capability before calling (optional in duck typing)."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Cat\n  def speak\n    \"meow\"\n  end\nend\nclass Dog\n  def speak\n    \"woof\"\n  end\nend\n[C cat.new, Dog.new].each { |a| puts a.speak }\n```",
+      "options": {"A": "Error (typo Cat.new)", "B": "meow then woof", "C": "speak then speak", "D": "Cat then Dog"},
+      "answer": "A",
+      "explanation": "The code has a typo: [C cat.new, ...] should be [Cat.new, ...]. So we get an error (undefined local variable or method). If it were [Cat.new, Dog.new], output would be meow then woof — polymorphism without a common superclass."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Cat\n  def speak\n    \"meow\"\n  end\nend\nclass Dog\n  def speak\n    \"woof\"\n  end\nend\n[Cat.new, Dog.new].each { |a| puts a.speak }\n```",
+      "options": {"A": "meow then woof", "B": "Error (no common class)", "C": "speak then speak", "D": "Cat then Dog"},
+      "answer": "A",
+      "explanation": "Cat and Dog are unrelated classes but both respond to speak. We iterate and call speak on each; each object responds in its own way. Polymorphism via duck typing."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "Why is the **+** operator polymorphic in Ruby?",
+      "options": {"A": "Different classes (Integer, String, Array, etc.) define + with different behavior", "B": "+ is a special keyword", "C": "Only Numeric has +", "D": "+ is defined in Object"},
+      "answer": "A",
+      "explanation": "1+2 => 3, \"a\"+\"b\" => \"ab\", [1]+[2] => [1,2]. Each class defines + for its type. Same message (+), different behavior — polymorphism."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Parent\n  def greet\n    \"Hello from Parent\"\n  end\nend\nclass Child < Parent\n  def greet\n    \"Hello from Child\"\n  end\nend\np = Child.new\nputs p.greet\n```",
+      "options": {"A": "Hello from Child", "B": "Hello from Parent", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "p is a Child instance. When we call greet, the method lookup finds Child#greet first (the overriding method). So we get \"Hello from Child\" — polymorphic behavior based on actual class."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "In Ruby, when you call a method on an object, how is the **implementation** chosen?",
+      "options": {"A": "By the object's class (and ancestor chain) at runtime", "B": "By the variable's declared type", "C": "By the first defined method", "D": "By the caller's class"},
+      "answer": "A",
+      "explanation": "Method dispatch is dynamic: we look at the object's actual class and walk the ancestor chain to find the method. So the implementation is chosen at runtime based on the receiver's class — enabling polymorphism."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Bird\n  def fly\n    \"flying\"\n  end\nend\nclass Penguin < Bird\n  def fly\n    \"cannot fly\"\n  end\nend\nb = Penguin.new\nputs b.fly\n```",
+      "options": {"A": "cannot fly", "B": "flying", "C": "Error", "D": "Penguin"},
+      "answer": "A",
+      "explanation": "Penguin overrides fly. b is a Penguin, so b.fly calls Penguin#fly and returns \"cannot fly\". The variable b could hold any Bird; at runtime we use the actual class (Penguin) — polymorphism."
+    },
+    {
+      "id": 18,
+      "type": "multiple",
+      "question": "Which support **polymorphism** in Ruby?",
+      "options": {"A": "Method overriding in subclasses", "B": "Duck typing (same method name, different classes)", "C": "Modules mixed in with include", "D": "Only single inheritance"},
+      "answer": ["A", "B", "C"],
+      "explanation": "Overriding (A), duck typing (B), and mixins (C) all allow different objects to respond to the same message. Single inheritance (D) is a language rule, not what \"supports\" polymorphism; polymorphism is supported by dynamic dispatch and duck typing."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs 1.respond_to?(:to_s)\nputs nil.respond_to?(:to_s)\n```",
+      "options": {"A": "true then true", "B": "true then false", "C": "false then true", "D": "false then false"},
+      "answer": "A",
+      "explanation": "Almost every object in Ruby has to_s (from Object or Kernel). So 1 and nil both respond_to?(:to_s) => true. Used to check before calling in a polymorphic way."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "Why might you use **respond_to?** before calling a method?",
+      "options": {"A": "To safely handle different object types in a polymorphic way", "B": "To make the method faster", "C": "To define the method", "D": "To inherit from Object"},
+      "answer": "A",
+      "explanation": "When you accept various object types (duck typing), you can use respond_to? to check if the object supports a method before calling it, avoiding NoMethodError. Optional defensive style."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Base\n  def run\n    \"base\"\n  end\nend\nclass Derived < Base\n  def run\n    super.upcase\n  end\nend\nputs Derived.new.run\n```",
+      "options": {"A": "BASE", "B": "base", "C": "DERIVED", "D": "Error"},
+      "answer": "A",
+      "explanation": "Derived#run calls super (Base#run returns \"base\"), then upcase on that string => \"BASE\". Override and transform the parent's result."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "In **duck typing**, what matters most?",
+      "options": {"A": "What methods the object responds to", "B": "The object's class name", "C": "The object's superclass", "D": "Whether the object is frozen"},
+      "answer": "A",
+      "explanation": "Duck typing: we care about behavior (what methods the object has), not the class. If it has the methods we need, we use it. \"If it quacks like a duck...\""
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef print_twice(obj)\n  puts obj.to_s\n  puts obj.to_s\nend\nprint_twice(42)\nprint_twice(\"hi\")\n```",
+      "options": {"A": "42 42 then hi hi", "B": "42 then hi", "C": "Error", "D": "Integer Integer then String String"},
+      "answer": "A",
+      "explanation": "print_twice calls to_s on whatever object is passed. 42.to_s => \"42\"; \"hi\".to_s => \"hi\". Same code, different behavior per type — polymorphism."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "Can **modules** contribute to polymorphism?",
+      "options": {"A": "Yes; different classes that include the same module can be used polymorphically", "B": "No; only inheritance", "C": "Only if the module is abstract", "D": "Only for class methods"},
+      "answer": "A",
+      "explanation": "When several classes include the same module, they all get the same method names. Code that expects \"something that responds to method X\" can work with any of those classes — polymorphism via mixins."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass X\n  def name\n    \"X\"\n  end\nend\nclass Y < X\n  def name\n    \"Y\"\n  end\nend\nobj = Y.new\nputs obj.name\n```",
+      "options": {"A": "Y", "B": "X", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "obj is an instance of Y. Method lookup finds Y#name first, so we get \"Y\". The variable could be typed as X (e.g. obj = Y.new) but the actual class (Y) determines which method runs — polymorphism."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What does **dynamic dispatch** mean?",
+      "options": {"A": "The method to run is determined at runtime by the receiver's class", "B": "Methods are defined at runtime only", "C": "Variables can change type", "D": "Only dynamic languages have it"},
+      "answer": "A",
+      "explanation": "Dynamic dispatch: when you call obj.method, which method runs is decided at runtime based on obj's class (and ancestors). This is what makes polymorphism work in Ruby."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass A\n  def f\n    1\n  end\nend\nclass B < A\n  def f\n    super + 1\n  end\nend\nclass C < B\n  def f\n    super + 1\n  end\nend\nputs C.new.f\n```",
+      "options": {"A": "3", "B": "1", "C": "2", "D": "Error"},
+      "answer": "A",
+      "explanation": "C#f calls super => B#f returns 2 (super+1 from A's 1). B#f's super is A#f => 1, so B#f returns 2. C#f gets 2 from super and adds 1 => 3."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "In Ruby, does **polymorphism** require interfaces or abstract classes?",
+      "options": {"A": "No; any object that responds to the message can be used", "B": "Yes; you must define an interface", "C": "Only for built-in classes", "D": "Only when using include"},
+      "answer": "A",
+      "explanation": "Ruby has no formal interfaces or abstract classes (in the Java sense). Polymorphism is based on the message: if an object responds to the method you call, it works. Duck typing and dynamic dispatch provide polymorphism without explicit types."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nitems = [1, \"two\", [3]]\nitems.each { |x| puts x.class }\n```",
+      "options": {"A": "Integer then String then Array", "B": "1 then two then [3]", "C": "Error (mixed types)", "D": "Object then Object then Object"},
+      "answer": "A",
+      "explanation": "each yields each element. We call .class on each; each object responds to class (polymorphism). So we print Integer, String, Array. Mixed collections are fine in Ruby."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is **subtype polymorphism** (in the context of Ruby)?",
+      "options": {"A": "When a subclass instance is used where a superclass is expected; the subclass's overridden method runs", "B": "When two classes have the same name", "C": "When a class has many subclasses", "D": "When you use super"},
+      "answer": "A",
+      "explanation": "Subtype polymorphism: we treat a subclass instance as its superclass type (e.g. Dog as Animal). When we call a method, the actual class (Dog) determines which implementation runs — the overridden one. Same interface (method name), behavior of the concrete type."
+    }
+  ]
+}

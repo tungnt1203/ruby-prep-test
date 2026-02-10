@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Class Definition",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which keyword defines a **class** in Ruby?",
+      "options": {"A": "class", "B": "Class", "C": "struct", "D": "type"},
+      "answer": "A",
+      "explanation": "Classes are defined with class ClassName ... end. Class names are constants and should start with an uppercase letter."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is **initialize** in a class?",
+      "options": {"A": "A private method called when an object is created with .new", "B": "A class method", "C": "Optional; only for inheritance", "D": "Called automatically by Ruby when the class is loaded"},
+      "answer": "A",
+      "explanation": "initialize is an instance method that Ruby calls automatically after Object#allocate when you call ClassName.new(args). It is the constructor. It is private by default (called only through new)."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Person\n  def initialize(name)\n    @name = name\n  end\n  def say_hi\n    \"Hi, #{@name}\"\n  end\nend\np = Person.new(\"Alice\")\nputs p.say_hi\n```",
+      "options": {"A": "Hi, Alice", "B": "Hi, ", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "Person.new(\"Alice\") creates an object and calls initialize(\"Alice\"), setting @name = \"Alice\". say_hi uses @name, so we get \"Hi, Alice\"."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What does **attr_reader :name** do?",
+      "options": {"A": "Defines a getter method name that returns @name", "B": "Defines both getter and setter", "C": "Defines a setter only", "D": "Creates an instance variable @name only"},
+      "answer": "A",
+      "explanation": "attr_reader :name defines def name; @name; end (a getter). attr_writer defines the setter; attr_accessor defines both."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What does **attr_accessor** provide?",
+      "options": {"A": "Getter only", "B": "Setter only", "C": "Both getter and setter", "D": "Initializer only"},
+      "answer": "C",
+      "explanation": "attr_accessor :name is shorthand for attr_reader :name and attr_writer :name. It defines both name and name= methods."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "How do you specify **inheritance** in Ruby?",
+      "options": {"A": "class Child < Parent", "B": "class Child extends Parent", "C": "class Child : Parent", "D": "class Child inherits Parent"},
+      "answer": "A",
+      "explanation": "class Child < Parent makes Child a subclass of Parent. Child inherits Parent's instance methods (and can override them)."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What does **super** do (without arguments)?",
+      "options": {"A": "Calls the same method in the parent class with the same arguments", "B": "Calls the parent's initialize only", "C": "Returns the parent class", "D": "Raises an error"},
+      "answer": "A",
+      "explanation": "super (no args) passes the current method's arguments to the superclass's version of the same method. super(args) passes explicit arguments."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Animal\n  def speak\n    \"grr\"\n  end\nend\nclass Dog < Animal\n  def speak\n    super + \" woof\"\n  end\nend\nputs Dog.new.speak\n```",
+      "options": {"A": "grr woof", "B": "woof", "C": "grr", "D": "Error"},
+      "answer": "A",
+      "explanation": "Dog#speak calls super, which invokes Animal#speak (returns \"grr\"). Then we add \" woof\", so the result is \"grr woof\"."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What method creates a **new instance** of a class?",
+      "options": {"A": "new", "B": "create", "C": "alloc", "D": "build"},
+      "answer": "A",
+      "explanation": "ClassName.new(args) allocates a new object and calls initialize(args) on it. new is a class method inherited from Class."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What does **object.class** return?",
+      "options": {"A": "The class of which object is an instance", "B": "The superclass", "C": "The class name as a string", "D": "Object"},
+      "answer": "A",
+      "explanation": "object.class returns the Class object (e.g. String, Array). So \"hello\".class is String. Used for type checking."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is **instance_of?** used for?",
+      "options": {"A": "Checks if object is an instance of the exact class (not subclass)", "B": "Checks if object has a method", "C": "Same as is_a?", "D": "Checks if object is nil"},
+      "answer": "A",
+      "explanation": "obj.instance_of?(SomeClass) is true only when obj.class == SomeClass. Subclasses return false. For subclasses use is_a? or kind_of?."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Box\n  attr_accessor :value\nend\nb = Box.new\nb.value = 10\nputs b.value\n```",
+      "options": {"A": "10", "B": "nil", "C": "Error (no initialize)", "D": "0"},
+      "answer": "A",
+      "explanation": "attr_accessor :value creates @value, value (getter), and value= (setter). We can set and get value. initialize is optional; @value starts as nil until set."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "Are **instance variables** inherited by subclasses?",
+      "options": {"A": "No; each object has its own instance variables", "B": "Yes; subclasses share the parent's instance variables", "C": "Only if they are public", "D": "Only in initialize"},
+      "answer": "A",
+      "explanation": "Instance variables belong to each object. They are not \"inherited\" in the sense of being shared. When a subclass's method runs, it can set @var on that instance; the subclass does not automatically get the parent's @var names unless the parent's methods run and set them (e.g. via super)."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is **self** inside an instance method definition?",
+      "options": {"A": "The class", "B": "The instance (object) that received the method call", "C": "The superclass", "D": "main"},
+      "answer": "B",
+      "explanation": "Inside an instance method, self is the receiver (the object on which the method was called). So you can call other instance methods and access instance variables."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is **self** inside the class body (outside any method)?",
+      "options": {"A": "The class itself", "B": "An instance", "C": "nil", "D": "The superclass"},
+      "answer": "A",
+      "explanation": "In the class body (outside method definitions), self is the class. So def self.foo defines a class method."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass A\n  def m\n    1\n  end\nend\nclass B < A\n  def m\n    super + 1\n  end\nend\nputs B.new.m\n```",
+      "options": {"A": "2", "B": "1", "C": "Error", "D": "3"},
+      "answer": "A",
+      "explanation": "B.new.m calls B#m, which calls super (A#m returns 1), then 1+1=2. So we print 2."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What does **attr_writer :name** define?",
+      "options": {"A": "def name; @name; end", "B": "def name=(v); @name = v; end", "C": "Both getter and setter", "D": "def name(v); @name = v; end"},
+      "answer": "B",
+      "explanation": "attr_writer :name defines the setter: def name=(value); @name = value; end. The method name is name= (with the equals sign)."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "Can a class **inherit** from more than one class in Ruby?",
+      "options": {"A": "No; Ruby has single inheritance only", "B": "Yes", "C": "Only with include", "D": "Only for modules"},
+      "answer": "A",
+      "explanation": "Ruby has single inheritance: a class can have only one superclass. Multiple behavior is achieved with mixins (include/prepend modules)."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the **superclass** of a class that does not specify one?",
+      "options": {"A": "Object", "B": "BasicObject", "C": "nil", "D": "Kernel"},
+      "answer": "A",
+      "explanation": "class Foo (with no < Parent) implicitly inherits from Object. So Foo.superclass is Object. Object inherits from BasicObject."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass C\n  @@count = 0\n  def initialize\n    @@count += 1\n  end\n  def self.count\n    @@count\n  end\nend\nC.new; C.new\nputs C.count\n```",
+      "options": {"A": "2", "B": "0", "C": "1", "D": "Error"},
+      "answer": "A",
+      "explanation": "@@count is a class variable, shared by the class and all instances. We create two instances, so initialize runs twice and @@count becomes 2. C.count returns 2."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which are **attr** helpers in Ruby?",
+      "options": {"A": "attr_reader", "B": "attr_writer", "C": "attr_accessor", "D": "attr"},
+      "answer": ["A", "B", "C", "D"],
+      "explanation": "attr_reader, attr_writer, and attr_accessor are standard. attr :name is like attr_reader; attr :name, true (second arg true) adds writer too (legacy)."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is **is_a?** used for?",
+      "options": {"A": "Checks if object is an instance of the class or of a subclass", "B": "Same as instance_of?", "C": "Checks if object has an attribute", "D": "Checks object identity"},
+      "answer": "A",
+      "explanation": "obj.is_a?(SomeClass) is true if obj is an instance of SomeClass or any of its subclasses. Alias: kind_of?. So (subclass_instance).is_a?(Parent) is true."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Parent\n  def greet\n    \"Hello\"\n  end\nend\nclass Child < Parent\nend\nputs Child.new.greet\n```",
+      "options": {"A": "Hello", "B": "Error (greet not in Child)", "C": "nil", "D": "Child"},
+      "answer": "A",
+      "explanation": "Child inherits from Parent, so it has the greet method. Child.new.greet calls Parent's greet and returns \"Hello\"."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "When is the **class body** (code outside methods) executed?",
+      "options": {"A": "When each instance is created", "B": "When the class is first defined (loaded)", "C": "Never", "D": "When the class method is called"},
+      "answer": "B",
+      "explanation": "The class body runs once when the class definition is evaluated (e.g. when the file is loaded or the class block is executed). It is not run per instance."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass X\n  def self.f\n    \"class method\"\n  end\nend\nputs X.f\n```",
+      "options": {"A": "class method", "B": "Error", "C": "X", "D": "nil"},
+      "answer": "A",
+      "explanation": "def self.f defines a method on the class X. So X.f calls that method and returns \"class method\"."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "How do you call **super** with **no arguments** when the current method has parameters?",
+      "options": {"A": "super passes the current method's arguments to the superclass", "B": "super() passes no arguments", "C": "super and super() are the same", "D": "super cannot be called with no args"},
+      "answer": "B",
+      "explanation": "super (no parentheses) forwards the current method's arguments. super() explicitly passes no arguments. Use super() when you want to call the parent with no args."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What does **ClassName.superclass** return?",
+      "options": {"A": "The parent class, or nil for BasicObject", "B": "The first included module", "C": "Object always", "D": "The class itself"},
+      "answer": "A",
+      "explanation": "Every class has a superclass (except BasicObject). SomeClass.superclass returns the parent class. BasicObject.superclass is nil."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "Can **initialize** take parameters?",
+      "options": {"A": "Yes; they are passed from .new", "B": "No", "C": "Only keyword arguments", "D": "Only one parameter"},
+      "answer": "A",
+      "explanation": "def initialize(a, b) is valid. When you call Person.new(1, 2), those arguments are passed to initialize. So initialize(1, 2) is called."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What is **nested class** syntax?\n\nDefining a class inside another class.",
+      "options": {"A": "class Outer; class Inner; end; end (Inner is Outer::Inner)", "B": "class Outer::Inner", "C": "nested class Outer.Inner", "D": "Ruby does not support nested classes"},
+      "answer": "A",
+      "explanation": "class Outer; class Inner; end; end defines Outer and Outer::Inner. Inner is a constant under Outer. You can also write class Outer::Inner ... end if Outer already exists."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Animal\n  def speak\n    \"animal\"\n  end\nend\nclass Cat < Animal\n  def speak\n    \"meow\"\n  end\nend\nputs Cat.new.speak\n```",
+      "options": {"A": "meow", "B": "animal", "C": "animal meow", "D": "Error"},
+      "answer": "A",
+      "explanation": "Cat overrides speak. Cat.new.speak calls Cat#speak (the overriding method), which returns \"meow\". The parent's speak is not called unless we use super."
+    }
+  ]
+}

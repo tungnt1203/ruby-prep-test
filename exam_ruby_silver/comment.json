@@ -1,0 +1,197 @@
+{
+  "topic": "Ruby 3.1.x Silver - Comment",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which symbol is used to start a single-line comment in Ruby?\n\n```ruby\n# This is a comment\nputs \"Hello\"\n```",
+      "options": {"A": "//", "B": "#", "C": "/*", "D": "--"},
+      "answer": "B",
+      "explanation": "In Ruby, the # character starts a single-line comment. // and /* */ are used in JavaScript/C/Java; -- is typically used in SQL."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What will be the output of the following code?\n\n```ruby\nputs \"Hello\" # puts \"World\"\n```",
+      "options": {"A": "Hello World", "B": "World", "C": "Hello", "D": "Nothing"},
+      "answer": "C",
+      "explanation": "Everything after # on the same line is a comment and is ignored. Only puts \"Hello\" is executed, so the output is Hello."
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "question": "Which of the following are valid ways to write comments in Ruby?",
+      "options": {"A": "# This is a comment", "B": "=begin\nThis is a multi-line comment\n=end", "C": "// This is a comment", "D": "/* comment */"},
+      "answer": ["A", "B"],
+      "explanation": "Ruby supports single-line comments with # and multi-line comments with =begin ... =end. // and /* */ are not valid Ruby comment syntax."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the correct syntax for a multi-line comment in Ruby?\n\n```ruby\n=begin\nThis is a comment\n=end\n```",
+      "options": {"A": "/* comment */", "B": "<!-- comment -->", "C": "=begin ... =end", "D": "// comment"},
+      "answer": "C",
+      "explanation": "Multi-line comments in Ruby use =begin at the start and =end at the end. /* */ is used in C/Java; <!-- --> is HTML."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What happens if `=begin` is indented with spaces?\n\n```ruby\n  =begin\n  comment\n  =end\n```",
+      "options": {"A": "Works normally", "B": "Raises syntax error", "C": "Ignored as comment", "D": "Prints comment"},
+      "answer": "B",
+      "explanation": "=begin and =end must start at column 1 (no leading whitespace or indentation). If indented, Ruby raises a syntax error."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the output of the following code?\n\n```ruby\n# puts \"Hello\"\nputs \"World\"\n```",
+      "options": {"A": "Hello", "B": "World", "C": "Hello World", "D": "Nothing"},
+      "answer": "B",
+      "explanation": "The first line is a comment, so puts \"Hello\" is not executed. Only puts \"World\" runs, producing the output World."
+    },
+    {
+      "id": 7,
+      "type": "multiple",
+      "question": "Which statements about Ruby comments are correct?",
+      "options": {"A": "Comments are ignored by the Ruby interpreter", "B": "Comments can appear after code on the same line", "C": "Comments affect program execution", "D": "Multi-line comments use =begin and =end"},
+      "answer": ["A", "B", "D"],
+      "explanation": "Comments are ignored by the interpreter (A), can appear after code on the same line (B), and multi-line comments use =begin/=end (D). Comments do not affect execution (C is false)."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs 1 + 1 # + 5\n```",
+      "options": {"A": "2", "B": "6", "C": "1", "D": "Error"},
+      "answer": "A",
+      "explanation": "The part # + 5 is a comment, so only 1 + 1 is evaluated, resulting in 2."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "Which line is treated as a comment?\n\n```ruby\n=begin comment\n=end\n```",
+      "options": {"A": "Only =begin", "B": "Only =end", "C": "Both lines and text between them", "D": "None"},
+      "answer": "C",
+      "explanation": "Everything from the =begin line to the =end line (including both lines and the text between them) is treated as a comment."
+    },
+    {
+      "id": 10,
+      "type": "multiple",
+      "question": "Select all true statements about Ruby comment behavior with code below:\n\n```ruby\nputs \"A\" # comment\n# puts \"B\"\n```",
+      "options": {"A": "\"A\" will be printed", "B": "\"B\" will be printed", "C": "Second line is ignored", "D": "Comment changes program result"},
+      "answer": ["A", "C"],
+      "explanation": "The first line executes puts \"A\", so A is printed (A is correct). The second line is a comment and is ignored (C is correct). B is not printed; comments do not change the program result (B and D are false)."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What happens if `=end` is missing?\n\n```ruby\n=begin\ncomment\n```",
+      "options": {"A": "Program runs normally", "B": "Syntax error occurs", "C": "Comment is ignored", "D": "Ruby auto-closes it"},
+      "answer": "B",
+      "explanation": "A block comment must have both =begin and =end. Missing =end means Ruby cannot find where the comment ends and raises a syntax error."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "Which comment style is most commonly used in Ruby production code?",
+      "options": {"A": "# single-line comment", "B": "=begin =end block", "C": "/* */", "D": "//"},
+      "answer": "A",
+      "explanation": "Single-line comments with # are the most common in Ruby code. The =begin/=end block is used less often and can cause errors if indented."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output of the following Ruby code?\n\n```ruby\nputs \"Ruby\" # comment here\n# puts \"Rails\"\n```",
+      "options": {"A": "Ruby Rails", "B": "Rails", "C": "Ruby", "D": "Nothing"},
+      "answer": "C",
+      "explanation": "Only puts \"Ruby\" is executed. The part after # on line 1 and the entire second line are comments, so Rails is not printed."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "Which of the following lines will cause a syntax error?\n\n```ruby\n=begin\ncomment\n  =end\n```",
+      "options": {"A": "=begin must start at the beginning of the line", "B": "Ruby allows indentation for =end", "C": "Both are always valid", "D": "Ruby ignores indentation rules"},
+      "answer": "A",
+      "explanation": "=end must start at column 1. When =end is indented (has leading whitespace), Ruby reports a syntax error."
+    },
+    {
+      "id": 15,
+      "type": "multiple",
+      "question": "Which of the following are true about Ruby comments?",
+      "options": {"A": "Anything after # on the same line is ignored", "B": "Comments can be placed after code", "C": "Ruby executes comments at runtime", "D": "Comments improve code readability"},
+      "answer": ["A", "B", "D"],
+      "explanation": "Anything after # on the same line is ignored (A). Comments can be placed after code (B) and improve readability (D). Comments are not executed at runtime (C is false)."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs \"A\" # first\nputs \"B\" # second\n```",
+      "options": {"A": "A B", "B": "AB", "C": "A\nB", "D": "Nothing"},
+      "answer": "C",
+      "explanation": "The two puts calls print \"A\" and \"B\" respectively; each puts adds a newline, so the output is A, newline, then B (A\\nB)."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "Which statement about =begin and =end is correct?",
+      "options": {"A": "They can appear anywhere in the line", "B": "They must start at column 1 (no indentation)", "C": "They work only inside methods", "D": "They are deprecated and invalid"},
+      "answer": "B",
+      "explanation": "=begin and =end must be at the beginning of the line (column 1), with no indentation. They can be used anywhere in the file, not only inside methods."
+    },
+    {
+      "id": 18,
+      "type": "multiple",
+      "question": "Given the code below, which lines are ignored by Ruby?\n\n```ruby\nputs 10\n# puts 20\n=begin\nputs 30\n=end\nputs 40\n```",
+      "options": {"A": "puts 10", "B": "puts 20", "C": "puts 30", "D": "puts 40"},
+      "answer": ["B", "C"],
+      "explanation": "The line # puts 20 is a single-line comment; the =begin to =end block is a comment containing puts 30. Both are ignored. puts 10 and puts 40 are executed."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs \"Hello\" # comment\n=begin\nputs \"World\"\n=end\n```",
+      "options": {"A": "Hello World", "B": "World", "C": "Hello", "D": "Nothing"},
+      "answer": "C",
+      "explanation": "Only puts \"Hello\" runs. The part after # and the entire =begin ... =end block are comments, so puts \"World\" is not executed."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "Which symbol comments out the rest of the line in Ruby?",
+      "options": {"A": "//", "B": "#", "C": "--", "D": "/*"},
+      "answer": "B",
+      "explanation": "In Ruby, # comments out from that position to the end of the line. // and /* belong to other languages; -- is commonly used in SQL."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which of the following statements are valid uses of comments in Ruby?",
+      "options": {"A": "# TODO: refactor this method", "B": "# FIXME: bug here", "C": "=begin documentation =end", "D": "// temporary disable code"},
+      "answer": ["A", "B", "C"],
+      "explanation": "# TODO/FIXME and =begin ... =end are valid Ruby comments. // is not Ruby comment syntax, so D is incorrect."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What happens in the following code?\n\n```ruby\nputs \"X\" #\n```",
+      "options": {"A": "Syntax error", "B": "Prints X", "C": "Prints #", "D": "Nothing"},
+      "answer": "B",
+      "explanation": "puts \"X\" is executed; the part from # to end of line (including the # character) is a comment. The result is that X is printed."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "Which of the following is NOT a valid Ruby comment style?",
+      "options": {"A": "# comment", "B": "=begin comment =end", "C": "// comment", "D": "# comment after code"},
+      "answer": "C",
+      "explanation": "Ruby uses # for single-line comments and =begin/=end for multi-line. // is syntax from C/Java/JavaScript, not Ruby."
+    },
+    {
+      "id": 24,
+      "type": "multiple",
+      "question": "Select all correct statements about comment placement in Ruby.",
+      "options": {"A": "Comments can be on their own line", "B": "Comments can appear after statements", "C": "Comments must be inside methods", "D": "Comments can appear inside class definitions"},
+      "answer": ["A", "B", "D"],
+      "explanation": "Comments can be on their own line (A), after statements on the same line (B), and inside class definitions (D). Comments do not have to be inside methods (C is false)."
+    }
+  ]
+}

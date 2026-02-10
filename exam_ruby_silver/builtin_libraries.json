@@ -1,0 +1,365 @@
+{
+  "topic": "Ruby 3.1.x Silver - Built-in Libraries",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "What is the **root** of the default class hierarchy (superclass of Object)?",
+      "options": {"A": "BasicObject", "B": "Object", "C": "Kernel", "D": "NilClass"},
+      "answer": "A",
+      "explanation": "BasicObject is the top of the hierarchy. Object inherits from BasicObject. Most classes inherit from Object. BasicObject has very few methods."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "Which **module** is included in Object and provides methods like puts, p, raise?",
+      "options": {"A": "Kernel", "B": "Object", "C": "IO", "D": "Standard"},
+      "answer": "A",
+      "explanation": "Kernel is included in Object, so every object has Kernel's instance methods (puts, p, raise, gets, rand, etc.). They appear as global methods because main is the receiver."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What does **Object#class** return?",
+      "options": {"A": "The Class object of which the object is an instance", "B": "The class name as a string", "C": "The superclass", "D": "Object"},
+      "answer": "A",
+      "explanation": "obj.class returns the Class object (e.g. \"hello\".class => String). For the name as a string use obj.class.name."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs 5.class\nputs 5.0.class\n```",
+      "options": {"A": "Integer then Float", "B": "Fixnum then Float", "C": "Numeric then Float", "D": "Number then Float"},
+      "answer": "A",
+      "explanation": "In Ruby 3, integers are Integer (Fixnum/Bignum were unified). 5.class is Integer, 5.0.class is Float."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "Which module do you **include** to get <, <=, ==, >=, >, between? (by defining <=>)?",
+      "options": {"A": "Comparable", "B": "Enumerable", "C": "Kernel", "D": "Ordered"},
+      "answer": "A",
+      "explanation": "Define <=> (spaceship) and include Comparable; you get <, <=, ==, >=, >, and between?. Used by String, Numeric, Time."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What does **Enumerable** require you to define to get map, select, find?",
+      "options": {"A": "each", "B": "size", "C": "[]", "D": "iterate"},
+      "answer": "A",
+      "explanation": "Include Enumerable and define each; you get map, select, find, reduce, etc. Array, Hash, Range include Enumerable."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ns = \"hello\"\nputs s.length\nputs s.size\n```",
+      "options": {"A": "5 then 5", "B": "5 then 4", "C": "4 then 5", "D": "Error"},
+      "answer": "A",
+      "explanation": "String#length and String#size are aliases; both return the character count. So 5, 5."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What does **String#split** return by default (no argument)?",
+      "options": {"A": "Array of words (split on whitespace)", "B": "Array of characters", "C": "The string unchanged", "D": "Array of lines"},
+      "answer": "A",
+      "explanation": "split with no argument (or nil) splits on whitespace and returns an array of words. split(\"\") splits into characters; split(\"\\n\") into lines."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\narr = [1, 2, 3]\narr << 4\nputs arr.last\n```",
+      "options": {"A": "4", "B": "3", "C": "[1, 2, 3, 4]", "D": "Error"},
+      "answer": "A",
+      "explanation": "<< appends to the array. arr becomes [1, 2, 3, 4]. last returns the last element, so 4."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What does **Array#compact** do?",
+      "options": {"A": "Removes all nil elements and returns a new array", "B": "Removes duplicates", "C": "Sorts the array", "D": "Flattens nested arrays"},
+      "answer": "A",
+      "explanation": "compact returns a new array with all nil elements removed. compact! mutates in place. uniq removes duplicates; flatten flattens nesting."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nh = { a: 1, b: 2 }\nputs h.keys.inspect\nputs h.key?(:a)\n```",
+      "options": {"A": "[:a, :b] then true", "B": "[\"a\", \"b\"] then false", "C": "[a, b] then true", "D": "Error"},
+      "answer": "A",
+      "explanation": "Hash#keys returns an array of keys (symbols here). key?(:a) returns true if the key exists. So [:a, :b] and true."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What does **Hash#merge** do?",
+      "options": {"A": "Returns a new hash combining both; duplicate keys use the argument's value", "B": "Replaces the receiver", "C": "Same as update", "D": "Merges only symbol keys"},
+      "answer": "A",
+      "explanation": "h1.merge(h2) returns a new hash. Keys in h2 override keys in h1. merge! (or update) mutates the receiver."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs [1, 2, 3].include?(2)\nputs [1, 2, 3].member?(3)\n```",
+      "options": {"A": "true then true", "B": "true then false", "C": "false then true", "D": "2 then 3"},
+      "answer": "A",
+      "explanation": "include? and member? are aliases (from Enumerable). They return true if the element is in the collection. So true, true."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What does **Kernel#puts** do differently from **Kernel#p**?",
+      "options": {"A": "puts calls to_s and adds newline; p calls inspect and adds newline", "B": "They are identical", "C": "p does not add newline", "D": "puts returns nil; p returns the object"},
+      "answer": "A",
+      "explanation": "puts obj prints obj.to_s and a newline (multiple args = multiple lines). p obj prints obj.inspect and a newline (better for debugging). Both return nil."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs [1, 2, 3].find { |n| n > 2 }\nputs [1, 2, 3].select { |n| n > 2 }.inspect\n```",
+      "options": {"A": "3 then [3]", "B": "3 then [1, 2, 3]", "C": "true then [3]", "D": "2 then [3]"},
+      "answer": "A",
+      "explanation": "find (Enumerable) returns the first element for which the block is truthy → 3. select returns all such elements → [3]."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What does **Integer#times** do?",
+      "options": {"A": "Yields 0 to n-1 to the block; returns self", "B": "Returns an array 0..n-1", "C": "Yields 1 to n", "D": "Raises if no block"},
+      "answer": "A",
+      "explanation": "n.times { |i| ... } yields i = 0, 1, ..., n-1. Returns the integer (self). So 3.times yields 0, 1, 2."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs \"hello\".upcase\nputs \"HELLO\".downcase\n```",
+      "options": {"A": "HELLO then hello", "B": "hello then HELLO", "C": "Hello then hello", "D": "Error"},
+      "answer": "A",
+      "explanation": "upcase converts to uppercase; downcase to lowercase. So HELLO and hello."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What does **Array#shift** do?",
+      "options": {"A": "Removes and returns the first element", "B": "Removes the last element", "C": "Adds an element at the beginning", "D": "Sorts the array"},
+      "answer": "A",
+      "explanation": "shift removes and returns the first element. pop removes the last. unshift adds at the beginning."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nh = { \"a\" => 1, \"b\" => 2 }\nputs h[\"a\"]\nputs h[:a]\n```",
+      "options": {"A": "1 then nil", "B": "1 then 1", "C": "nil then 1", "D": "Error"},
+      "answer": "A",
+      "explanation": "Hash keys are compared by eql? and hash. String and Symbol are different keys. h[\"a\"] is 1; h[:a] is nil (no symbol key)."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What does **Enumerable#reduce** (or inject) do?",
+      "options": {"A": "Combines all elements using a block (and optional initial value)", "B": "Reduces the array size", "C": "Returns the minimum", "D": "Same as map"},
+      "answer": "A",
+      "explanation": "reduce(init) { |acc, el| ... } (or inject) runs the block for each element; acc is the accumulated value. [1,2,3].reduce(0) { |s,n| s+n } => 6."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs (-5).abs\nputs 5.abs\n```",
+      "options": {"A": "5 then 5", "B": "-5 then 5", "C": "5 then -5", "D": "Error"},
+      "answer": "A",
+      "explanation": "Numeric#abs returns the absolute value. So (-5).abs is 5 and 5.abs is 5."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What does **String#gsub** return?",
+      "options": {"A": "A new string with all matches replaced", "B": "The receiver (mutated)", "C": "The number of replacements", "D": "An array of matches"},
+      "answer": "A",
+      "explanation": "gsub(pattern, replacement) or gsub(pattern) { } returns a new string with all matches replaced. gsub! mutates the receiver."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs [3, 1, 2].sort.inspect\nputs [3, 1, 2].sort { |a, b| b <=> a }.inspect\n```",
+      "options": {"A": "[1, 2, 3] then [3, 2, 1]", "B": "[1, 2, 3] then [1, 2, 3]", "C": "[3, 1, 2] then [3, 2, 1]", "D": "Error"},
+      "answer": "A",
+      "explanation": "sort uses <=> (ascending by default) → [1, 2, 3]. The block b <=> a reverses order → [3, 2, 1]."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What does **Kernel#raise** do?",
+      "options": {"A": "Raises an exception (same as fail)", "B": "Prints an error message", "C": "Exits the program", "D": "Returns nil"},
+      "answer": "A",
+      "explanation": "raise (or fail) raises an exception. raise \"msg\" raises RuntimeError; raise SomeError, \"msg\" raises the given error class."
+    },
+    {
+      "id": 25,
+      "type": "multiple",
+      "question": "Which are **Enumerable** methods (available when you define each)?",
+      "options": {"A": "map", "B": "select", "C": "length", "D": "find"},
+      "answer": ["A", "B", "D"],
+      "explanation": "map, select, find (and reduce, count, etc.) come from Enumerable. length/size may come from the class itself (e.g. Array#length) or Enumerable#count; typically length is on Array. So A, B, D are Enumerable; length is often a direct method on the collection."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs \"  hello  \".strip\nputs \"hello\".strip\n```",
+      "options": {"A": "hello then hello", "B": "  hello   then hello", "C": "hello  then hello", "D": "Error"},
+      "answer": "A",
+      "explanation": "strip removes leading and trailing whitespace. So \"  hello  \".strip is \"hello\"; \"hello\".strip is \"hello\" (unchanged)."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What does **Hash#fetch** do when the key is missing (and no default given)?",
+      "options": {"A": "Raises KeyError", "B": "Returns nil", "C": "Returns the default", "D": "Creates the key"},
+      "answer": "A",
+      "explanation": "fetch(key) returns the value for key. If key is missing, it raises KeyError (or returns the second argument if provided: fetch(key, default))."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs \"hello\".start_with?(\"he\")\nputs \"hello\".end_with?(\"lo\")\n```",
+      "options": {"A": "true then true", "B": "true then false", "C": "he then lo", "D": "Error"},
+      "answer": "A",
+      "explanation": "start_with? and end_with? return true if the string starts/ends with the given prefix/suffix. So true, true."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What does **Array#uniq** do?",
+      "options": {"A": "Returns a new array with duplicate elements removed", "B": "Returns the first unique element", "C": "Counts unique elements", "D": "Same as compact"},
+      "answer": "A",
+      "explanation": "uniq returns a new array with only the first occurrence of each value. uniq! mutates. compact removes nil; uniq removes duplicates."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs (1..5).min\nputs (1..5).max\n```",
+      "options": {"A": "1 then 5", "B": "5 then 1", "C": "0 then 5", "D": "Error"},
+      "answer": "A",
+      "explanation": "Range (and Enumerable) provide min and max. For 1..5, min is 1 and max is 5."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "What does **String#chars** return?",
+      "options": {"A": "An array of single-character strings", "B": "An array of character codes", "C": "The string unchanged", "D": "An enumerator"},
+      "answer": "A",
+      "explanation": "chars returns an array of one-character strings. \"hello\".chars => [\"h\", \"e\", \"l\", \"l\", \"o\"]. For bytes use bytes."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\narr = [10, 20, 30]\nputs arr.first\nputs arr.last\n```",
+      "options": {"A": "10 then 30", "B": "30 then 10", "C": "0 then 2", "D": "Error"},
+      "answer": "A",
+      "explanation": "first returns the first element; last returns the last. So 10 and 30. Works for Array and other Enumerables (e.g. Range)."
+    },
+    {
+      "id": 33,
+      "type": "single",
+      "question": "What does **Hash#values** return?",
+      "options": {"A": "An array of all values", "B": "A hash of values", "C": "The number of key-value pairs", "D": "An enumerator only"},
+      "answer": "A",
+      "explanation": "values returns an array of the hash's values. keys returns keys; to_a returns [ [k,v], ... ]. So h.values => [1, 2, 3] for {a:1, b:2, c:3}."
+    },
+    {
+      "id": 34,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs [1, 2, 3].any? { |n| n > 2 }\nputs [1, 2, 3].all? { |n| n > 0 }\n```",
+      "options": {"A": "true then true", "B": "false then true", "C": "true then false", "D": "false then false"},
+      "answer": "A",
+      "explanation": "any? returns true if the block is true for at least one element (3 > 2). all? returns true if the block is true for every element (all > 0). So true, true."
+    },
+    {
+      "id": 35,
+      "type": "single",
+      "question": "What does **Array#pop** do?",
+      "options": {"A": "Removes and returns the last element", "B": "Removes the first element", "C": "Returns the last element without removing", "D": "Adds an element at the end"},
+      "answer": "A",
+      "explanation": "pop removes and returns the last element. shift removes the first. push (or <<) adds at the end; unshift adds at the beginning."
+    },
+    {
+      "id": 36,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs \"hello\".empty?\nputs \"\".empty?\n```",
+      "options": {"A": "false then true", "B": "true then false", "C": "false then false", "D": "0 then 0"},
+      "answer": "A",
+      "explanation": "empty? returns true if the string has length 0. \"hello\" is not empty; \"\" is empty. So false, true."
+    },
+    {
+      "id": 37,
+      "type": "single",
+      "question": "What does **Kernel#rand** return (with no argument)?",
+      "options": {"A": "A random float in [0.0, 1.0)", "B": "A random integer", "C": "0 or 1", "D": "A random string"},
+      "answer": "A",
+      "explanation": "rand with no argument returns a random float >= 0 and < 1. rand(10) returns a random integer in 0...10. rand(max) gives integer in [0, max)."
+    },
+    {
+      "id": 38,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs [1, [2, 3], 4].flatten.inspect\n```",
+      "options": {"A": "[1, 2, 3, 4]", "B": "[1, [2, 3], 4]", "C": "[[1, 2, 3, 4]]", "D": "Error"},
+      "answer": "A",
+      "explanation": "flatten returns a new array with all elements recursively flattened to one level (by default). So [1, [2, 3], 4].flatten => [1, 2, 3, 4]."
+    },
+    {
+      "id": 39,
+      "type": "single",
+      "question": "What does **String#to_i** do?",
+      "options": {"A": "Converts leading numeric part to an integer", "B": "Returns the string length", "C": "Converts entire string or raises", "D": "Same as Integer(string)"},
+      "answer": "A",
+      "explanation": "to_i parses leading characters as an integer; trailing non-numeric is ignored. \"42\".to_i => 42, \"42abc\".to_i => 42, \"abc\".to_i => 0. Integer(\"42\") is stricter (raises on invalid)."
+    },
+    {
+      "id": 40,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nh = { a: 1, b: 2 }\nputs h.has_value?(2)\nputs h.value?(1)\n```",
+      "options": {"A": "true then true", "B": "true then false", "C": "false then true", "D": "Error"},
+      "answer": "A",
+      "explanation": "has_value? and value? are aliases; they return true if the hash has that value. So has_value?(2) and value?(1) are both true."
+    },
+    {
+      "id": 41,
+      "type": "single",
+      "question": "What does **Enumerable#count** return (with no block)?",
+      "options": {"A": "The number of elements", "B": "The first element", "C": "An array", "D": "nil"},
+      "answer": "A",
+      "explanation": "count with no block returns the number of elements (e.g. array length). count { |x| ... } returns how many elements make the block true."
+    },
+    {
+      "id": 42,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs (1..5).cover?(3)\nputs (1...5).cover?(5)\n```",
+      "options": {"A": "true then false", "B": "true then true", "C": "false then true", "D": "false then false"},
+      "answer": "A",
+      "explanation": "cover? checks if the value is within the range. 3 is in 1..5 => true. 5 is not in 1...5 (exclusive end) => false."
+    },
+    {
+      "id": 43,
+      "type": "single",
+      "question": "What does **Numeric#round** do (with no argument)?",
+      "options": {"A": "Rounds to the nearest integer", "B": "Rounds up (ceil)", "C": "Rounds down (floor)", "D": "Truncates"},
+      "answer": "A",
+      "explanation": "round rounds to the nearest integer (0.5 rounds up in default mode). round(n) rounds to n decimal places. ceil rounds up; floor rounds down."
+    },
+    {
+      "id": 44,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs [1, 2, 3].reverse.inspect\nputs \"hello\".reverse\n```",
+      "options": {"A": "[3, 2, 1] then olleh", "B": "[1, 2, 3] then hello", "C": "[3, 2, 1] then hello", "D": "Error"},
+      "answer": "A",
+      "explanation": "Array#reverse and String#reverse return a new reversed array/string. [1,2,3].reverse => [3,2,1]; \"hello\".reverse => \"olleh\"."
+    },
+    {
+      "id": 45,
+      "type": "single",
+      "question": "What does **Object#nil?** return?",
+      "options": {"A": "true only for the object nil", "B": "true for nil and false", "C": "true for any falsy value", "D": "false for everything"},
+      "answer": "A",
+      "explanation": "nil? is defined so that only the object nil returns true. So nil.nil? => true; false.nil? => false; 0.nil? => false. Used to check for nil specifically."
+    }
+  ]
+}

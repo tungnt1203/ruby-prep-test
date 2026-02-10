@@ -1,0 +1,325 @@
+{
+  "topic": "Ruby 3.1.x Silver - Literals",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which of the following is a valid **integer literal** in Ruby?\n\n```ruby\n# Consider: 1_000_000, 0xFF, 0o77\n```",
+      "options": {"A": "1_000_000", "B": "1,000,000", "C": "1.000.000", "D": "1 000 000"},
+      "answer": "A",
+      "explanation": "Ruby allows underscores in integer literals for readability (e.g. 1_000_000). Commas, dots, or spaces are not valid digit separators."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the value of the following **hexadecimal** literal?\n\n```ruby\n0xFF\n```",
+      "options": {"A": "255", "B": "256", "C": "15", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "0x prefix denotes hexadecimal. 0xFF = 15×16 + 15 = 255."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is the result of `1 / 2` in Ruby?\n\n```ruby\n1 / 2\n```",
+      "options": {"A": "0.5", "B": "0", "C": "0.5r (Rational)", "D": "Syntax error"},
+      "answer": "B",
+      "explanation": "Integer division: both operands are integers, so the result is truncated to 0. Use 1.0/2 or 1/2.0 for 0.5."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "Which literal represents a **Rational** number in Ruby?\n\n```ruby\n# Consider: 1/2r, 1/2, 0.5, 1r/2\n```",
+      "options": {"A": "1/2r", "B": "1/2", "C": "0.5", "D": "1r/2"},
+      "answer": "A",
+      "explanation": "The suffix r makes a rational literal. 1/2r is Rational(1, 2). 1/2 is integer division (0); 0.5 is Float."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What are the two **boolean** literals in Ruby?",
+      "options": {"A": "true and false", "B": "True and False", "C": "yes and no", "D": "1 and 0"},
+      "answer": "A",
+      "explanation": "Ruby has exactly two boolean literals: true and false (lowercase). They are not constants like in some other languages."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the **class** of `nil` in Ruby?",
+      "options": {"A": "NilClass", "B": "Null", "C": "None", "D": "Nil"},
+      "answer": "A",
+      "explanation": "nil is the single instance of NilClass. It represents \"no value\" or \"undefined\"."
+    },
+    {
+      "id": 7,
+      "type": "multiple",
+      "question": "Which of the following are valid **string** literal forms in Ruby?",
+      "options": {"A": "\"double quoted\"", "B": "'single quoted'", "C": "%q{single style}", "D": "%Q{double with interpolation}"},
+      "answer": ["A", "B", "C", "D"],
+      "explanation": "Ruby supports \"...\" (interpolation), '...' (no interpolation), %q{...} (single-quote behavior), and %Q{...} (double-quote behavior)."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 3\nputs \"#{x + 2}\"\n```",
+      "options": {"A": "x + 2", "B": "#{x + 2}", "C": "5", "D": "3 + 2"},
+      "answer": "C",
+      "explanation": "Double-quoted strings support interpolation. #{x + 2} is evaluated to 5 and embedded in the string."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs 'Hello #{1 + 1}'\n```",
+      "options": {"A": "Hello 2", "B": "Hello #{1 + 1}", "C": "Hello 1 + 1", "D": "Error"},
+      "answer": "B",
+      "explanation": "Single-quoted strings do not support interpolation; #{...} is treated as literal text."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "Which creates an array of **symbols**?\n\n```ruby\n# Consider: %i[a b c], %w[a b c], [:a, :b, :c]\n```",
+      "options": {"A": "%i[a b c]", "B": "%w[a b c]", "C": "[\"a\", \"b\", \"c\"]", "D": "%s[a b c]"},
+      "answer": "A",
+      "explanation": "%i[a b c] is shorthand for [:a, :b, :c]. %w creates an array of strings; %s is not a valid array literal."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What does `%w[one two three]` evaluate to?",
+      "options": {"A": "[\"one\", \"two\", \"three\"]", "B": "[:one, :two, :three]", "C": "[one, two, three]", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "%w[] creates an array of strings from space-separated words, equivalent to [\"one\", \"two\", \"three\"]."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What is the type of `:hello` in Ruby?",
+      "options": {"A": "Symbol", "B": "String", "C": "Keyword", "D": "Identifier"},
+      "answer": "A",
+      "explanation": ":hello is a Symbol literal. Symbols are immutable identifiers often used as hash keys or method names."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nh = { a: 1, b: 2 }\nputs h[:a]\n```",
+      "options": {"A": "1", "B": "a", "C": ":a", "D": "nil"},
+      "answer": "A",
+      "explanation": "The hash uses symbol keys (a: 1 is shorthand for :a => 1). h[:a] returns the value 1."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "Which range **excludes** the end value?\n\n```ruby\n# Consider: 1..5 vs 1...5\n```",
+      "options": {"A": "1...5", "B": "1..5", "C": "1..5 (exclusive)", "D": "Both exclude end"},
+      "answer": "A",
+      "explanation": "1..5 is inclusive (1,2,3,4,5). 1...5 is exclusive of the end (1,2,3,4). Three dots = exclusive end."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What does `(1..3).to_a` return?",
+      "options": {"A": "[1, 2, 3]", "B": "[1, 2]", "C": "[1, 2, 3, 4]", "D": "Range object"},
+      "answer": "A",
+      "explanation": "1..3 is an inclusive range. .to_a converts it to an array [1, 2, 3]."
+    },
+    {
+      "id": 16,
+      "type": "multiple",
+      "question": "Which are valid **hash** literal syntaxes in Ruby?",
+      "options": {"A": "{}", "B": "{ a: 1 }", "C": "{ \"a\" => 1 }", "D": "{ a = 1 }"},
+      "answer": ["A", "B", "C"],
+      "explanation": "{} is empty hash. { a: 1 } and { \"a\" => 1 } are valid. { a = 1 } is invalid (assignment, not key-value)."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the value of `[].class`?",
+      "options": {"A": "Array", "B": "List", "C": "NilClass", "D": "Object"},
+      "answer": "A",
+      "explanation": "[] is an array literal. The class of an empty array is Array."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "What does `1.5e2` represent?",
+      "options": {"A": "150.0", "B": "1.52", "C": "15.0", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "Scientific notation: 1.5e2 = 1.5 × 10² = 150.0 (Float)."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "Which is a valid **regex** literal in Ruby?\n\n```ruby\n# Consider: /abc/, %r{abc}, Regexp.new('abc')\n```",
+      "options": {"A": "/abc/", "B": "%r{abc}", "C": "r\"abc\"", "D": "Both A and B"},
+      "answer": "D",
+      "explanation": "Ruby supports /pattern/ and %r{pattern} for regex literals. r\"abc\" is not valid."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs [1, 2, 3][1]\n```",
+      "options": {"A": "1", "B": "2", "C": "3", "D": "nil"},
+      "answer": "B",
+      "explanation": "Array indices are zero-based. [1] is the second element, which is 2."
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "What does `0b1010` evaluate to?",
+      "options": {"A": "10", "B": "1010", "C": "2", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "0b prefix denotes binary. 0b1010 = 1×8 + 0×4 + 1×2 + 0×1 = 10."
+    },
+    {
+      "id": 22,
+      "type": "multiple",
+      "question": "Which of the following are **falsy** in Ruby (evaluate to false in conditionals)?",
+      "options": {"A": "false", "B": "nil", "C": "0", "D": "\"\""},
+      "answer": ["A", "B"],
+      "explanation": "In Ruby only false and nil are falsy. 0 and \"\" are truthy (unlike in some other languages)."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What is the result of `\"hello\".freeze`?",
+      "options": {"A": "Frozen string (same object)", "B": "New mutable string", "C": "Symbol", "D": "Error"},
+      "answer": "A",
+      "explanation": ".freeze makes the object immutable and returns the same object. Literal strings in Ruby 3 can be frozen by default depending on magic comment."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "Which literal is equivalent to an empty **hash**?",
+      "options": {"A": "{}", "B": "[]", "C": "Hash.new", "D": "A and C"},
+      "answer": "D",
+      "explanation": "{} and Hash.new both create empty hashes. [] creates an empty array."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What is the value of **octal** literal `0o10` in Ruby?\n\n```ruby\n0o10\n```",
+      "options": {"A": "8", "B": "10", "C": "2", "D": "16"},
+      "answer": "A",
+      "explanation": "0o prefix is octal. 0o10 = 1×8¹ + 0×8⁰ = 8."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "Which creates an array of strings **with interpolation**?\n\n```ruby\n# Consider: %w[#{1} two], %W[#{1} two]\n```",
+      "options": {"A": "%w[#{1} two]", "B": "%W[#{1} two]", "C": "%q[#{1} two]", "D": "None"},
+      "answer": "B",
+      "explanation": "%W[] is like %w[] but allows interpolation. %w[] does not interpolate; %W[#{1} two] gives [\"1\", \"two\"]."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What does `[1, 2, 3][-1]` return?",
+      "options": {"A": "1", "B": "3", "C": "nil", "D": "2"},
+      "answer": "B",
+      "explanation": "Negative indices count from the end. -1 is the last element, so 3."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "Which is a valid **Float** literal?\n\n```ruby\n# Consider: .5, 1., 3.14\n```",
+      "options": {"A": ".5", "B": "1.", "C": "3.14", "D": "A and C"},
+      "answer": "D",
+      "explanation": ".5 and 3.14 are valid. 1. alone can be ambiguous (method call); Ruby accepts 1.0. .5 is valid shorthand for 0.5."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What is the class of `1+2i` in Ruby?",
+      "options": {"A": "Complex", "B": "Integer", "C": "Array", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "1+2i is a complex number literal (Complex). In Ruby 3.1, complex literals use the i suffix."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nputs (\"a\"..\"c\").to_a.inspect\n```",
+      "options": {"A": "[\"a\", \"b\", \"c\"]", "B": "[a, b, c]", "C": "a..c", "D": "Error"},
+      "answer": "A",
+      "explanation": "Range works with strings (succ). \"a\"..\"c\" expands to [\"a\", \"b\", \"c\"] with .to_a."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "Which symbol literal allows **spaces** in the name?",
+      "options": {"A": ":hello world", "B": ":\"hello world\"", "C": ":hello_world", "D": "Symbol with spaces is invalid"},
+      "answer": "B",
+      "explanation": ":\"hello world\" is a quoted symbol literal for names with spaces or special characters."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "What does `%i[ a b c ]` produce?",
+      "options": {"A": "[:a, :b, :c]", "B": "[\"a\", \"b\", \"c\"]", "C": "[: a, : b, : c]", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "%i[] creates symbol array; extra spaces between items are ignored, so [:a, :b, :c]."
+    },
+    {
+      "id": 33,
+      "type": "multiple",
+      "question": "Which string **escape sequences** are valid in double-quoted Ruby strings?",
+      "options": {"A": "\\n (newline)", "B": "\\t (tab)", "C": "\\\" (double quote)", "D": "\\s (space)"},
+      "answer": ["A", "B", "C"],
+      "explanation": "\\n, \\t, and \\\" are standard escapes in double-quoted strings. There is no \\s escape; space is literal."
+    },
+    {
+      "id": 34,
+      "type": "single",
+      "question": "What is `(1...1).to_a`?",
+      "options": {"A": "[1]", "B": "[]", "C": "[0]", "D": "Error"},
+      "answer": "B",
+      "explanation": "1...1 is an exclusive range from 1 to 1 (end excluded), so it includes no elements → []."
+    },
+    {
+      "id": 35,
+      "type": "single",
+      "question": "What does `/foo/i` represent?",
+      "options": {"A": "Regex, case-insensitive", "B": "Regex, multiline", "C": "String", "D": "Invalid syntax"},
+      "answer": "A",
+      "explanation": "The i option after a regex literal makes the match case-insensitive."
+    },
+    {
+      "id": 36,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ns = \"\"\nputs s.class.name\n```",
+      "options": {"A": "String", "B": "NilClass", "C": "Empty", "D": "Error"},
+      "answer": "A",
+      "explanation": "\"\" is an empty string literal; its class is String."
+    },
+    {
+      "id": 37,
+      "type": "single",
+      "question": "Which is **not** a literal in Ruby?",
+      "options": {"A": "true", "B": "nil", "C": "self", "D": "42"},
+      "answer": "C",
+      "explanation": "self is a keyword referring to the current object, not a literal. true, nil, and 42 are literals."
+    },
+    {
+      "id": 38,
+      "type": "single",
+      "question": "What does `{ \"a\" => 1 }[\"a\"]` return?",
+      "options": {"A": "1", "B": ":a", "C": "nil", "D": "[\"a\", 1]"},
+      "answer": "A",
+      "explanation": "Hash with string key \"a\" and value 1; [] with \"a\" returns 1."
+    },
+    {
+      "id": 39,
+      "type": "multiple",
+      "question": "Which **number** literal types does Ruby support?",
+      "options": {"A": "Integer (e.g. 42)", "B": "Float (e.g. 3.14)", "C": "Rational (e.g. 1/2r)", "D": "Complex (e.g. 1+0i)"},
+      "answer": ["A", "B", "C", "D"],
+      "explanation": "Ruby has Integer, Float, Rational (suffix r), and Complex (e.g. 1+0i) numeric literals."
+    },
+    {
+      "id": 40,
+      "type": "single",
+      "question": "What is `[] == Array.new`?",
+      "options": {"A": "true", "B": "false", "C": "nil", "D": "Error"},
+      "answer": "A",
+      "explanation": "[] and Array.new both create a new empty array; they are equal in value, so true."
+    }
+  ]
+}

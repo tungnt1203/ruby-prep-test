@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Exception Handling",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which keyword is used to **raise** an exception in Ruby?",
+      "options": {"A": "raise", "B": "throw", "C": "fail", "D": "A and C"},
+      "answer": "D",
+      "explanation": "raise and fail are synonyms; both raise an exception. throw is used with catch for control flow, not for exceptions."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the **default exception class** when you call `raise \"message\"`?",
+      "options": {"A": "RuntimeError", "B": "StandardError", "C": "Exception", "D": "Error"},
+      "answer": "A",
+      "explanation": "raise \"message\" (or raise with only a string) raises a RuntimeError with that message. RuntimeError is a subclass of StandardError."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "Which keyword **rescues** (catches) exceptions in Ruby?",
+      "options": {"A": "rescue", "B": "catch", "C": "handle", "D": "recover"},
+      "answer": "A",
+      "explanation": "rescue catches exceptions. It appears after begin or as part of a method/block. catch/throw are separate (control flow)."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  raise \"error\"\nrescue => e\n  puts e.message\nend\n```",
+      "options": {"A": "error", "B": "RuntimeError", "C": "Nothing", "D": "Program crashes"},
+      "answer": "A",
+      "explanation": "rescue => e captures the exception in e. e.message returns the exception message, so \"error\" is printed. The program does not crash."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What does **ensure** do?",
+      "options": {"A": "Runs only when an exception occurs", "B": "Runs only when no exception occurs", "C": "Runs always (after begin/rescue/else)", "D": "Reraises the exception"},
+      "answer": "C",
+      "explanation": "ensure runs whether or not an exception was raised. It runs after the begin/rescue/else body, and is typically used for cleanup (e.g. closing files)."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the **order** of begin/rescue/else/ensure blocks?",
+      "options": {"A": "begin, rescue, ensure, else", "B": "begin, rescue, else, ensure", "C": "begin, else, rescue, ensure", "D": "begin, ensure, rescue, else"},
+      "answer": "B",
+      "explanation": "Correct order: begin ... rescue ... else ... ensure ... end. else runs when no exception was raised; ensure always runs last (before the block returns)."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "When does the **else** clause run (in begin/rescue/else/ensure)?",
+      "options": {"A": "When an exception is raised", "B": "When no exception is raised in the begin block", "C": "Always", "D": "When rescue runs"},
+      "answer": "B",
+      "explanation": "else runs only when the begin block completes without raising an exception. It runs before ensure."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  puts \"a\"\n  raise \"x\"\n  puts \"b\"\nrescue\n  puts \"c\"\nensure\n  puts \"d\"\nend\n```",
+      "options": {"A": "a c d", "B": "a b c d", "C": "a d", "D": "a c"},
+      "answer": "A",
+      "explanation": "We print \"a\", then raise. \"b\" is skipped. rescue runs and prints \"c\". ensure always runs and prints \"d\". So output: a, c, d."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "How do you **rescue only a specific exception type**?",
+      "options": {"A": "rescue ArgumentError", "B": "rescue ArgumentError => e", "C": "rescue ArgumentError, TypeError", "D": "All of the above"},
+      "answer": "D",
+      "explanation": "You can write rescue ArgumentError, rescue ArgumentError => e (to capture in e), or rescue ArgumentError, TypeError (multiple classes). All are valid."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "What does **raise** (with no arguments) do inside a **rescue** block?",
+      "options": {"A": "Does nothing", "B": "Re-raises the current exception", "C": "Raises RuntimeError", "D": "Exits the program"},
+      "answer": "B",
+      "explanation": "raise with no arguments inside a rescue block re-raises the exception that was just caught. Used when you handle partially but want to propagate it."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  1/0\nrescue ZeroDivisionError => e\n  puts \"Division error\"\nend\n```",
+      "options": {"A": "Division error", "B": "Error message then crash", "C": "Nothing", "D": "ZeroDivisionError"},
+      "answer": "A",
+      "explanation": "1/0 raises ZeroDivisionError. We rescue ZeroDivisionError and print \"Division error\". The program continues normally."
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "Which class is the **superclass** of most built-in Ruby exceptions (e.g. ArgumentError, RuntimeError)?",
+      "options": {"A": "StandardError", "B": "Exception", "C": "Error", "D": "RuntimeError"},
+      "answer": "A",
+      "explanation": "StandardError is the superclass of most common exceptions (ArgumentError, RuntimeError, TypeError, etc.). Exception is the top; rescuing Exception catches everything including system exits."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What happens if an exception is raised and **no rescue** matches its class?",
+      "options": {"A": "The exception propagates up the call stack", "B": "The program exits silently", "C": "nil is returned", "D": "StandardError is raised instead"},
+      "answer": "A",
+      "explanation": "If no rescue clause matches (e.g. you rescue StandardError but a SystemExit is raised), the exception propagates to the caller until it is rescued or the program exits."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  puts \"ok\"\nrescue\n  puts \"rescue\"\nelse\n  puts \"else\"\nensure\n  puts \"ensure\"\nend\n```",
+      "options": {"A": "ok else ensure", "B": "ok ensure", "C": "ok else", "D": "ok rescue ensure"},
+      "answer": "A",
+      "explanation": "No exception: begin runs (ok), rescue skipped, else runs (else), then ensure runs (ensure). So: ok, else, ensure."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What does **rescue StandardError** catch?",
+      "options": {"A": "Only StandardError itself", "B": "StandardError and all its subclasses", "C": "All exceptions", "D": "Only RuntimeError"},
+      "answer": "B",
+      "explanation": "rescue StandardError catches StandardError and every subclass (ArgumentError, RuntimeError, TypeError, etc.). It does not catch Exception or system-level exceptions like SignalException."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What is the **global variable** that holds the last raised exception?",
+      "options": {"A": "$!", "B": "$?", "C": "$e", "D": "$exception"},
+      "answer": "A",
+      "explanation": "$! (or $ERROR_INFO in English) holds the last exception. $? holds the last child process status. In rescue, you typically use rescue => e instead."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  raise ArgumentError, \"bad\"\nrescue RuntimeError => e\n  puts \"Runtime\"\nrescue ArgumentError => e\n  puts e.message\nend\n```",
+      "options": {"A": "Runtime", "B": "bad", "C": "ArgumentError", "D": "Nothing (uncaught)"},
+      "answer": "B",
+      "explanation": "ArgumentError is raised. The first rescue (RuntimeError) does not match. The second (ArgumentError) matches; we print e.message, which is \"bad\"."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "Can you use **rescue** without **begin**?",
+      "options": {"A": "No, begin is required", "B": "Yes, in method body (method-level rescue)", "C": "Only with ensure", "D": "Only in blocks"},
+      "answer": "B",
+      "explanation": "In a method, you can write def foo; ...; rescue => e; ...; end without an explicit begin. The whole method body acts as the begin block. begin is required in other contexts (e.g. at top level or inside another block)."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nresult = begin\n  1 + 1\nrescue\n  0\nend\nputs result\n```",
+      "options": {"A": "2", "B": "0", "C": "nil", "D": "1"},
+      "answer": "A",
+      "explanation": "No exception is raised (1+1 is 2). The begin block returns 2. rescue does not run. So result is 2."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "How do you **raise** a specific exception class with a message?",
+      "options": {"A": "raise ArgumentError, \"message\"", "B": "raise ArgumentError.new(\"message\")", "C": "raise ArgumentError(\"message\")", "D": "A and B"},
+      "answer": "D",
+      "explanation": "raise ArgumentError, \"message\" and raise ArgumentError.new(\"message\") are both valid. raise SomeError, \"msg\" is shorthand for raise SomeError.new(\"msg\")."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which are **subclasses of StandardError** in Ruby?",
+      "options": {"A": "ArgumentError", "B": "RuntimeError", "C": "TypeError", "D": "SignalException"},
+      "answer": ["A", "B", "C"],
+      "explanation": "ArgumentError, RuntimeError, and TypeError are subclasses of StandardError. SignalException is a subclass of Exception (not StandardError), used for system signals."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  raise \"err\"\nrescue => e\n  puts e.class\nend\n```",
+      "options": {"A": "RuntimeError", "B": "StandardError", "C": "Exception", "D": "err"},
+      "answer": "A",
+      "explanation": "raise \"err\" raises a RuntimeError. e.class is RuntimeError. StandardError and Exception are superclasses, but the actual class of e is RuntimeError."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What does the **rescue modifier** do?\n\n```ruby\nx = risky_call rescue 0\n```",
+      "options": {"A": "Runs risky_call; if it raises, x gets 0", "B": "Always sets x to 0", "C": "Syntax error", "D": "Rescues only StandardError"},
+      "answer": "A",
+      "explanation": "expression rescue value evaluates expression; if it raises an exception, the whole expression returns value. So x gets the result of risky_call or 0 if an exception occurred. It rescues StandardError and subclasses."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  raise \"x\"\nrescue\n  puts \"A\"\n  raise\n  puts \"B\"\nend\n```",
+      "options": {"A": "A B", "B": "A then uncaught exception", "C": "A", "D": "B"},
+      "answer": "B",
+      "explanation": "We rescue and print \"A\". Then raise (no arguments) re-raises the same exception. \"B\" is never printed. The exception propagates (or is caught by an outer rescue)."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "What does **Exception** represent in the hierarchy?",
+      "options": {"A": "Only runtime errors", "B": "The root of all exception classes", "C": "Same as StandardError", "D": "Only user-defined exceptions"},
+      "answer": "B",
+      "explanation": "Exception is the root class of all exceptions. StandardError is a subclass of Exception. Rescuing Exception catches everything, including system exits and interrupts; usually you want rescue StandardError."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef foo\n  raise \"oops\"\nrescue => e\n  puts \"caught\"\n  return e.message\nend\nputs foo\n```",
+      "options": {"A": "caught then oops", "B": "oops", "C": "caught", "D": "Program crashes"},
+      "answer": "A",
+      "explanation": "raise is rescued; we print \"caught\" and return e.message (\"oops\"). So foo returns \"oops\" and the outer puts prints \"oops\". Output: caught, then oops."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "Which exception is raised when you pass the **wrong number of arguments** to a method?",
+      "options": {"A": "ArgumentError", "B": "RuntimeError", "C": "TypeError", "D": "NoMethodError"},
+      "answer": "A",
+      "explanation": "Wrong number of arguments (e.g. foo(1,2) when foo expects 1) raises ArgumentError. NoMethodError is for undefined method; TypeError for type mismatch."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nbegin\n  nil + 1\nrescue TypeError => e\n  puts \"TypeError\"\nrescue StandardError => e\n  puts \"StandardError\"\nend\n```",
+      "options": {"A": "TypeError", "B": "StandardError", "C": "No output", "D": "Program crashes"},
+      "answer": "A",
+      "explanation": "nil + 1 raises TypeError. The first rescue (TypeError) matches, so we print \"TypeError\". More specific rescues should come first."
+    },
+    {
+      "id": 29,
+      "type": "multiple",
+      "question": "Which blocks can appear in a **begin/rescue** structure?",
+      "options": {"A": "begin", "B": "rescue", "C": "else", "D": "ensure"},
+      "answer": ["A", "B", "C", "D"],
+      "explanation": "begin (required), rescue (one or more), else (optional, when no exception), and ensure (optional, always runs) can all be used. Order: begin, rescue(s), else, ensure, end."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "What does **e.backtrace** return?",
+      "options": {"A": "An array of strings showing the call stack where the exception was raised", "B": "The exception message", "C": "The exception class", "D": "nil"},
+      "answer": "A",
+      "explanation": "exception.backtrace (or caller at raise time) returns an array of strings describing the call stack, useful for debugging. e.message and e.class are the message and class."
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "topic": "Ruby 3.1.x Silver - Keyword Arguments",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "What is the **syntax** for a **required** keyword argument?",
+      "options": {"A": "def foo(name:)", "B": "def foo(name =>)", "C": "def foo(:name)", "D": "def foo(keyword name)"},
+      "answer": "A",
+      "explanation": "Required keyword argument: name with a colon but no default (name:). The caller must pass name: value. def foo(name:) means name is required."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the **syntax** for an **optional** keyword argument with a default?",
+      "options": {"A": "def foo(name: \"default\")", "B": "def foo(name = \"default\")", "C": "def foo(:name => \"default\")", "D": "def foo(name optional: \"default\")"},
+      "answer": "A",
+      "explanation": "Optional keyword argument: name: default_value. So def foo(name: \"default\") allows foo (uses default) or foo(name: \"Alice\")."
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef greet(name:, greeting: \"Hello\")\n  \"#{greeting}, #{name}!\"\nend\nputs greet(name: \"Ruby\")\n```",
+      "options": {"A": "Hello, Ruby!", "B": "Error (greeting missing)", "C": ", Ruby!", "D": "Hello"},
+      "answer": "A",
+      "explanation": "name: is required (we pass name: \"Ruby\"). greeting: has default \"Hello\", so we get \"Hello, Ruby!\"."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "Does the **order** of keyword arguments matter when **calling** a method?",
+      "options": {"A": "No; they are matched by name", "B": "Yes; order must match definition", "C": "Only for required ones", "D": "Only in Ruby 3+"},
+      "answer": "A",
+      "explanation": "Keyword arguments are passed by name, so order does not matter. foo(b: 2, a: 1) is the same as foo(a: 1, b: 2)."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef sum(a:, b:)\n  a + b\nend\nputs sum(b: 2, a: 1)\n```",
+      "options": {"A": "3", "B": "Error", "C": "12", "D": "21"},
+      "answer": "A",
+      "explanation": "Keyword args are matched by name. sum(b: 2, a: 1) gives a=1, b=2. So 1+2=3."
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "Can you **mix** positional and keyword arguments in one method?",
+      "options": {"A": "Yes; positional must come first in both definition and call", "B": "No", "C": "Only in definition", "D": "Only with ** at the end"},
+      "answer": "A",
+      "explanation": "You can: def foo(x, y, a:, b:). Positional parameters must come before keyword parameters in the definition. When calling, pass positional args first, then keyword args."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef f(a, b: 10)\n  a + b\nend\nputs f(1)\nputs f(1, b: 5)\n```",
+      "options": {"A": "11 then 6", "B": "Error", "C": "1 then 6", "D": "11 then 11"},
+      "answer": "A",
+      "explanation": "f(1) gives a=1, b=10 (default) → 11. f(1, b: 5) gives a=1, b=5 → 6."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What does **kwargs** (double splat) in a parameter list do?",
+      "options": {"A": "Collects extra keyword arguments into a Hash", "B": "Collects positional arguments", "C": "Same as *args", "D": "Makes all arguments optional"},
+      "answer": "A",
+      "explanation": "def foo(a:, **kwargs) collects any additional keyword arguments into kwargs (a Hash). So foo(a: 1, b: 2, c: 3) gives a=1, kwargs={b: 2, c: 3}."
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef bar(**opts)\n  opts.size\nend\nputs bar(a: 1, b: 2)\n```",
+      "options": {"A": "2", "B": "0", "C": "{ a: 1, b: 2 }", "D": "Error"},
+      "answer": "A",
+      "explanation": "**opts collects all keyword arguments into a Hash. bar(a: 1, b: 2) gives opts = { a: 1, b: 2 }. opts.size is 2."
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "How do you **pass a Hash** as keyword arguments to a method?",
+      "options": {"A": "Use ** in the call: method(**hash)", "B": "Pass the hash as the last argument", "C": "Use hash.to_kw", "D": "Keyword arguments cannot come from a Hash"},
+      "answer": "A",
+      "explanation": "**hash in a method call converts the Hash to keyword arguments. So if h = { a: 1, b: 2 }, then foo(**h) is equivalent to foo(a: 1, b: 2). The Hash keys must be symbols (or convert with transform_keys)."
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef greet(name: \"World\")\n  \"Hello, #{name}!\"\nend\nputs greet()\nputs greet(name: \"Ruby\")\n```",
+      "options": {"A": "Hello, World! then Hello, Ruby!", "B": "Error (greet() invalid)", "C": "Hello, ! then Hello, Ruby!", "D": "nil then Hello, Ruby!"},
+      "answer": "A",
+      "explanation": "greet() with no args uses default name=\"World\". greet(name: \"Ruby\") passes the keyword. Both are valid. Output: Hello, World! then Hello, Ruby!"
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "What happens if you **omit a required** keyword argument?",
+      "options": {"A": "ArgumentError (missing keyword)", "B": "nil is used", "C": "RuntimeError", "D": "NoMethodError"},
+      "answer": "A",
+      "explanation": "Calling a method that has a required keyword (e.g. name:) without passing that keyword raises ArgumentError: missing keyword: name."
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef f(a:, b: 2)\n  [a, b]\nend\np f(a: 1)\n```",
+      "options": {"A": "[1, 2]", "B": "Error", "C": "[1, nil]", "D": "[2, 1]"},
+      "answer": "A",
+      "explanation": "a: is required (we pass a: 1). b: has default 2 and we don't pass it, so b=2. Result is [1, 2]."
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "In Ruby 3+, can you pass a **positional Hash** where keyword arguments are expected?",
+      "options": {"A": "No; keyword arguments and Hash are distinct; use **hash to pass as keywords", "B": "Yes; Hash is automatically converted", "C": "Only with optional keywords", "D": "Only for the last argument"},
+      "answer": "A",
+      "explanation": "In Ruby 3.0+, keyword arguments are separated from positional arguments. A Hash as the last positional argument is not automatically converted to keyword arguments. Use **hash to pass it as keywords."
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef build(x:, y: 0)\n  [x, y]\nend\np build(x: 1, y: 2)\np build(x: 3)\n```",
+      "options": {"A": "[1, 2] then [3, 0]", "B": "[1, 2] then [3, nil]", "C": "Error", "D": "[2, 1] then [0, 3]"},
+      "answer": "A",
+      "explanation": "build(x: 1, y: 2) gives x=1, y=2 → [1, 2]. build(x: 3) gives x=3, y=0 (default) → [3, 0]."
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "What does **nil** mean as a keyword argument parameter?",
+      "options": {"A": "def foo(**nil) means the method accepts no keyword arguments", "B": "Same as **kwargs", "C": "Invalid syntax", "D": "Accepts only nil as a keyword"},
+      "answer": "A",
+      "explanation": "In Ruby 2.7+, def foo(**nil) explicitly means the method accepts no keyword arguments. Passing any keyword will raise ArgumentError. Useful to avoid confusion with optional **kwargs."
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef merge(a:, **rest)\n  { a: a }.merge(rest)\nend\np merge(a: 1, b: 2, c: 3)\n```",
+      "options": {"A": "{ a: 1, b: 2, c: 3 }", "B": "{ a: 1 }", "C": "Error", "D": "{ b: 2, c: 3 }"},
+      "answer": "A",
+      "explanation": "a: 1 is captured by a:. b: 2 and c: 3 go into **rest, so rest = { b: 2, c: 3 }. We merge and get { a: 1, b: 2, c: 3 }."
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "Can keyword argument **defaults** reference **earlier** parameters?",
+      "options": {"A": "Yes", "B": "No", "C": "Only positional parameters", "D": "Only in Ruby 3+"},
+      "answer": "A",
+      "explanation": "Default values can reference earlier parameters: def foo(a: 1, b: a) is valid. So foo(b: 2) gives a=1, b=2; foo(a: 10) gives a=10, b=10."
+    },
+    {
+      "id": 19,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef calc(a:, b: a)\n  a + b\nend\nputs calc(a: 5)\nputs calc(a: 2, b: 3)\n```",
+      "options": {"A": "10 then 5", "B": "Error", "C": "5 then 5", "D": "10 then 6"},
+      "answer": "A",
+      "explanation": "calc(a: 5) gives a=5, b=a=5 → 10. calc(a: 2, b: 3) gives a=2, b=3 → 5."
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "Where must **keyword parameters** appear in a method definition?",
+      "options": {"A": "After all positional and *args parameters", "B": "First", "C": "Anywhere", "D": "Only after *args"},
+      "answer": "A",
+      "explanation": "Order is: positional (required then optional), *args, then keyword args, then **kwargs, then &block. So keyword parameters come after positional and *args."
+    },
+    {
+      "id": 21,
+      "type": "multiple",
+      "question": "Which are valid **keyword argument** syntaxes in a method definition?",
+      "options": {"A": "def foo(a:)", "B": "def foo(a: 1)", "C": "def foo(**opts)", "D": "def foo(a => 1)"},
+      "answer": ["A", "B", "C"],
+      "explanation": "a: (required), a: 1 (optional with default), and **opts (collect rest) are valid. a => 1 is Hash syntax, not keyword parameter syntax in def."
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef f(first:, second: first)\n  [first, second]\nend\np f(first: 10)\n```",
+      "options": {"A": "[10, 10]", "B": "Error (second missing)", "C": "[10, nil]", "D": "[10, 0]"},
+      "answer": "A",
+      "explanation": "first: 10 gives first=10. second: first uses default second=first=10. So we get [10, 10]."
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "What happens if you pass an **unknown** keyword to a method that has no **kwargs?",
+      "options": {"A": "ArgumentError (unknown keyword)", "B": "The keyword is ignored", "C": "NoMethodError", "D": "It becomes a positional argument"},
+      "answer": "A",
+      "explanation": "If the method does not accept **kwargs and you pass a keyword it doesn't define, Ruby raises ArgumentError: unknown keyword: :name (or similar)."
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nh = { name: \"Alice\", age: 30 }\ndef show(name:, age:)\n  \"#{name}: #{age}\"\nend\nputs show(**h)\n```",
+      "options": {"A": "Alice: 30", "B": "Error", "C": "{ name: Alice, age: 30 }", "D": "nil"},
+      "answer": "A",
+      "explanation": "**h expands the Hash into keyword arguments. So show(**h) is show(name: \"Alice\", age: 30). We get \"Alice: 30\"."
+    },
+    {
+      "id": 25,
+      "type": "single",
+      "question": "Can you use **string keys** in a Hash when passing with ** to a method?",
+      "options": {"A": "In Ruby 3+, keyword args expect symbol keys; string keys may need transform_keys", "B": "Yes; strings and symbols are the same", "C": "No; only symbols", "D": "Only for optional keywords"},
+      "answer": "A",
+      "explanation": "Keyword arguments are typically passed with symbol keys (name: \"x\"). When using **hash, the hash should have symbol keys for standard keyword args. Ruby can convert in some cases; for clarity use symbol keys or transform_keys(&:to_sym)."
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef one(a: 1)\n  a\nend\nputs one()\nputs one(a: 99)\n```",
+      "options": {"A": "1 then 99", "B": "Error", "C": "nil then 99", "D": "1 then 1"},
+      "answer": "A",
+      "explanation": "one() uses default a=1 → 1. one(a: 99) passes a=99 → 99."
+    },
+    {
+      "id": 27,
+      "type": "single",
+      "question": "What is **super** with keyword arguments?",
+      "options": {"A": "super (no args) forwards the current method's keyword arguments to the parent", "B": "super never takes keyword args", "C": "super always requires explicit keywords", "D": "super() passes no keywords"},
+      "answer": "A",
+      "explanation": "super (no arguments) forwards both positional and keyword arguments to the superclass's method. Use super() to pass no arguments, or super(a: 1) to pass explicit keywords."
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef wrap(a:, b: 0)\n  a + b\nend\nputs wrap(a: 1)\nputs wrap(a: 1, b: 2)\n```",
+      "options": {"A": "1 then 3", "B": "Error", "C": "0 then 3", "D": "1 then 1"},
+      "answer": "A",
+      "explanation": "wrap(a: 1) gives a=1, b=0 → 1. wrap(a: 1, b: 2) gives a=1, b=2 → 3."
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\ndef options(**opts)\n  opts.empty?\nend\nputs options()\nputs options(x: 1)\n```",
+      "options": {"A": "true then false", "B": "false then true", "C": "Error", "D": "nil then false"},
+      "answer": "A",
+      "explanation": "options() gives opts={}, so opts.empty? is true. options(x: 1) gives opts={x: 1}, so empty? is false."
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "When calling a method, where do **keyword arguments** appear?",
+      "options": {"A": "After positional arguments (or alone)", "B": "Only at the start", "C": "Mixed with positional in any order", "D": "Only when using **hash"},
+      "answer": "A",
+      "explanation": "In a method call, pass positional arguments first, then keyword arguments. So foo(1, 2, a: 3, b: 4). You cannot put a keyword in the middle of positional args (e.g. foo(1, a: 2, 3) is invalid)."
+    }
+  ]
+}
