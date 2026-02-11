@@ -83,7 +83,7 @@
                     <% else %>
                       <span class="flex-shrink-0 w-6 h-6 rounded-full border-2 border-slate-300 bg-white"></span>
                     <% end %>
-                    <span class="text-sm font-medium text-slate-800 prose prose-slate max-w-none"><%= simple_exam_markdown(choice["label"].to_s.strip) %></span>
+                    <span class="text-sm font-medium text-slate-800 prose prose-slate max-w-none"><%= choice["id"] %>. <%= simple_exam_markdown(choice["label"].to_s.strip) %></span>
                   </li>
                 <% end %>
               </ul>

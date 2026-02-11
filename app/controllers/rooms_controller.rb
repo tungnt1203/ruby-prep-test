@@ -6,6 +6,7 @@ class RoomsController < ApplicationController
 
   def new
     @exam_sessions = ExamSession.order(created_at: :desc).limit(20)
+    @preselected_exam_hash_id = params[:exam_hash_id].presence
   end
 
   def create

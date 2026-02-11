@@ -23,9 +23,16 @@
         </div>
       </div>
 
+      <div class="rounded-lg bg-amber-50 border border-amber-200 p-4">
+        <p class="text-sm font-medium text-amber-800">Recommended: Schedule a room for timed exam</p>
+        <p class="mt-1 text-xs text-amber-700">Candidates join room → wait for start time → same exam, timer, leaderboard.</p>
+        <%= link_to "Schedule a room for this exam", new_room_path(exam_hash_id: @exam_code), class: "mt-3 inline-flex items-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500" %>
+      </div>
+
       <% exam_url = "#{request.base_url}#{exams_path}?exam_code=#{@exam_code}" %>
       <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Exam link</label>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Exam link (solo / practice)</label>
+        <p class="mb-1 text-xs text-slate-500">Direct link for one person. No room timer, no leaderboard. Use for self-practice.</p>
         <div class="flex flex-col gap-2">
           <input
             type="text"

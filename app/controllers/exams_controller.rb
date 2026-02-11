@@ -123,10 +123,7 @@ class ExamsController < ApplicationController
       questions = questions.shuffle(random: Random.new(seed))
     end
     questions.map do |q|
-      choices = q.question_choices.to_a.map { |c| { "id" => c.choice_key, "label" => c.label } }
-      if seed
-        choices = choices.shuffle(random: Random.new(seed + q.id))
-      end
+      choices = q.question_choices.order(:choice_key).map { |c| { "id" => c.choice_key, "label" => c.label } }
       {
         "id" => q.id,
         "type" => q.question_type,

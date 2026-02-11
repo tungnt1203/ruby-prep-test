@@ -97,7 +97,7 @@
                         <% else %>
                           <%= f.radio_button nil, c_id, { name: "answers[#{q_id}]", id: "q_#{q_id}_c_#{c_id}", class: "mt-1 h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500" } %>
                         <% end %>
-                        <span class="flex-1 text-sm font-medium text-slate-800 select-none"><%= simple_exam_markdown(label_text) %></span>
+                        <span class="flex-1 text-sm font-medium text-slate-800 select-none"><%= c_id %>. <%= simple_exam_markdown(label_text) %></span>
                       </label>
                     <% end %>
                   </fieldset>
