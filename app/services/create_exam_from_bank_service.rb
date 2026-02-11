@@ -6,7 +6,7 @@ class CreateExamFromBankService
   EXAM_QUESTIONS_COUNT = 50
   DEFAULT_TITLE = "Ruby 3.1.x Silver Exam"
   DEFAULT_TIME_LIMIT = 60 * 60 # 1 hour
-  DEFAULT_NUMBER_PASS = 30
+  DEFAULT_NUMBER_PASS = 40
 
   def initialize(questions_count: EXAM_QUESTIONS_COUNT)
     @questions_count = questions_count
