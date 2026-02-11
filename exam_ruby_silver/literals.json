@@ -320,6 +320,30 @@
       "options": {"A": "true", "B": "false", "C": "nil", "D": "Error"},
       "answer": "A",
       "explanation": "[] and Array.new both create a new empty array; they are equal in value, so true."
+    },
+    {
+      "id": 41,
+      "type": "single",
+      "question": "What is the value of the **octal** literal `025` in Ruby?\n\n```ruby\nnum = 025\nputs num\n```",
+      "options": {"A": "25", "B": "21", "C": "nil", "D": "Syntax error"},
+      "answer": "B",
+      "explanation": "Leading 0 makes an octal literal. 025 = 2×8 + 5 = 21."
+    },
+    {
+      "id": 42,
+      "type": "multiple",
+      "question": "Which of the following are **truthy** in Ruby (evaluate to true in conditionals)?",
+      "options": {"A": "\"\"", "B": "0", "C": "false", "D": "nil"},
+      "answer": ["A", "B"],
+      "explanation": "Only false and nil are falsy. Empty string \"\" and 0 are truthy in Ruby."
+    },
+    {
+      "id": 43,
+      "type": "single",
+      "question": "Which magic comment specifies **source encoding** in Ruby?",
+      "options": {"A": "# coding: UTF-8", "B": "# charset: UTF-8", "C": "# encoding: UTF-8", "D": "A and C"},
+      "answer": "D",
+      "explanation": "# coding: and # encoding: both set source encoding. # charset: is not valid."
     }
   ]
 }

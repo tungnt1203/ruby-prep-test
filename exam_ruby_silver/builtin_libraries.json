@@ -360,6 +360,78 @@
       "options": {"A": "true only for the object nil", "B": "true for nil and false", "C": "true for any falsy value", "D": "false for everything"},
       "answer": "A",
       "explanation": "nil? is defined so that only the object nil returns true. So nil.nil? => true; false.nil? => false; 0.nil? => false. Used to check for nil specifically."
+    },
+    {
+      "id": 46,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\na = [2, 4, 6, 8, 10]\na.shift\na.pop\na.push(12)\np a\n```",
+      "options": {"A": "[4, 6, 8, 12]", "B": "[2, 4, 6, 8, 10, 12]", "C": "[4, 6, 8]", "D": "[2, 4, 6, 8, 10]"},
+      "answer": "A",
+      "explanation": "shift removes first (2), pop removes last (10). push(12) appends. After: [4, 6, 8, 12]."
+    },
+    {
+      "id": 47,
+      "type": "single",
+      "question": "What does `[\"apple\", \"banana\"].join(\",\")` return?",
+      "options": {"A": "\"apple,banana\"", "B": "[\"apple\", \"banana\"]", "C": "\"apple\", \"banana\"", "D": "Error"},
+      "answer": "A",
+      "explanation": "join concatenates array elements with the given separator. Result is a single string."
+    },
+    {
+      "id": 48,
+      "type": "single",
+      "question": "What is `\"42A7\".to_i`?",
+      "options": {"A": "42", "B": "42A7", "C": "17063", "D": "Error"},
+      "answer": "A",
+      "explanation": "to_i parses leading digits and stops at first non-digit. So 42."
+    },
+    {
+      "id": 49,
+      "type": "single",
+      "question": "Which method does **Hash** NOT have for checking if a key exists?",
+      "options": {"A": "has_key?", "B": "contain?", "C": "key?", "D": "include?"},
+      "answer": "B",
+      "explanation": "Hash has has_key?, key?, include?, member? (aliases). contain? does not exist."
+    },
+    {
+      "id": 50,
+      "type": "single",
+      "question": "What is `[1, 16, 8, 4, 2].sort.reverse`?",
+      "options": {"A": "[16, 8, 4, 2, 1]", "B": "[1, 2, 4, 8, 16]", "C": "[2, 4, 8, 16, 1]", "D": "Error"},
+      "answer": "A",
+      "explanation": "sort => [1, 2, 4, 8, 16], reverse => [16, 8, 4, 2, 1]."
+    },
+    {
+      "id": 51,
+      "type": "single",
+      "question": "What is `[\"apple\", \"banana\"] | [\"banana\", \"carrot\"]`?",
+      "options": {"A": "[\"apple\", \"banana\", \"carrot\"]", "B": "[\"banana\"]", "C": "[\"apple\", \"banana\", \"carrot\"] (order may vary)", "D": "Error"},
+      "answer": "A",
+      "explanation": "Array | is union: unique elements from both arrays. Result order follows first array then second."
+    },
+    {
+      "id": 52,
+      "type": "single",
+      "question": "What is `[\"apple\", \"banana\"] & [\"banana\", \"carrot\"]`?",
+      "options": {"A": "[\"apple\", \"banana\", \"carrot\"]", "B": "[\"banana\"]", "C": "[\"apple\"]", "D": "[]"},
+      "answer": "B",
+      "explanation": "Array & is intersection: elements common to both. Only \"banana\" is in both."
+    },
+    {
+      "id": 53,
+      "type": "single",
+      "question": "What does `p \"hello ruby world\"[6, 4]` output?",
+      "options": {"A": "\"ruby\"", "B": "\"hello\"", "C": "\" wor\"", "D": "Error"},
+      "answer": "A",
+      "explanation": "str[start, length]: index 6 is 'r', length 4 gives \"ruby\"."
+    },
+    {
+      "id": 54,
+      "type": "single",
+      "question": "What is the **default mode** when opening a file with `File.open(\"file.txt\")` (no second argument)?",
+      "options": {"A": "\"r\"", "B": "\"r+\"", "C": "\"w\"", "D": "\"a\""},
+      "answer": "A",
+      "explanation": "File.open(path) defaults to \"r\" (read-only)."
     }
   ]
 }

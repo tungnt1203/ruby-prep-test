@@ -240,6 +240,14 @@
       "options": {"A": "X", "B": "Y", "C": "Error", "D": "nil"},
       "answer": "A",
       "explanation": "Y inherits foo from X. When we call bar on a Y instance, bar calls foo (no receiver). Method lookup finds X#foo (inherited by Y). So we get \"X\"."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nclass Foo\n  attr_reader :var\n  def initialize\n    @var = \"apple\"\n  end\nend\nclass Bar < Foo\n  def initialize\n    @var = \"banana\"\n    super\n  end\nend\nputs Bar.new.var\n```",
+      "options": {"A": "apple", "B": "banana", "C": "Error", "D": "nil"},
+      "answer": "A",
+      "explanation": "super calls Foo#initialize, which sets @var = \"apple\". It runs after Bar set @var = \"banana\", so @var becomes \"apple\"."
     }
   ]
 }

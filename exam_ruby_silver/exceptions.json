@@ -240,6 +240,22 @@
       "options": {"A": "An array of strings showing the call stack where the exception was raised", "B": "The exception message", "C": "The exception class", "D": "nil"},
       "answer": "A",
       "explanation": "exception.backtrace (or caller at raise time) returns an array of strings describing the call stack, useful for debugging. e.message and e.class are the message and class."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "Given `class ChildError < ParentError`. If you rescue both, which must come first?",
+      "options": {"A": "ParentError first", "B": "ChildError first", "C": "Either order works", "D": "Syntax error if both"},
+      "answer": "B",
+      "explanation": "Rescue the more specific (child) exception first. Otherwise ParentError would catch the child too and the child rescue would never run."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "When does **ensure** run relative to **rescue**?",
+      "options": {"A": "After rescue, always", "B": "Before rescue", "C": "Only when no exception", "D": "Only when exception raised"},
+      "answer": "A",
+      "explanation": "ensure always runs after the begin/rescue/else body, whether or not an exception was raised. Used for cleanup."
     }
   ]
 }

@@ -240,6 +240,14 @@
       "options": {"A": "[1, 3]", "B": "[2, 4]", "C": "[1, 2, 3, 4]", "D": "[]"},
       "answer": "A",
       "explanation": "reject keeps elements for which the block returns false. n.even? is false for 1 and 3, so we get [1, 3]."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nitem = \"apple\"\n[\"banana\", \"carrot\"].each do |item|\n  puts item\nend\nputs item\n```",
+      "options": {"A": "banana carrot apple", "B": "banana carrot carrot", "C": "banana carrot banana", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "Block parameter |item| shadows outer item. Inside block, item refers to the iterated value. After the block, outer item is unchanged (still \"apple\")."
     }
   ]
 }

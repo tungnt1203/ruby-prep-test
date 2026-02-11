@@ -240,6 +240,22 @@
       "options": {"A": "meow", "B": "animal", "C": "animal meow", "D": "Error"},
       "answer": "A",
       "explanation": "Cat overrides speak. Cat.new.speak calls Cat#speak (the overriding method), which returns \"meow\". The parent's speak is not called unless we use super."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "For a class that does **not** specify a superclass, what is the superclass?",
+      "options": {"A": "Object", "B": "Module", "C": "BasicObject", "D": "nil"},
+      "answer": "A",
+      "explanation": "class Foo without < Superclass defaults to inheriting from Object."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "Which method is called when you do `Shouter.new(\"Hi!\")`?",
+      "options": {"A": "initialize", "B": "new", "C": "Shouter", "D": "create"},
+      "answer": "A",
+      "explanation": "Class#new allocates the object and calls initialize with the given arguments. So Shouter.new(\"Hi!\") calls initialize(\"Hi!\")."
     }
   ]
 }

@@ -360,6 +360,14 @@
       "options": {"A": "1", "B": "1 2", "C": "2", "D": "Infinite loop"},
       "answer": "A",
       "explanation": "First iteration: count=1, break if count==2 is false, we print 1. Second: count=2, break if count==2 is true, we break without printing. Output: 1."
+    },
+    {
+      "id": 46,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nx = 0\n4.times do |i|\n  x += i\nend\np x\n```",
+      "options": {"A": "0", "B": "4", "C": "6", "D": "10"},
+      "answer": "C",
+      "explanation": "4.times yields 0, 1, 2, 3. x += 0 => 0, += 1 => 1, += 2 => 3, += 3 => 6. So x is 6."
     }
   ]
 }

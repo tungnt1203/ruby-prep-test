@@ -360,6 +360,14 @@
       "options": {"A": "a is 1", "B": "a is 2", "C": "Syntax error", "D": "a is nil"},
       "answer": "A",
       "explanation": "The modifier attaches to the assignment: execute \"a = 2\" only when a is falsy. Since a is 1 (truthy), the assignment is not executed, so a remains 1."
+    },
+    {
+      "id": 46,
+      "type": "single",
+      "question": "What is `5 * \"hi\"` in Ruby?",
+      "options": {"A": "\"hihihihihi\"", "B": "Error", "C": "\"5hi\"", "D": "15"},
+      "answer": "A",
+      "explanation": "String * Integer repeats the string. 5 * \"hi\" => \"hihihihihi\"."
     }
   ]
 }

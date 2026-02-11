@@ -360,6 +360,14 @@
       "options": {"A": "1", "B": "0", "C": "nil", "D": "true"},
       "answer": "A",
       "explanation": "0 is truthy, so the if branch runs. The last (and only) expression is 1, so the if returns 1."
+    },
+    {
+      "id": 46,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\namount = 120\nsize = case amount\n  when 1..120; \"S\"\n  when 120..170; \"M\"\n  when 170..200; \"L\"\n  else \"XL\"\nend\np size\n```",
+      "options": {"A": "\"S\"", "B": "\"M\"", "C": "\"L\"", "D": "\"XL\""},
+      "answer": "A",
+      "explanation": "case uses ===. 1..120 === 120 is true (120 is in the range). The first matching when wins, so \"S\"."
     }
   ]
 }

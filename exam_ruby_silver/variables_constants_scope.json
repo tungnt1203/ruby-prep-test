@@ -240,6 +240,30 @@
       "options": {"A": "The module/class hierarchy at the point the constant is written", "B": "The inheritance hierarchy only", "C": "The file path", "D": "The call stack"},
       "answer": "A",
       "explanation": "Nesting is the lexical module/class nesting where the constant appears (e.g. module M; class C; X end end). Ruby uses this for constant lookup before inheritance."
+    },
+    {
+      "id": 31,
+      "type": "single",
+      "question": "Which is a **valid** local variable name in Ruby?",
+      "options": {"A": "_9class", "B": "3y", "C": "false", "D": "xyz$"},
+      "answer": "A",
+      "explanation": "_9class starts with underscore and is valid. 3y starts with digit (invalid). false is a reserved word. xyz$ has invalid character $ (for globals)."
+    },
+    {
+      "id": 32,
+      "type": "single",
+      "question": "What happens when you do `MSG = 42` then `MSG += 5`?",
+      "options": {"A": "Warning and MSG becomes 47", "B": "RuntimeError because MSG is constant", "C": "MSG stays 42", "D": "Syntax error"},
+      "answer": "A",
+      "explanation": "Reassigning a constant triggers a warning but the assignment succeeds. MSG += 5 is reassignment, so 47 is stored."
+    },
+    {
+      "id": 33,
+      "type": "single",
+      "question": "What is the output?\n\n```ruby\nMSG = \"hello\"\nMSG.upcase!\nputs MSG\n```",
+      "options": {"A": "hello", "B": "HELLO", "C": "RuntimeError", "D": "Syntax error"},
+      "answer": "B",
+      "explanation": "MSG.upcase! mutates the object in place. The constant still points to the same object; the object's content changed to HELLO."
     }
   ]
 }
