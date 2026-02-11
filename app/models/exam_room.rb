@@ -14,12 +14,14 @@ class ExamRoom < ApplicationRecord
   scope :started, -> { where("starts_at <= ?", Time.current) }
 
   def started?
-    starts_at <= Time.current
+    t = starts_at.respond_to?(:to_time) ? starts_at.to_time : starts_at
+    t <= Time.current
   end
 
   def ends_at
     return nil if duration_minutes.blank? || duration_minutes <= 0
-    starts_at + duration_minutes.minutes
+    t = starts_at.respond_to?(:to_time) ? starts_at.to_time : starts_at
+    t + duration_minutes.minutes
   end
 
   def expired?

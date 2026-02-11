@@ -57,7 +57,8 @@ class ExamsController < ApplicationController
     if @exam_session
       @exam = build_exam_hash(@exam_session)
       @questions = build_questions_array(@exam_session, @exam_attempt)
-      @room_ends_at = @exam_room&.started? && @exam_room.ends_at.present? ? @exam_room.ends_at : nil
+      raw_ends_at = @exam_room&.started? && @exam_room.ends_at.present? ? @exam_room.ends_at : nil
+      @room_ends_at = raw_ends_at.respond_to?(:iso8601) ? raw_ends_at : (raw_ends_at.respond_to?(:to_time) ? raw_ends_at.to_time : nil)
     else
       @exam = {}
       @questions = []
