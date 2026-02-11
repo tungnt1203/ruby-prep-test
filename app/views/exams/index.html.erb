@@ -67,16 +67,19 @@
               <% q_id = question["id"] %>
               <% q_type = question["type"] %>
               <% choices = question["choices"] || [] %>
-              <% is_multi = q_type == "multi_choice" %>
+              <% is_multi = q_type == "multiple" %>
               <section
                 class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200 overflow-hidden <%= index == 0 ? '' : 'hidden' %>"
                 data-exam-target="questionPanel"
                 data-question-index="<%= index %>"
               >
-                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-2">
                   <span class="text-xs font-medium uppercase tracking-wider text-indigo-600">Question <%= index + 1 %> / <%= total_questions %></span>
+                  <% if question["topic_key"].present? %>
+                    <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600" title="<%= question['topic_name'] %>"><%= question["topic_key"] %></span>
+                  <% end %>
                   <% if is_multi %>
-                    <span class="ml-2 text-xs text-slate-500">(Multiple answers)</span>
+                    <span class="text-xs text-slate-500">(Multiple answers)</span>
                   <% end %>
                 </div>
                 <div class="p-6">

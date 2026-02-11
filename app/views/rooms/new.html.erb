@@ -5,9 +5,22 @@
 
     <%= form_with url: rooms_path, method: :post, local: true, data: { turbo: false }, class: "mt-6 space-y-4" do |f| %>
       <div>
-        <label for="exam_hash_id" class="block text-sm font-medium text-slate-700">Exam code (hash_id)</label>
-        <input type="text" name="exam_hash_id" id="exam_hash_id" required placeholder="e.g. WPe9rDJYaL" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-        <p class="mt-1 text-xs text-slate-500">From the "Exam created" page after creating an exam.</p>
+        <label for="exam_hash_id" class="block text-sm font-medium text-slate-700">Exam</label>
+        <% if @exam_sessions.any? %>
+          <select name="exam_hash_id" id="exam_hash_id" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" onchange="var w=document.getElementById('exam_hash_manual_wrapper'); w.classList.toggle('hidden', this.value!=='__manual__'); if(this.value!=='__manual__') document.getElementById('exam_hash_id_manual').value='';">
+            <option value="">-- Select exam --</option>
+            <% @exam_sessions.each do |es| %>
+              <option value="<%= es.hash_id %>"><%= es.exam_title %> (<%= es.hash_id %>, <%= es.total_questions %> questions)</option>
+            <% end %>
+            <option value="__manual__">── Enter code manually ──</option>
+          </select>
+          <div id="exam_hash_manual_wrapper" class="mt-2 hidden">
+            <input type="text" name="exam_hash_id_manual" id="exam_hash_id_manual" placeholder="Paste exam code" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+          </div>
+        <% else %>
+          <input type="text" name="exam_hash_id" id="exam_hash_id" required placeholder="e.g. abc123def456" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+          <p class="mt-1 text-xs text-amber-600">No exams yet. <%= link_to "Create an exam first", pre_exams_path, class: "underline" %>, then come back.</p>
+        <% end %>
       </div>
       <div>
         <label for="room_name" class="block text-sm font-medium text-slate-700">Room name (optional)</label>

@@ -35,7 +35,6 @@ gem "bcrypt", "~> 3.1.7"
 gem "rouge"
 gem "turbo-rails"
 gem "vite_rails"
-gem "faraday", "~> 2.14"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

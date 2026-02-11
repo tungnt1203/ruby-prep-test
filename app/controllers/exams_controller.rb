@@ -33,6 +33,10 @@ class ExamsController < ApplicationController
           redirect_to room_path(@exam_room.room_code), alert: "Please enter your email or candidate ID to start the exam."
           return
         end
+        if !@exam_room.started?
+          redirect_to room_path(@exam_room.room_code), alert: "Exam has not started yet. Please wait until the start time."
+          return
+        end
       end
       if @exam_session
         @exam_attempt = find_or_create_attempt
@@ -90,10 +94,10 @@ class ExamsController < ApplicationController
     @score_from_db = if @exam_session && last_submissions.present?
       @exam_session.score_submissions(last_submissions)
     end
-    @details_by_qid = @score_from_db[:details].index_by { |d| d[:external_question_id].to_i } if @score_from_db.present?
+    @details_by_qid = @score_from_db[:details].index_by { |d| d[:question_id].to_i } if @score_from_db.present?
 
     if @exam_session
-      @questions_for_result = build_questions_array(@exam_session)
+      @questions_for_result = build_questions_array(@exam_session, @exam_attempt)
       @exam_title = @exam_session.exam_title
       @total_questions = @exam_session.total_questions
     end
@@ -117,15 +121,17 @@ class ExamsController < ApplicationController
       questions = questions.shuffle(random: Random.new(seed))
     end
     questions.map do |q|
-      choices = q.question_choices.to_a.map { |c| { "id" => c.external_choice_id, "label" => c.label } }
+      choices = q.question_choices.to_a.map { |c| { "id" => c.choice_key, "label" => c.label } }
       if seed
-        choices = choices.shuffle(random: Random.new(seed + q.external_question_id))
+        choices = choices.shuffle(random: Random.new(seed + q.id))
       end
       {
-        "id" => q.external_question_id,
+        "id" => q.id,
         "type" => q.question_type,
         "question" => q.body,
-        "choices" => choices
+        "choices" => choices,
+        "topic_key" => q.topic_key,
+        "topic_name" => q.topic_name
       }
     end
   end
@@ -158,7 +164,7 @@ class ExamsController < ApplicationController
 
     answers_params.map do |question_id_str, value|
       qid = question_id_str.to_i
-      answers = Array.wrap(value).map { |v| v.to_s.to_i }.compact
+      answers = Array.wrap(value).map { |v| v.to_s.upcase }.compact
       next if answers.empty?
 
       item = { question_id: qid }

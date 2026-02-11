@@ -6,22 +6,21 @@ class Question < ApplicationRecord
   has_many :question_correct_answers, dependent: :destroy
   has_many :correct_choices, through: :question_correct_answers, source: :question_choice
 
-  validates :external_question_id, presence: true
-  validates :question_type, presence: true, inclusion: { in: %w[single_choice multi_choice] }
+  validates :question_type, presence: true, inclusion: { in: %w[single multiple] }
   validates :body, presence: true
 
-  scope :single_choice, -> { where(question_type: "single_choice") }
-  scope :multi_choice, -> { where(question_type: "multi_choice") }
+  scope :single, -> { where(question_type: "single") }
+  scope :multiple, -> { where(question_type: "multiple") }
 
-  # Returns external_choice_ids for the persisted correct answers.
-  def correct_external_choice_ids
-    correct_choices.pluck(:external_choice_id).sort
+  # Returns choice_keys (A, B, C, D) for the correct answers.
+  def correct_choice_keys
+    correct_choices.pluck(:choice_key).sort
   end
 
-  # Checks if the user's external_choice_ids match the persisted correct answers.
-  def correct?(user_external_choice_ids)
-    return false if user_external_choice_ids.blank?
+  # Checks if the user's choice_keys match the persisted correct answers.
+  def correct?(user_choice_keys)
+    return false if user_choice_keys.blank?
 
-    Array.wrap(user_external_choice_ids).map(&:to_i).sort == correct_external_choice_ids
+    Array.wrap(user_choice_keys).map(&:to_s).map(&:upcase).sort == correct_choice_keys
   end
 end

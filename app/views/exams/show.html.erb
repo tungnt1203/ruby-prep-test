@@ -12,7 +12,7 @@
     <aside class="lg:w-64 xl:w-72 lg:flex-shrink-0 lg:border-r lg:border-slate-200 lg:overflow-y-auto bg-white">
       <div class="p-4">
         <h2 class="text-base font-semibold text-slate-900">Questions</h2>
-        <p class="mt-2 text-sm font-medium text-slate-700"><%= correct_count %> / <%= total_questions %> correct (based on persisted answer key)</p>
+        <p class="mt-2 text-sm font-medium text-slate-700"><%= correct_count %> / <%= total_questions %> correct</p>
         <div class="mt-4 space-y-2 text-xs text-slate-600">
           <p class="flex items-center gap-2">
             <span class="w-4 h-4 rounded-full bg-emerald-500 shrink-0"></span>
@@ -60,14 +60,19 @@
             data-question-index="<%= index %>"
           >
             <div class="p-6">
-              <h3 class="text-lg font-semibold text-slate-900 mb-4">Question <%= index + 1 %></h3>
+              <div class="flex flex-wrap items-center gap-2 mb-4">
+                <h3 class="text-lg font-semibold text-slate-900">Question <%= index + 1 %></h3>
+                <% if question["topic_key"].present? %>
+                  <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600" title="<%= question['topic_name'] %>"><%= question["topic_key"] %></span>
+                <% end %>
+              </div>
               <div class="prose prose-slate max-w-none text-slate-700 mb-6">
                 <%= simple_exam_markdown(question["question"]) %>
               </div>
               <p class="text-sm font-medium text-slate-600 mb-2">Your answers:</p>
               <ul class="space-y-2">
                 <% choices.each do |choice| %>
-                  <% selected = answer_ids.include?(choice["id"]) %>
+                  <% selected = answer_ids.include?(choice["id"].to_s) %>
                   <li class="flex items-center gap-3 p-3 rounded-lg border <%= selected ? (is_correct ? 'border-emerald-300 bg-emerald-50' : 'border-rose-300 bg-rose-50') : 'border-slate-200 bg-slate-50' %>">
                     <% if selected %>
                       <% if is_correct %>

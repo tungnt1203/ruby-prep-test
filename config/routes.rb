@@ -27,7 +27,6 @@ Rails.application.routes.draw do
   resources :pre_exams, only: [:index], path: "pre_exams" do
     get :created, on: :collection
     post :create_test, on: :collection
-    post :fetch_correct_answers, on: :collection
   end
 
   resources :exams, only: [ :index, :create, :show ]

@@ -39,7 +39,7 @@ class ExamsControllerTest < ActionDispatch::IntegrationTest
     assert attempt_token.present?
 
     delete logout_path
-    post exams_path, params: { attempt_id: attempt_token, answers: { "1" => "1" } }
+    post exams_path, params: { attempt_id: attempt_token, answers: { "1" => "A" } }
     assert_redirected_to login_path
     assert_match(/sign in to take the exam/i, flash[:alert].to_s)
   end

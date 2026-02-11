@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_09_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_11_100000) do
+  create_table "bank_question_choices", force: :cascade do |t|
+    t.integer "bank_question_id", null: false
+    t.string "choice_key", null: false
+    t.datetime "created_at", null: false
+    t.boolean "is_correct", default: false, null: false
+    t.text "label", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bank_question_id", "choice_key"], name: "index_bank_question_choices_on_bank_question_id_and_choice_key", unique: true
+    t.index ["bank_question_id"], name: "index_bank_question_choices_on_bank_question_id"
+  end
+
+  create_table "bank_questions", force: :cascade do |t|
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.text "explanation"
+    t.integer "question_topic_id", null: false
+    t.string "question_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_topic_id"], name: "index_bank_questions_on_question_topic_id"
+  end
+
   create_table "exam_attempts", force: :cascade do |t|
     t.string "attempt_token", null: false
     t.string "candidate_identifier"
@@ -46,7 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_09_120000) do
     t.datetime "created_at", null: false
     t.text "exam_description"
     t.string "exam_title"
-    t.integer "external_exam_id", null: false
+    t.integer "external_exam_id"
     t.string "hash_id", null: false
     t.string "language", default: "en"
     t.integer "number_pass"
@@ -58,12 +79,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_09_120000) do
   end
 
   create_table "question_choices", force: :cascade do |t|
+    t.string "choice_key", null: false
     t.datetime "created_at", null: false
-    t.integer "external_choice_id", null: false
     t.text "label", null: false
     t.integer "question_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["question_id", "external_choice_id"], name: "index_question_choices_on_question_id_and_external_choice_id", unique: true
+    t.index ["question_id", "choice_key"], name: "index_question_choices_on_question_id_and_choice_key", unique: true
     t.index ["question_id"], name: "index_question_choices_on_question_id"
   end
 
@@ -77,17 +98,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_09_120000) do
     t.index ["question_id"], name: "index_question_correct_answers_on_question_id"
   end
 
+  create_table "question_topics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_question_topics_on_key", unique: true
+  end
+
   create_table "questions", force: :cascade do |t|
     t.text "body", null: false
-    t.text "correct_answer_description"
-    t.datetime "correct_answers_fetched_at"
     t.datetime "created_at", null: false
     t.integer "exam_session_id", null: false
     t.text "explanation"
-    t.integer "external_question_id", null: false
     t.string "question_type", null: false
+    t.string "topic_key"
+    t.string "topic_name"
     t.datetime "updated_at", null: false
-    t.index ["exam_session_id", "external_question_id"], name: "index_questions_on_exam_session_id_and_external_question_id", unique: true
     t.index ["exam_session_id"], name: "index_questions_on_exam_session_id"
   end
 
@@ -100,6 +127,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_09_120000) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "bank_question_choices", "bank_questions"
+  add_foreign_key "bank_questions", "question_topics"
   add_foreign_key "exam_attempts", "exam_rooms"
   add_foreign_key "exam_attempts", "exam_sessions"
   add_foreign_key "exam_rooms", "exam_sessions"

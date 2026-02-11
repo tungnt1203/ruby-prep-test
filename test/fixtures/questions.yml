@@ -1,5 +1,4 @@
 one:
   exam_session: one
-  external_question_id: 1
-  question_type: single_choice
+  question_type: single
   body: "What is 1 + 1?"

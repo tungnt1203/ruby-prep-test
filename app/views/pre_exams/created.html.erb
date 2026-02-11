@@ -1,21 +1,6 @@
 <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
   <div class="w-full max-w-lg rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8">
     <h1 class="text-xl font-semibold text-slate-900">Exam created</h1>
-    <% if flash[:ai_answer_key_queued] %>
-      <p class="mt-2 text-sm text-slate-600">
-        AI answer key is being fetched in the background. Refresh the exam page in a minute or use “Refresh AI answer key” on the exam screen.
-      </p>
-    <% elsif flash[:ai_answer_key_result].present? %>
-      <p class="mt-2 text-sm text-slate-600">
-        AI answer key: <strong><%= flash[:ai_answer_key_result] %></strong>
-        <%= " (some questions failed)" if flash[:ai_answer_key_has_errors] %>
-      </p>
-      <% if flash[:ai_answer_key_first_error].present? %>
-        <p class="mt-1 text-sm text-amber-700 bg-amber-50 rounded px-2 py-1 font-mono break-all" title="First failure (other questions may have the same error)">
-          Error: <%= flash[:ai_answer_key_first_error] %>
-        </p>
-      <% end %>
-    <% end %>
 
     <div class="mt-6 space-y-4">
       <div>

@@ -1,9 +1,9 @@
 one:
   question: one
-  external_choice_id: 1
+  choice_key: A
   label: "2"
 
 two:
   question: one
-  external_choice_id: 2
+  choice_key: B
   label: "3"

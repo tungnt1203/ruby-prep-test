@@ -9,7 +9,8 @@ class RoomsController < ApplicationController
   end
 
   def create
-    exam_session = ExamSession.find_by(hash_id: params[:exam_hash_id])
+    exam_hash_id = [params[:exam_hash_id_manual], params[:exam_hash_id]].compact.find { |v| v.present? && v != "__manual__" }
+    exam_session = ExamSession.find_by(hash_id: exam_hash_id)
     unless exam_session
       redirect_to new_room_path, alert: "Exam not found. Please enter a valid exam code."
       return
