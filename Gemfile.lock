@@ -117,12 +117,6 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
-    faraday (2.14.0)
-      faraday-net_http (>= 2.0, < 3.5)
-      json
-      logger
-    faraday-net_http (3.4.2)
-      net-http (~> 0.5)
     ffi (1.17.3-aarch64-linux-gnu)
     ffi (1.17.3-aarch64-linux-musl)
     ffi (1.17.3-arm-linux-gnu)
@@ -182,8 +176,6 @@ GEM
       prism (~> 1.5)
     msgpack (1.8.0)
     mutex_m (0.3.0)
-    net-http (0.9.1)
-      uri (>= 0.11.1)
     net-imap (0.6.2)
       date
       net-protocol
@@ -415,7 +407,6 @@ DEPENDENCIES
   bundler-audit
   capybara
   debug
-  faraday (~> 2.14)
   image_processing (~> 1.2)
   jbuilder
   kamal
@@ -473,8 +464,6 @@ CHECKSUMS
   erb (6.0.1) sha256=28ecdd99c5472aebd5674d6061e3c6b0a45c049578b071e5a52c2a7f13c197e5
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   et-orbi (1.4.0) sha256=6c7e3c90779821f9e3b324c5e96fda9767f72995d6ae435b96678a4f3e2de8bc
-  faraday (2.14.0) sha256=8699cfe5d97e55268f2596f9a9d5a43736808a943714e3d9a53e6110593941cd
-  faraday-net_http (3.4.2) sha256=f147758260d3526939bf57ecf911682f94926a3666502e24c69992765875906c
   ffi (1.17.3-aarch64-linux-gnu) sha256=28ad573df26560f0aedd8a90c3371279a0b2bd0b4e834b16a2baa10bd7a97068
   ffi (1.17.3-aarch64-linux-musl) sha256=020b33b76775b1abacc3b7d86b287cef3251f66d747092deec592c7f5df764b2
   ffi (1.17.3-arm-linux-gnu) sha256=5bd4cea83b68b5ec0037f99c57d5ce2dd5aa438f35decc5ef68a7d085c785668
@@ -504,7 +493,6 @@ CHECKSUMS
   minitest (6.0.1) sha256=7854c74f48e2e975969062833adc4013f249a4b212f5e7b9d5c040bf838d54bb
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
   mutex_m (0.3.0) sha256=cfcb04ac16b69c4813777022fdceda24e9f798e48092a2b817eb4c0a782b0751
-  net-http (0.9.1) sha256=25ba0b67c63e89df626ed8fac771d0ad24ad151a858af2cc8e6a716ca4336996
   net-imap (0.6.2) sha256=08caacad486853c61676cca0c0c47df93db02abc4a8239a8b67eb0981428acc6
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
