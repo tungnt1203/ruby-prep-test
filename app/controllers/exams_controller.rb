@@ -56,7 +56,7 @@ class ExamsController < ApplicationController
 
     if @exam_session
       @exam = build_exam_hash(@exam_session)
-      @questions = build_questions_array(@exam_session, @exam_attempt)
+      @questions = build_questions_array(@exam_session, @exam_attempt, @exam_room)
       raw_ends_at = @exam_room&.started? && @exam_room.ends_at.present? ? @exam_room.ends_at : nil
       @room_ends_at = raw_ends_at.respond_to?(:iso8601) ? raw_ends_at : (raw_ends_at.respond_to?(:to_time) ? raw_ends_at.to_time : nil)
     else
@@ -98,7 +98,7 @@ class ExamsController < ApplicationController
     @details_by_qid = @score_from_db[:details].index_by { |d| d[:question_id].to_i } if @score_from_db.present?
 
     if @exam_session
-      @questions_for_result = build_questions_array(@exam_session, @exam_attempt)
+      @questions_for_result = build_questions_array(@exam_session, @exam_attempt, @exam_attempt&.exam_room)
       @exam_title = @exam_session.exam_title
       @total_questions = @exam_session.total_questions
     end
@@ -115,9 +115,10 @@ class ExamsController < ApplicationController
     }
   end
 
-  def build_questions_array(exam_session, attempt = nil)
+  def build_questions_array(exam_session, attempt = nil, exam_room = nil)
     questions = exam_session.questions.order(:id).to_a
-    seed = attempt.present? && attempt.attempt_token.present? ? attempt.attempt_token.bytes.sum : nil
+    # Cùng phòng thi → cùng seed → đề và thứ tự đáp án giống nhau cho mọi thí sinh
+    seed = questions_seed_for(exam_room, attempt)
     if seed
       questions = questions.shuffle(random: Random.new(seed))
     end
@@ -134,6 +135,15 @@ class ExamsController < ApplicationController
         "topic_key" => q.topic_key,
         "topic_name" => q.topic_name
       }
+    end
+  end
+
+  # Seed cho thứ tự câu/đáp án: theo room nếu có phòng (đề giống nhau trong room), không thì theo attempt
+  def questions_seed_for(exam_room, attempt)
+    if exam_room.present?
+      exam_room.id.to_i
+    elsif attempt.present? && attempt.attempt_token.present?
+      attempt.attempt_token.bytes.sum
     end
   end
 
