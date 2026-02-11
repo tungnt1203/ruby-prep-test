@@ -65,23 +65,27 @@
                 <% if question["topic_key"].present? %>
                   <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600" title="<%= question['topic_name'] %>"><%= question["topic_key"] %></span>
                 <% end %>
+                <% if question["type"] == "multiple" %>
+                  <span class="text-xs text-slate-500">(Multiple answers)</span>
+                <% end %>
               </div>
               <div class="prose prose-slate max-w-none text-slate-700 mb-6">
                 <%= simple_exam_markdown(question["question"]) %>
               </div>
               <p class="text-sm font-medium text-slate-600 mb-2">Your answers:</p>
               <ul class="space-y-2">
+                <% is_multi = question["type"] == "multiple" %>
                 <% choices.each do |choice| %>
                   <% selected = answer_ids.include?(choice["id"].to_s) %>
                   <li class="flex items-center gap-3 p-3 rounded-lg border <%= selected ? (is_correct ? 'border-emerald-300 bg-emerald-50' : 'border-rose-300 bg-rose-50') : 'border-slate-200 bg-slate-50' %>">
                     <% if selected %>
                       <% if is_correct %>
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white" aria-hidden="true">✓</span>
+                        <span class="flex-shrink-0 w-6 h-6 <%= is_multi ? 'rounded' : 'rounded-full' %> bg-emerald-500 flex items-center justify-center text-white" aria-hidden="true">✓</span>
                       <% else %>
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full bg-rose-400 flex items-center justify-center text-white" aria-hidden="true">✗</span>
+                        <span class="flex-shrink-0 w-6 h-6 <%= is_multi ? 'rounded' : 'rounded-full' %> bg-rose-400 flex items-center justify-center text-white" aria-hidden="true">✗</span>
                       <% end %>
                     <% else %>
-                      <span class="flex-shrink-0 w-6 h-6 rounded-full border-2 border-slate-300 bg-white"></span>
+                      <span class="flex-shrink-0 w-6 h-6 <%= is_multi ? 'rounded border-2' : 'rounded-full border-2' %> border-slate-300 bg-white"></span>
                     <% end %>
                     <span class="text-sm font-medium text-slate-800 prose prose-slate max-w-none"><%= choice["id"] %>. <%= simple_exam_markdown(choice["label"].to_s.strip) %></span>
                   </li>
