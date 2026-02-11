@@ -67,6 +67,11 @@
     <p class="mt-4 text-sm text-slate-600">
       <%= link_to "View leaderboard", room_results_path(@room.room_code), class: "text-indigo-600 hover:underline" %> (updates as participants submit)
     </p>
+    <% if room_created_by_current_user?(@room) %>
+      <p class="mt-4 text-xs">
+        <%= button_to "Delete this room", room_destroy_path(@room.room_code), method: :delete, form: { data: { turbo_confirm: "Delete this room and all participant attempts? This cannot be undone." } }, class: "text-red-600 hover:underline" %>
+      </p>
+    <% end %>
     <p class="mt-6 text-xs text-slate-500">
       <%= link_to "← Back", room_created_by_current_user?(@room) ? dashboard_path : root_path, class: "text-indigo-600 hover:underline" %>
     </p>

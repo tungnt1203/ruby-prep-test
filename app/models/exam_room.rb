@@ -3,7 +3,7 @@
 class ExamRoom < ApplicationRecord
   belongs_to :exam_session
   belongs_to :created_by, class_name: "User", optional: true
-  has_many :exam_attempts, dependent: :nullify
+  has_many :exam_attempts, dependent: :destroy
 
   validates :starts_at, presence: true
   validates :room_code, presence: true, uniqueness: true

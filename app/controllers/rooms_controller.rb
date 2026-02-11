@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class RoomsController < ApplicationController
-  before_action :require_host, only: [:new, :create]
-  before_action :set_room, only: [:show, :results, :participants, :start_now]
+  before_action :require_host, only: [:new, :create, :destroy]
+  before_action :set_room, only: [:show, :results, :participants, :start_now, :destroy]
 
   def new
     @exam_sessions = ExamSession.order(created_at: :desc).limit(20)
@@ -68,6 +68,18 @@ class RoomsController < ApplicationController
     end
     @room.update!(starts_at: Time.current)
     redirect_to room_path(@room.room_code), notice: "Exam started now. Candidates can begin."
+  end
+
+  def destroy
+    return if performed?
+
+    unless current_user&.host? && @room.created_by_id == current_user.id
+      redirect_to room_path(@room.room_code), alert: "Only the room creator can delete this room."
+      return
+    end
+    room_code = @room.room_code
+    @room.destroy
+    redirect_to dashboard_path, notice: "Room #{room_code} and all related attempts have been deleted."
   end
 
   def participants

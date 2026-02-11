@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   get "rooms/new", to: "rooms#new", as: :new_room
   post "rooms", to: "rooms#create", as: :rooms
   get "rooms/:room_code", to: "rooms#show", as: :room, room_code: /[A-Za-z0-9]+/
+  delete "rooms/:room_code", to: "rooms#destroy", as: :room_destroy, room_code: /[A-Za-z0-9]+/
   patch "rooms/:room_code/start_now", to: "rooms#start_now", as: :room_start_now, room_code: /[A-Za-z0-9]+/
   get "rooms/:room_code/participants", to: "rooms#participants", as: :room_participants, room_code: /[A-Za-z0-9]+/
   get "rooms/:room_code/results", to: "rooms#results", as: :room_results, room_code: /[A-Za-z0-9]+/

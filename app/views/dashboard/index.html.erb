@@ -33,6 +33,7 @@
               <td class="px-4 py-3 text-right space-x-2">
                 <%= link_to "Room", room_path(room.room_code), class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
                 <%= link_to "Results", room_results_path(room.room_code), class: "text-sm font-medium text-indigo-600 hover:text-indigo-800" %>
+                <%= button_to "Delete", room_destroy_path(room.room_code), method: :delete, form: { data: { turbo_confirm: "Delete this room and all participant attempts? This cannot be undone." }, class: "inline" }, class: "text-sm font-medium text-red-600 hover:text-red-800" %>
               </td>
             </tr>
           <% end %>
