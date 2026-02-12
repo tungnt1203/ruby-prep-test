@@ -1,62 +1,90 @@
-<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-  <div class="w-full max-w-lg rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8">
-    <h1 class="text-xl font-semibold text-slate-900">Exam created</h1>
+<div class="min-h-[calc(100vh-3.5rem)] flex items-center justify-center p-4">
+  <div class="w-full max-w-lg">
+    <%# Success header %>
+    <div class="text-center mb-8">
+      <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 mb-4">
+        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      </div>
+      <h1 class="text-2xl font-bold text-slate-900">Exam Created</h1>
+      <p class="mt-2 text-sm text-slate-500">Your exam is ready. Share the code or schedule a room for candidates.</p>
+    </div>
 
-    <div class="mt-6 space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Exam code (hash_id)</label>
+    <div class="space-y-4">
+      <%# Exam code card %>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Exam Code</label>
         <div class="flex gap-2">
           <input
             type="text"
             value="<%= @exam_code %>"
             readonly
             id="exam_code_input"
-            class="flex-1 rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-900 font-mono text-sm"
+            class="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base font-mono font-bold text-slate-900 tracking-wider"
           />
           <button
             type="button"
-            onclick="navigator.clipboard.writeText(document.getElementById('exam_code_input').value).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy'; }, 1500); })"
-            class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 shrink-0"
+            onclick="navigator.clipboard.writeText(document.getElementById('exam_code_input').value).then(() => { this.querySelector('span').textContent = 'Copied!'; setTimeout(() => { this.querySelector('span').textContent = 'Copy'; }, 1500); })"
+            class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors duration-150 cursor-pointer shrink-0"
           >
-            Copy
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" /></svg>
+            <span>Copy</span>
           </button>
         </div>
       </div>
 
-      <div class="rounded-lg bg-amber-50 border border-amber-200 p-4">
-        <p class="text-sm font-medium text-amber-800">Recommended: Schedule a room for timed exam</p>
-        <p class="mt-1 text-xs text-amber-700">Candidates join room → wait for start time → same exam, timer, leaderboard.</p>
-        <%= link_to "Schedule a room for this exam", new_room_path(exam_hash_id: @exam_code), class: "mt-3 inline-flex items-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-500" %>
+      <%# Recommended next step %>
+      <div class="rounded-2xl border-2 border-orange-200 bg-orange-50 p-6">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-bold text-orange-900">Recommended: Schedule a Room</p>
+            <p class="mt-1 text-xs text-orange-700">Create a timed room so candidates can join, wait, and start the exam together with a shared timer and leaderboard.</p>
+            <div class="mt-4">
+              <%= link_to "Schedule a room for this exam", new_room_path(exam_hash_id: @exam_code), class: "inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-orange-400 transition-colors duration-150 cursor-pointer" %>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <%# Solo practice link %>
       <% exam_url = "#{request.base_url}#{exams_path}?exam_code=#{@exam_code}" %>
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">Exam link (solo / practice)</label>
-        <p class="mb-1 text-xs text-slate-500">Direct link for one person. No room timer, no leaderboard. Use for self-practice.</p>
-        <div class="flex flex-col gap-2">
-          <input
-            type="text"
-            value="<%= exam_url %>"
-            readonly
-            id="exam_url_input"
-            class="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-900 font-mono text-sm"
-          />
-          <div class="flex gap-2">
-            <%= link_to "Start", exams_path(exam_code: @exam_code), class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 text-center" %>
-            <button
-              type="button"
-              onclick="navigator.clipboard.writeText('<%= exam_url %>').then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy link'; }, 1500); })"
-              class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-            >
-              Copy link
-            </button>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6">
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold text-slate-900">Solo Practice Link</p>
+            <p class="mt-0.5 text-xs text-slate-500">Direct link for one person. No room timer, no leaderboard.</p>
+            <div class="mt-3 flex flex-col gap-2">
+              <input
+                type="text"
+                value="<%= exam_url %>"
+                readonly
+                id="exam_url_input"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 font-mono truncate"
+              />
+              <div class="flex gap-2">
+                <%= link_to "Start now", exams_path(exam_code: @exam_code), class: "inline-flex items-center gap-1 rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors duration-150 cursor-pointer" %>
+                <button
+                  type="button"
+                  onclick="navigator.clipboard.writeText('<%= exam_url %>').then(() => { this.querySelector('span').textContent = 'Copied!'; setTimeout(() => { this.querySelector('span').textContent = 'Copy link'; }, 1500); })"
+                  class="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors duration-150 cursor-pointer"
+                >
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.54a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.34 8.374" /></svg>
+                  <span>Copy link</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <p class="mt-6 text-xs text-slate-500">
-      <%= link_to "← Create another exam", pre_exams_path, class: "text-indigo-600 hover:underline" %>
+    <p class="mt-6 text-center">
+      <%= link_to "Create another exam", pre_exams_path, class: "text-sm text-slate-400 hover:text-slate-600 transition-colors duration-150" %>
     </p>
   </div>
 </div>

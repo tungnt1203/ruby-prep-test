@@ -1,34 +1,92 @@
-<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-  <div class="w-full max-w-md rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8">
-    <h1 class="text-xl font-semibold text-slate-900">Sign up</h1>
-    <p class="mt-2 text-sm text-slate-600">Create an account to join rooms and take exams. Host accounts can be set in the console.</p>
+<div class="min-h-[calc(100vh-3.5rem)] flex">
+  <%# Left: Branded panel (hidden on mobile) %>
+  <div class="hidden lg:flex lg:w-1/2 bg-indigo-600 p-12 flex-col justify-between">
+    <div>
+      <div class="flex items-center gap-3 mb-12">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-white font-extrabold text-lg">R</span>
+        <span class="text-lg font-bold text-white">Ruby Prep Test</span>
+      </div>
+      <h2 class="text-3xl font-extrabold text-white leading-tight">
+        Start assessing<br>Ruby knowledge today
+      </h2>
+      <p class="mt-4 text-base text-indigo-200 max-w-md">
+        Create your account to join rooms, take exams, and track your Ruby Silver preparation.
+      </p>
+    </div>
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
+        </span>
+        <span class="text-sm text-indigo-100">Ruby Silver certification questions</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
+        </span>
+        <span class="text-sm text-indigo-100">Join assessment rooms with other candidates</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+        </span>
+        <span class="text-sm text-indigo-100">Instant feedback with detailed explanations</span>
+      </div>
+    </div>
+  </div>
 
-    <%= form_with model: @user, url: signup_path, method: :post, local: true, class: "mt-6 space-y-4" do |f| %>
-      <% if @user.errors.any? %>
-        <div class="rounded-lg bg-rose-50 p-3 text-sm text-rose-700">
-          <%= @user.errors.full_messages.to_sentence %>
+  <%# Right: Sign up form %>
+  <div class="flex flex-1 items-center justify-center p-6 sm:p-12">
+    <div class="w-full max-w-sm">
+      <div class="lg:hidden flex items-center gap-2.5 mb-8">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-extrabold text-sm">R</span>
+        <span class="text-sm font-bold text-slate-900">Ruby Prep Test</span>
+      </div>
+
+      <h1 class="text-2xl font-bold text-slate-900">Create account</h1>
+      <p class="mt-2 text-sm text-slate-500">Sign up to join rooms and take Ruby assessments.</p>
+
+      <%= form_with model: @user, url: signup_path, method: :post, local: true, class: "mt-8 space-y-5" do |f| %>
+        <% if @user.errors.any? %>
+          <div class="rounded-xl bg-rose-50 border border-rose-200 p-4">
+            <div class="flex items-start gap-3">
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600 mt-0.5">
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+              </span>
+              <p class="text-sm font-medium text-rose-800"><%= @user.errors.full_messages.to_sentence %></p>
+            </div>
+          </div>
+        <% end %>
+        <div>
+          <label for="user_email" class="block text-sm font-medium text-slate-700">Email</label>
+          <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email", placeholder: "you@example.com", class: "mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" %>
         </div>
+        <div>
+          <label for="user_password" class="block text-sm font-medium text-slate-700">Password</label>
+          <%= f.password_field :password, required: true, autocomplete: "new-password", placeholder: "At least 6 characters", class: "mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" %>
+        </div>
+        <div>
+          <label for="user_password_confirmation" class="block text-sm font-medium text-slate-700">Confirm password</label>
+          <%= f.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Re-enter your password", class: "mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" %>
+        </div>
+        <button type="submit" class="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer">
+          Create account
+        </button>
       <% end %>
-      <div>
-        <label for="user_email" class="block text-sm font-medium text-slate-700">Email</label>
-        <%= f.email_field :email, required: true, autofocus: true, class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-      </div>
-      <div>
-        <label for="user_password" class="block text-sm font-medium text-slate-700">Password</label>
-        <%= f.password_field :password, required: true, class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-      </div>
-      <div>
-        <label for="user_password_confirmation" class="block text-sm font-medium text-slate-700">Password confirmation</label>
-        <%= f.password_field :password_confirmation, required: true, class: "mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-      </div>
-      <button type="submit" class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500">Sign up</button>
-    <% end %>
 
-    <p class="mt-4 text-sm text-slate-600">
-      Already have an account? <%= link_to "Sign in", login_path, class: "text-indigo-600 hover:underline" %>
-    </p>
-    <p class="mt-2 text-xs text-slate-500">
-      <%= link_to "← Back", root_path, class: "text-indigo-600 hover:underline" %>
-    </p>
+      <div class="mt-6 flex items-center gap-2">
+        <div class="flex-1 border-t border-slate-200"></div>
+        <span class="text-xs text-slate-400">or</span>
+        <div class="flex-1 border-t border-slate-200"></div>
+      </div>
+
+      <p class="mt-6 text-center text-sm text-slate-500">
+        Already have an account?
+        <%= link_to "Sign in", login_path, class: "font-semibold text-indigo-600 hover:text-indigo-500 transition-colors duration-150" %>
+      </p>
+      <p class="mt-3 text-center">
+        <%= link_to "Join a room instead", join_path, class: "text-sm text-slate-400 hover:text-slate-600 transition-colors duration-150" %>
+      </p>
+    </div>
   </div>
 </div>

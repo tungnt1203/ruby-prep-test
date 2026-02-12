@@ -1,79 +1,109 @@
 <%= turbo_stream_from "room:#{@room.room_code}" %>
-<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4" data-controller="room-countdown" data-room-countdown-starts-at-value="<%= @room.starts_at.iso8601 %>" data-room-countdown-room-url-value="<%= exams_path(exam_code: @room.exam_hash_id, room_code: @room.room_code) %>">
-  <div class="w-full max-w-lg rounded-xl bg-white shadow-sm ring-1 ring-slate-200 p-8 text-center">
-    <h1 class="text-xl font-semibold text-slate-900"><%= @room.name.presence || "Ruby interview room" %></h1>
-    <p class="mt-2 text-sm text-slate-600"><%= @exam_session.exam_title %></p>
-    <p class="mt-1 text-sm text-slate-500"><%= @exam_session.total_questions %> questions</p>
-
-    <% if @room.instructions.present? %>
-      <div class="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-left">
-        <p class="text-xs font-medium uppercase tracking-wider text-amber-700 mb-2">Instructions</p>
-        <p class="text-sm text-amber-900 whitespace-pre-wrap"><%= @room.instructions %></p>
+<div class="min-h-[calc(100vh-3.5rem)] flex items-center justify-center p-4" data-controller="room-countdown" data-room-countdown-starts-at-value="<%= @room.starts_at.iso8601 %>" data-room-countdown-room-url-value="<%= exams_path(exam_code: @room.exam_hash_id, room_code: @room.room_code) %>">
+  <div class="w-full max-w-lg">
+    <%# Room header %>
+    <div class="text-center mb-6">
+      <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 mb-4">
+        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>
       </div>
-    <% end %>
-
-    <div class="mt-8 p-6 rounded-xl bg-slate-100 border border-slate-200">
-      <p class="text-xs font-medium uppercase tracking-wider text-slate-500 mb-2">Starts at</p>
-      <p class="text-lg font-semibold text-slate-800" data-room-countdown-target="startsAt"><%= @room.starts_at.strftime("%Y-%m-%d %H:%M %Z") %></p>
-      <p class="text-sm text-slate-500 mt-1" data-room-countdown-target="localTime">(<span class="local-time" data-iso="<%= @room.starts_at.iso8601 %>">...</span>)</p>
-      <p class="mt-4 text-2xl font-mono font-bold text-indigo-600 tabular-nums" data-room-countdown-target="countdown">--:--:--</p>
-      <p class="mt-1 text-xs text-slate-500" data-room-countdown-target="label">Loading…</p>
+      <h1 class="text-2xl font-bold text-slate-900"><%= @room.name.presence || "Ruby Interview Room" %></h1>
+      <p class="mt-1 text-sm text-slate-500"><%= @exam_session.exam_title %> &middot; <%= @exam_session.total_questions %> questions</p>
     </div>
-    <script>
-      (function() {
-        var el = document.querySelector('.local-time');
-        if (el && el.dataset.iso) {
-          var d = new Date(el.dataset.iso);
-          el.textContent = 'your time: ' + d.toLocaleString();
-        }
-      })();
-    </script>
 
-    <% if room_created_by_current_user?(@room) && !@room.started? %>
-      <div class="mt-4">
-        <%= button_to "Start exam now", room_start_now_path(@room.room_code), method: :patch, class: "inline-flex items-center rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2" %>
-        <p class="mt-1 text-xs text-slate-500">Candidates can begin immediately after.</p>
-      </div>
-    <% end %>
-
-    <div class="mt-6" data-room-countdown-target="startBlock" style="display: none;">
-      <div id="room_<%= @room.room_code %>_participants">
-        <%= render "rooms/participants", room: @room %>
-      </div>
-      <%= form_with url: exams_path, method: :get, local: true, class: "flex flex-col gap-3 items-center" do |f| %>
-        <%= hidden_field_tag :exam_code, @room.exam_hash_id %>
-        <%= hidden_field_tag :room_code, @room.room_code %>
-        <div class="w-full max-w-xs text-left">
-          <label for="display_name" class="block text-xs font-medium text-slate-500 mb-1">Your name <%= @room.require_display_name ? '(required)' : '(optional)' %></label>
-          <%= text_field_tag :display_name, nil, placeholder: "e.g. Nguyen Van A", required: @room.require_display_name, class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+    <div class="space-y-4">
+      <%# Instructions %>
+      <% if @room.instructions.present? %>
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <div class="flex items-start gap-3">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600 mt-0.5">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+            </span>
+            <div>
+              <p class="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">Instructions</p>
+              <p class="text-sm text-amber-900 whitespace-pre-wrap"><%= @room.instructions %></p>
+            </div>
+          </div>
         </div>
-        <div class="w-full max-w-xs text-left">
-          <label for="candidate_identifier" class="block text-xs font-medium text-slate-500 mb-1">Email or candidate ID <%= @room.require_candidate_identifier ? '(required)' : '(optional)' %></label>
-          <%= text_field_tag :candidate_identifier, nil, placeholder: "e.g. email@company.com", required: @room.require_candidate_identifier, class: "block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-        </div>
-        <p class="text-xs text-slate-500">You must be signed in to take the exam.</p>
-        <button type="submit" class="inline-flex items-center rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Start exam</button>
       <% end %>
-    </div>
 
-    <div class="mt-6 flex flex-col gap-2">
-      <label class="block text-xs font-medium text-slate-500 text-left">Share this link</label>
-      <div class="flex gap-2">
-        <input type="text" readonly value="<%= request.base_url %><%= room_path(@room.room_code) %>" id="room_url" class="flex-1 rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-900 font-mono text-sm" />
-        <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('room_url').value).then(() => { this.textContent = 'Copied!'; setTimeout(() => { this.textContent = 'Copy'; }, 1500); })" class="rounded-lg bg-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-300 shrink-0">Copy</button>
+      <%# Countdown card %>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Starts at</p>
+        <p class="text-base font-semibold text-slate-800" data-room-countdown-target="startsAt"><%= @room.starts_at.strftime("%b %d, %Y %H:%M %Z") %></p>
+        <p class="text-xs text-slate-400 mt-1" data-room-countdown-target="localTime">(<span class="local-time" data-iso="<%= @room.starts_at.iso8601 %>">...</span>)</p>
+        <div class="mt-4 py-4 px-6 rounded-xl bg-slate-50 inline-block">
+          <p class="text-3xl font-mono font-extrabold text-indigo-600 tabular-nums" data-room-countdown-target="countdown">--:--:--</p>
+          <p class="mt-1 text-xs text-slate-500" data-room-countdown-target="label">Loading...</p>
+        </div>
+        <script>
+          (function() {
+            var el = document.querySelector('.local-time');
+            if (el && el.dataset.iso) {
+              var d = new Date(el.dataset.iso);
+              el.textContent = 'your time: ' + d.toLocaleString();
+            }
+          })();
+        </script>
       </div>
-    </div>
 
-    <p class="mt-4 text-sm text-slate-600">
-      <%= link_to "View leaderboard", room_results_path(@room.room_code), class: "text-indigo-600 hover:underline" %> (updates as participants submit)
-    </p>
-    <% if room_created_by_current_user?(@room) %>
-      <p class="mt-4 text-xs">
-        <%= button_to "Delete this room", room_destroy_path(@room.room_code), method: :delete, form: { data: { turbo_confirm: "Delete this room and all participant attempts? This cannot be undone." } }, class: "text-red-600 hover:underline" %>
+      <%# Host: Start now button %>
+      <% if room_created_by_current_user?(@room) && !@room.started? %>
+        <div class="rounded-2xl border border-orange-200 bg-orange-50 p-5 text-center">
+          <%= button_to "Start exam now", room_start_now_path(@room.room_code), method: :patch, class: "inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-400 transition-colors duration-150 cursor-pointer" %>
+          <p class="mt-2 text-xs text-orange-600">Candidates can begin immediately.</p>
+        </div>
+      <% end %>
+
+      <%# Start exam block (shown by countdown controller) %>
+      <div data-room-countdown-target="startBlock" style="display: none;" class="space-y-4">
+        <div id="room_<%= @room.room_code %>_participants">
+          <%= render "rooms/participants", room: @room %>
+        </div>
+
+        <%= form_with url: exams_path, method: :get, local: true, class: "rounded-2xl border border-slate-200 bg-white p-6" do |f| %>
+          <%= hidden_field_tag :exam_code, @room.exam_hash_id %>
+          <%= hidden_field_tag :room_code, @room.room_code %>
+          <div class="space-y-4">
+            <div>
+              <label for="display_name" class="block text-sm font-medium text-slate-700">Your name <%= @room.require_display_name ? '<span class="text-rose-500">*</span>'.html_safe : '<span class="text-slate-400 font-normal">(optional)</span>'.html_safe %></label>
+              <%= text_field_tag :display_name, nil, placeholder: "e.g. Nguyen Van A", required: @room.require_display_name, class: "mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" %>
+            </div>
+            <div>
+              <label for="candidate_identifier" class="block text-sm font-medium text-slate-700">Email or candidate ID <%= @room.require_candidate_identifier ? '<span class="text-rose-500">*</span>'.html_safe : '<span class="text-slate-400 font-normal">(optional)</span>'.html_safe %></label>
+              <%= text_field_tag :candidate_identifier, nil, placeholder: "e.g. email@company.com", required: @room.require_candidate_identifier, class: "mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" %>
+            </div>
+            <p class="text-xs text-slate-400 text-center">You must be signed in to take the exam.</p>
+            <button type="submit" class="w-full rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer">
+              Start Exam
+            </button>
+          </div>
+        <% end %>
+      </div>
+
+      <%# Share link %>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5">
+        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Share this room</label>
+        <div class="flex gap-2">
+          <input type="text" readonly value="<%= request.base_url %><%= room_path(@room.room_code) %>" id="room_url" class="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 font-mono truncate" />
+          <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('room_url').value).then(() => { this.querySelector('span').textContent = 'Copied!'; setTimeout(() => { this.querySelector('span').textContent = 'Copy'; }, 1500); })" class="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors duration-150 cursor-pointer shrink-0">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" /></svg>
+            <span>Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Footer links %>
+      <div class="flex items-center justify-center gap-4 text-sm">
+        <%= link_to "View leaderboard", room_results_path(@room.room_code), class: "text-indigo-600 hover:text-indigo-500 font-medium transition-colors duration-150" %>
+        <% if room_created_by_current_user?(@room) %>
+          <span class="text-slate-300">&middot;</span>
+          <%= button_to "Delete room", room_destroy_path(@room.room_code), method: :delete, form: { data: { turbo_confirm: "Delete this room and all participant attempts? This cannot be undone." } }, class: "text-red-500 hover:text-red-600 font-medium transition-colors duration-150 cursor-pointer" %>
+        <% end %>
+      </div>
+
+      <p class="text-center">
+        <%= link_to "Back", room_created_by_current_user?(@room) ? dashboard_path : root_path, class: "text-sm text-slate-400 hover:text-slate-600 transition-colors duration-150" %>
       </p>
-    <% end %>
-    <p class="mt-6 text-xs text-slate-500">
-      <%= link_to "← Back", room_created_by_current_user?(@room) ? dashboard_path : root_path, class: "text-indigo-600 hover:underline" %>
-    </p>
+    </div>
   </div>
 </div>

@@ -46,10 +46,10 @@ export default class extends Controller {
         const correct = item.dataset.questionCorrect
         const isCurrent = itemIndex === i
         item.classList.remove(
-          "bg-indigo-600", "text-white",
-          "bg-emerald-500", "text-white",
-          "bg-rose-400", "text-white",
-          "bg-slate-200", "text-slate-600"
+          "bg-indigo-600", "text-white", "ring-2", "ring-indigo-600", "ring-offset-1",
+          "bg-emerald-500",
+          "bg-rose-400",
+          "bg-slate-200", "text-slate-500"
         )
         if (isCurrent) {
           item.classList.add("bg-indigo-600", "text-white")
@@ -58,7 +58,7 @@ export default class extends Controller {
         } else if (correct === "false") {
           item.classList.add("bg-rose-400", "text-white")
         } else {
-          item.classList.add("bg-slate-200", "text-slate-600")
+          item.classList.add("bg-slate-200", "text-slate-500")
         }
       })
     }

@@ -1,0 +1,68 @@
+# Docker Compose for Fast Quiz - Ruby on Rails Application
+# Usage:
+#   Development: docker compose up
+#   Debug:       docker attach fast_quiz_rails
+#   Production:  docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+x-common: &common
+  build:
+    context: .
+    dockerfile: Dockerfile.dev
+  image: fast_quiz:development
+  volumes:
+    - .:/rails
+    - bundle_cache:/usr/local/bundle
+    - node_modules:/rails/node_modules
+    # Explicit mount for SQLite database - ensures files are visible on host
+    - ./storage:/rails/storage
+  stdin_open: true
+  tty: true
+
+services:
+  rails:
+    <<: *common
+    container_name: fast_quiz_rails
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      RAILS_LOG_TO_STDOUT: "true"
+      # Vite dev server check - Rails connects to vite container internally
+      VITE_DEV_SERVER_HOST: vite
+      PORT: 3000
+    command: >
+      bash -c "bundle install &&
+               ./bin/rails db:prepare &&
+               ./bin/rails server -b 0.0.0.0 -p 3000"
+    depends_on:
+      vite:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  vite:
+    <<: *common
+    container_name: fast_quiz_vite
+    ports:
+      - "3036:3036"
+    environment:
+      VITE_RUBY_HOST: 0.0.0.0
+    command: >
+      bash -c "yarn install &&
+               ./bin/vite dev"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3036/vite-dev/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  bundle_cache:
+    name: fast_quiz_bundle_cache
+  node_modules:
+    name: fast_quiz_node_modules

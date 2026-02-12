@@ -1,0 +1,38 @@
+# Docker Compose Production Override
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Before running:
+#   1. Set RAILS_MASTER_KEY environment variable or create .env file
+#   2. Build production image: docker compose -f docker-compose.yml -f docker-compose.prod.yml build
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Use final production stage (not build stage)
+      target: ""
+    image: fast_quiz:production
+    container_name: fast_quiz_prod
+    ports:
+      - "80:80"
+    volumes:
+      - storage:/rails/storage
+    environment:
+      - RAILS_ENV=production
+      - RAILS_LOG_TO_STDOUT=true
+      - RAILS_SERVE_STATIC_FILES=true
+      - SOLID_QUEUE_IN_PUMA=true
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+    command: ["./bin/thrust", "./bin/rails", "server"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  storage:
+    name: fast_quiz_storage_prod

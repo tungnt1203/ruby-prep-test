@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= content_for(:title) || "Ruby Prep Test" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -18,60 +18,119 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= vite_stylesheet_tag "application" %>
     <%= vite_client_tag %>
     <%= vite_javascript_tag "application" %>
-    <!--
-      If using a TypeScript entrypoint file:
-        vite_typescript_tag 'application'
-
-      If using a .jsx or .tsx entrypoint, add the extension:
-        vite_javascript_tag 'application.jsx'
-
-      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
-    -->
-
   </head>
 
   <body class="min-h-screen bg-slate-50">
-    <header class="border-b border-slate-200 bg-white">
-      <div class="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <%= link_to "Ruby Prep Test", root_path, class: "text-sm font-semibold text-slate-900" %>
-        <nav class="flex items-center gap-4">
+    <%# ===== NAVIGATION ===== %>
+    <header class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur-sm">
+      <div class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <%# Logo %>
+        <%= link_to root_path, class: "flex items-center gap-2.5 cursor-pointer group" do %>
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-extrabold text-sm transition-colors duration-150 group-hover:bg-indigo-500">R</span>
+          <span class="text-sm font-bold text-slate-900 hidden sm:inline">Ruby Prep Test</span>
+        <% end %>
+
+        <%# Desktop nav %>
+        <nav class="hidden sm:flex items-center gap-1">
           <% if logged_in? %>
-            <span class="text-sm text-slate-600"><%= current_user.email %></span>
-            <%= button_to "Sign out", logout_path, method: :delete, class: "text-sm text-slate-500 hover:text-slate-700" %>
+            <% if current_user.host? %>
+              <%= link_to "Dashboard", dashboard_path, class: "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
+              <%= link_to "Create Exam", pre_exams_path, class: "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
+            <% end %>
+            <%= link_to "Join Room", join_path, class: "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
+            <div class="ml-3 h-5 w-px bg-slate-200"></div>
+            <div class="ml-3 flex items-center gap-2.5">
+              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700"><%= current_user.email[0].upcase %></span>
+              <div class="flex flex-col">
+                <span class="text-xs font-medium text-slate-700 leading-tight max-w-[140px] truncate"><%= current_user.email %></span>
+                <% if current_user.host? %>
+                  <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-wide leading-tight">Host</span>
+                <% end %>
+              </div>
+              <%= button_to "Sign out", logout_path, method: :delete, class: "ml-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors duration-150 cursor-pointer" %>
+            </div>
           <% else %>
-            <%= link_to "Sign in", login_path, class: "text-sm font-medium text-slate-600 hover:text-slate-900" %>
-            <%= link_to "Sign up", signup_path, class: "text-sm font-medium text-indigo-600 hover:text-indigo-500" %>
+            <%= link_to "Join Room", join_path, class: "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
+            <div class="ml-2 h-5 w-px bg-slate-200"></div>
+            <%= link_to "Sign in", login_path, class: "ml-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
+            <%= link_to "Sign up", signup_path, class: "rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors duration-150 cursor-pointer" %>
           <% end %>
         </nav>
+
+        <%# Mobile menu toggle %>
+        <button type="button" class="sm:hidden rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors duration-150 cursor-pointer" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" aria-label="Toggle menu">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+        </button>
+      </div>
+
+      <%# Mobile dropdown menu %>
+      <div id="mobile-menu" class="hidden sm:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1">
+        <% if logged_in? %>
+          <div class="flex items-center gap-3 px-3 py-2.5 mb-2 rounded-lg bg-slate-50">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-700"><%= current_user.email[0].upcase %></span>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-slate-900 truncate"><%= current_user.email %></p>
+              <% if current_user.host? %>
+                <span class="inline-flex items-center rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-700 uppercase tracking-wide">Host</span>
+              <% end %>
+            </div>
+          </div>
+          <% if current_user.host? %>
+            <%= link_to "Dashboard", dashboard_path, class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
+            <%= link_to "Create Exam", pre_exams_path, class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
+          <% end %>
+          <%= link_to "Join Room", join_path, class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
+          <div class="border-t border-slate-200 mt-2 pt-2">
+            <%= button_to "Sign out", logout_path, method: :delete, class: "w-full text-left rounded-lg px-3 py-2.5 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 cursor-pointer" %>
+          </div>
+        <% else %>
+          <%= link_to "Join Room", join_path, class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
+          <div class="border-t border-slate-200 mt-2 pt-2 space-y-1">
+            <%= link_to "Sign in", login_path, class: "block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
+            <%= link_to "Sign up", signup_path, class: "block rounded-lg bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white text-center hover:bg-indigo-500 cursor-pointer" %>
+          </div>
+        <% end %>
       </div>
     </header>
+
+    <%# ===== FLASH MESSAGES ===== %>
     <% if flash[:notice] || flash[:alert] %>
-      <div class="fixed top-4 left-4 z-50 flex flex-col gap-2 max-w-sm" role="alert">
+      <div class="fixed top-16 right-4 z-50 flex flex-col gap-2 max-w-sm" role="alert">
         <% if flash[:notice] %>
-          <div class="flex items-start gap-3 rounded-lg border border-emerald-200 bg-white px-4 py-3 shadow-lg ring-1 ring-emerald-500/10" >
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
+          <div class="flash-auto-dismiss flex items-start gap-3 rounded-xl border border-emerald-200 bg-white px-4 py-3 shadow-lg">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>
             </span>
             <p class="flex-1 text-sm font-medium text-emerald-800"><%= flash[:notice] %></p>
-            <button type="button" class="shrink-0 rounded p-1 text-emerald-600 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-500" onclick="this.parentElement.remove()" aria-label="Dismiss">×</button>
+            <button type="button" class="shrink-0 rounded-md p-1 text-slate-400 hover:text-slate-600 transition-colors duration-150 cursor-pointer" onclick="this.closest('[role=alert]').remove()" aria-label="Dismiss">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
           </div>
         <% end %>
         <% if flash[:alert] %>
-          <div class="flex items-start gap-3 rounded-lg border border-amber-200 bg-white px-4 py-3 shadow-lg ring-1 ring-amber-500/10" >
-            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+          <div class="flash-auto-dismiss flex items-start gap-3 rounded-xl border border-amber-200 bg-white px-4 py-3 shadow-lg">
+            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
             </span>
             <p class="flex-1 text-sm font-medium text-amber-800"><%= flash[:alert] %></p>
-            <button type="button" class="shrink-0 rounded p-1 text-amber-600 hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500" onclick="this.parentElement.remove()" aria-label="Dismiss">×</button>
+            <button type="button" class="shrink-0 rounded-md p-1 text-slate-400 hover:text-slate-600 transition-colors duration-150 cursor-pointer" onclick="this.closest('[role=alert]').remove()" aria-label="Dismiss">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
           </div>
         <% end %>
       </div>
     <% end %>
-    <%= yield %>
+
+    <%# ===== MAIN CONTENT ===== %>
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

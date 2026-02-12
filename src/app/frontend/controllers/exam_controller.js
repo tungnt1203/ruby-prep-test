@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["questionPanel", "questionItem"]
+  static targets = ["questionPanel", "questionItem", "progressBar", "answeredCount"]
   static values = { total: { type: Number, default: 50 }, current: { type: Number, default: 0 } }
 
   connect() {
@@ -93,14 +93,27 @@ export default class extends Controller {
       const itemIndex = parseInt(item.dataset.questionIndex, 10)
       const isCurrent = itemIndex === i
       const isAnswered = this.answeredIndices.has(itemIndex)
-      item.classList.remove("bg-indigo-600", "text-white", "bg-indigo-100", "text-indigo-700", "ring-2", "ring-indigo-400", "bg-slate-100", "text-slate-700")
+      item.classList.remove("bg-indigo-600", "text-white", "bg-indigo-100", "text-indigo-700", "ring-2", "ring-indigo-400", "bg-slate-100", "text-slate-600", "hover:bg-slate-200")
       if (isCurrent) {
         item.classList.add("bg-indigo-600", "text-white")
       } else if (isAnswered) {
         item.classList.add("bg-indigo-100", "text-indigo-700", "ring-2", "ring-indigo-400")
       } else {
-        item.classList.add("bg-slate-100", "text-slate-700")
+        item.classList.add("bg-slate-100", "text-slate-600", "hover:bg-slate-200")
       }
     })
+    this.updateProgress()
+  }
+
+  /** Update progress bar and answered count */
+  updateProgress() {
+    const count = this.answeredIndices.size
+    if (this.hasAnsweredCountTarget) {
+      this.answeredCountTarget.textContent = count
+    }
+    if (this.hasProgressBarTarget) {
+      const pct = this.totalValue > 0 ? (count / this.totalValue * 100) : 0
+      this.progressBarTarget.style.width = `${pct}%`
+    }
   }
 }
