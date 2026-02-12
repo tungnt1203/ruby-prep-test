@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class RoomsController < ApplicationController
-  before_action :require_host, only: [:new, :create, :destroy]
-  before_action :set_room, only: [:show, :results, :participants, :start_now, :destroy]
+  before_action :require_host, only: [ :new, :create, :destroy ]
+  before_action :set_room, only: [ :show, :results, :participants, :start_now, :destroy ]
 
   def new
     @exam_sessions = ExamSession.order(created_at: :desc).limit(20)
@@ -10,7 +10,7 @@ class RoomsController < ApplicationController
   end
 
   def create
-    exam_hash_id = [params[:exam_hash_id_manual], params[:exam_hash_id]].compact.find { |v| v.present? && v != "__manual__" }
+    exam_hash_id = [ params[:exam_hash_id_manual], params[:exam_hash_id] ].compact.find { |v| v.present? && v != "__manual__" }
     exam_session = ExamSession.find_by(hash_id: exam_hash_id)
     unless exam_session
       redirect_to new_room_path, alert: "Exam not found. Please enter a valid exam code."
@@ -44,12 +44,11 @@ class RoomsController < ApplicationController
 
     @exam_session = @room.exam_session
     @participants_count = @room.exam_attempts.count
-    @submitted_count = @room.exam_attempts.where.not(submissions: [nil, ""]).count
+    @submitted_count = @room.exam_attempts.where.not(submissions: [ nil, "" ]).count
     @participants = @room.exam_attempts.order(created_at: :asc).pluck(:display_name, :candidate_identifier, :submissions)
 
     if @room.expired?
       redirect_to room_results_path(@room.room_code), notice: "Room has ended. Here are the results."
-      return
     end
     # When room is started, do not redirect to exams here — user may not have entered name yet.
     # They see the "Start exam" form (countdown shows "Started!") and submit with display_name/candidate_identifier,
@@ -88,7 +87,7 @@ class RoomsController < ApplicationController
 
     render json: {
       participants_count: @room.exam_attempts.count,
-      submitted_count: @room.exam_attempts.where.not(submissions: [nil, ""]).count,
+      submitted_count: @room.exam_attempts.where.not(submissions: [ nil, "" ]).count,
       participants: @room.exam_attempts.order(created_at: :asc).map { |a| { display_name: a.display_name.presence || "—", submitted: a.submissions.present? } }
     }
   end
@@ -97,13 +96,13 @@ class RoomsController < ApplicationController
     return if performed?
 
     @exam_session = @room.exam_session
-    attempts_with_submissions = @room.exam_attempts.where.not(submissions: [nil, ""])
+    attempts_with_submissions = @room.exam_attempts.where.not(submissions: [ nil, "" ])
 
     @leaderboard = attempts_with_submissions.map do |attempt|
       subs = attempt.submissions_array
       result = @exam_session.score_submissions(subs)
       { attempt: attempt, score: result[:score], total: result[:total], submitted_at: attempt.updated_at }
-    end.sort_by { |e| [-e[:score], e[:submitted_at].to_i] }
+    end.sort_by { |e| [ -e[:score], e[:submitted_at].to_i ] }
 
     respond_to do |format|
       format.html
@@ -121,7 +120,6 @@ class RoomsController < ApplicationController
     @room = ExamRoom.find_by(room_code: params[:room_code])
     unless @room
       redirect_to root_path, alert: "Room not found."
-      return
     end
   end
 

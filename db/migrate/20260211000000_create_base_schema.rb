@@ -43,7 +43,7 @@ class CreateBaseSchema < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :question_choices, [:question_id, :choice_key], unique: true
+    add_index :question_choices, [ :question_id, :choice_key ], unique: true
 
     create_table :question_correct_answers do |t|
       t.references :question, null: false, foreign_key: true
@@ -51,7 +51,7 @@ class CreateBaseSchema < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :question_correct_answers, [:question_id, :question_choice_id],
+    add_index :question_correct_answers, [ :question_id, :question_choice_id ],
               unique: true, name: "index_qca_on_question_and_choice"
 
     create_table :exam_rooms do |t|

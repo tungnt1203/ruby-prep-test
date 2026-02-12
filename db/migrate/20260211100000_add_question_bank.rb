@@ -27,7 +27,7 @@ class AddQuestionBank < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :bank_question_choices, [:bank_question_id, :choice_key], unique: true
+    add_index :bank_question_choices, [ :bank_question_id, :choice_key ], unique: true
 
     add_column :questions, :topic_key, :string
     add_column :questions, :topic_name, :string

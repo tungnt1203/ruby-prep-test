@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
-
   def index
     # Show home for everyone (host sees Dashboard / Create exam / Schedule room; others see Join / Sign in).
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExamsController < ApplicationController
-  before_action :require_login, only: [:index, :create, :show]
+  before_action :require_login, only: [ :index, :create, :show ]
 
   def index
     hash_id = params[:exam_code].presence || session[:exam_hash_id]
