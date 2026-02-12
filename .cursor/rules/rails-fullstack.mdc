@@ -1,0 +1,141 @@
+---
+description: Enforce YAGNI/SOLID/DRY principles and convention compliance for fullstack Ruby on Rails projects. Agent must detect project architecture before coding — never assume a specific pattern.
+globs: "**/*.rb,**/*.rake,**/*.erb,**/*.haml,**/*.slim"
+alwaysApply: false
+---
+
+# Rails Fullstack — Mandatory Convention
+
+## Core Rule
+
+**NEVER place code by instinct or self-invention.** Before writing any code, you MUST understand the project's architecture. Do NOT assume MVC, HMVC, service objects, or any specific pattern — **detect it first.**
+
+## Before Any Task
+
+1. **Detect architecture** — Read the project's `AGENTS.md` at repo root. If none exists:
+   - Scan `app/` directory structure to depth 2 to identify layers (e.g., `operations/`, `services/`, `interactors/`, `forms/`, `serializers/`, `decorators/`)
+   - Read 2-3 existing files in the target directory to understand naming, structure, and patterns
+   - Check for `docs/`, `CONTRIBUTING.md`, `convention*.md`, `.cursor/rules/` for documented conventions
+2. **Identify modules** — Use the Decision Tree in AGENTS.md, or map your task to the detected directory structure
+3. **Read module AGENTS.md** — If `{module_dir}/AGENTS.md` exists, read it before touching that module
+4. **Mirror existing patterns** — The best convention is what's already in the codebase. Follow it exactly.
+
+## YAGNI — You Aren't Gonna Need It
+
+- Implement ONLY what is explicitly requested — nothing more
+- Do NOT add optional parameters, abstract base classes, or config flags "for the future"
+- Do NOT pre-build service objects, decorators, or patterns that solve problems you don't have yet
+- If a method is used once, keep it in the class — do NOT extract preemptively
+- One class, one responsibility. Split only when reuse is real, not hypothetical
+
+## SOLID in Rails Context
+
+| Principle | Meaning in Practice |
+|-----------|-------------------|
+| **S — Single Responsibility** | One model = one domain entity. One service = one business action. One controller = one resource. |
+| **O — Open/Closed** | Extend via concerns, modules, composition — do NOT modify existing shared classes to fit one use case |
+| **L — Liskov Substitution** | Subclasses must honor the parent's contract. If a base class expects `call`, every subclass must respect that. |
+| **I — Interface Segregation** | Pass only needed data — do NOT pass entire `params` hash or full model when 2 fields suffice |
+| **D — Dependency Inversion** | Controllers depend on abstractions (services, operations), NOT raw ActiveRecord queries in actions |
+
+## DRY — But Not Premature
+
+- Extract shared logic ONLY after it appears in **3+ places** with identical behavior
+- Prefer composition (concerns, modules) over deep inheritance chains
+- Do NOT create a "universal" class that handles 10 actions via flags — split into focused classes
+- Duplicated code in 2 places is acceptable if the contexts differ and may diverge
+- A concern used by 1 model is premature abstraction, not DRY
+
+## Layer Responsibilities — Detect, Then Enforce
+
+After detecting the project's architecture, enforce that each layer does ONE job. Common patterns:
+
+| Layer | Typical Location | Does | Does NOT |
+|-------|-----------------|------|----------|
+| **Controller** | `app/controllers/` | Receive request, delegate, render response | Business logic, complex queries, validation |
+| **Model** | `app/models/` | Associations, scopes, enums, simple validations | Complex business logic, HTTP concerns |
+| **View** | `app/views/` or `app/serializers/` | Present/format data | Business logic, DB queries, state changes |
+| **Business Logic** | `app/services/`, `app/operations/`, `app/interactors/` — **whatever the project uses** | Orchestration, multi-model coordination | HTTP concerns, rendering |
+| **Validation** | `app/forms/`, `app/validators/`, or inline in model — **follow project pattern** | Input validation | Business logic, DB writes |
+| **Background** | `app/jobs/`, `app/workers/` | Async processing | HTTP handling, rendering |
+| **Authorization** | `app/policies/`, `app/abilities/` | Permission checks | Business logic |
+
+**If the project doesn't have `services/` or `operations/`, do NOT create one.** Follow whatever abstraction the project already uses. If none exists, keep logic simple in the model until complexity demands extraction.
+
+## Critical Anti-Patterns
+
+```ruby
+# ❌ WRONG: Fat controller — logic belongs in the business layer
+def create
+  @campaign = current_company.campaigns.new(campaign_params)
+  @campaign.status = params[:draft] ? :draft : :active
+  @campaign.assign_defaults(current_member)
+  if @campaign.save
+    CampaignMailer.created(@campaign).deliver_later
+    render json: @campaign
+  else
+    render json: { errors: @campaign.errors }, status: 422
+  end
+end
+
+# ✅ CORRECT: Thin controller — delegate to whatever pattern the project uses
+# (service, operation, interactor — mirror what already exists)
+```
+
+```ruby
+# ❌ WRONG: Fat model — business logic buried in model
+class Campaign < ApplicationRecord
+  def activate!
+    update!(status: :active, activated_at: Time.current)
+    rewards.each { |r| r.update!(visible: true) }
+    CampaignMailer.activated(self).deliver_later
+    company.increment!(:active_campaign_count)
+  end
+end
+
+# ✅ CORRECT: Model stays lean — extract when logic involves side effects or multi-model writes
+class Campaign < ApplicationRecord
+  scope :active, -> { where(status: :active) }
+end
+```
+
+```ruby
+# ❌ WRONG: YAGNI — Inventing a pattern the project doesn't use
+class BaseExporter          # project has zero other exporters
+  def export(format:, filter:, sort:, paginate:, compress:); end
+end
+class CampaignExporter < BaseExporter; end
+
+# ✅ CORRECT: Simple, focused, no invented abstractions
+class CampaignCsvExport
+  def call(campaigns)
+    CSV.generate { |csv| campaigns.each { |c| csv << [c.name, c.status] } }
+  end
+end
+```
+
+```ruby
+# ❌ WRONG: Creating a new directory/pattern that doesn't exist in the project
+# Project has no app/decorators/ but agent creates one
+app/decorators/campaign_decorator.rb
+
+# ✅ CORRECT: Ask the user before introducing a new architectural pattern
+# "The project doesn't have a decorator layer. Should I add logic to
+#  the serializer/view helper instead, or create a new pattern?"
+```
+
+## Coding Style — Non-Negotiable
+
+- `# frozen_string_literal: true` as first line of every `.rb` file
+- Use `attr_reader` for private state — not instance variables scattered in methods
+- Use `find_each` / `find_in_batches` for large dataset iteration — never `Model.all.each`
+- Wrap multi-model writes in `ActiveRecord::Base.transaction`
+- Handle errors explicitly — never silently swallow exceptions
+
+## When Unsure
+
+1. **Read AGENTS.md** — root and module-level
+2. **Read sibling files** — 2-3 existing files in the same directory
+3. **Ask** — If no pattern is detectable, ask the user before inventing one
+
+**Do NOT introduce new architectural layers, directories, or patterns without explicit user approval.**
