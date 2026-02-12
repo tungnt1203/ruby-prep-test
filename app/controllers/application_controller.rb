@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
   def require_login
     return if current_user.present?
-    session[:return_to] = request.get? ? request.fullpath : nil
+    session[:return_to] = session[:return_to] = request.fullpath unless request.post? || request.patch? || request.put? || request.delete?
     redirect_to login_path, alert: "Please sign in to take the exam."
   end
 
