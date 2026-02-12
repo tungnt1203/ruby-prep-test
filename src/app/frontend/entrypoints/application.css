@@ -1,0 +1,82 @@
+@import "tailwindcss";
+@source "../../../app/views/**/*.html.erb";
+@source "../../../app/views/**/*.rb";
+@source "../../../app/helpers/**/*.rb";
+
+/* Design System: Plus Jakarta Sans + Flat Design for EdTech SaaS */
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Flash message slide-in animation */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Flash dismiss transition */
+.flash-dismiss {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Auto-dismiss flash after 5s */
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+}
+
+.flash-auto-dismiss {
+  animation: slideInRight 0.3s ease-out, fadeOutRight 0.3s ease-in 5s forwards;
+}
+
+/* Rouge Ruby syntax highlight */
+.exam-code-block--ruby {
+  background: linear-gradient(135deg, #1e1e2e 0%, #2d2d3f 100%);
+  border: 1px solid rgba(204, 52, 43, 0.25);
+  color: #e2e8f0;
+}
+
+.exam-code-block--ruby .k,
+.exam-code-block--ruby .kd,
+.exam-code-block--ruby .kn { color: #f472b6; font-weight: 600; }
+.exam-code-block--ruby .kp { color: #fb7185; }
+.exam-code-block--ruby .kt { color: #c084fc; }
+.exam-code-block--ruby .s,
+.exam-code-block--ruby .s1,
+.exam-code-block--ruby .s2,
+.exam-code-block--ruby .sb,
+.exam-code-block--ruby .sc,
+.exam-code-block--ruby .dl { color: #86efac; }
+.exam-code-block--ruby .c,
+.exam-code-block--ruby .c1,
+.exam-code-block--ruby .cm { color: #64748b; font-style: italic; }
+.exam-code-block--ruby .mi,
+.exam-code-block--ruby .mf,
+.exam-code-block--ruby .mh { color: #fbbf24; }
+.exam-code-block--ruby .nf,
+.exam-code-block--ruby .n { color: #a5b4fc; }
+.exam-code-block--ruby .nb { color: #38bdf8; }
+.exam-code-block--ruby .no,
+.exam-code-block--ruby .vc,
+.exam-code-block--ruby .vi { color: #38bdf8; }
+.exam-code-block--ruby .ss { color: #fcd34d; }
+.exam-code-block--ruby .o { color: #94a3b8; }
+.exam-code-block--ruby .p { color: #94a3b8; }
+.exam-code-block--ruby .err { color: #f87171; }
+.exam-code-block--ruby .il { color: #fbbf24; }

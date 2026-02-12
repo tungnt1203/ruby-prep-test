@@ -1,0 +1,180 @@
+<div class="min-h-screen bg-slate-50">
+  <% if @exam.present? && @questions.any? %>
+    <% exam_title = @exam["title"] %>
+    <% exam_time = @exam["time"] %>
+    <% total_questions = @exam["totalQuestions"] %>
+    <% number_pass = @exam["numberPass"] %>
+
+    <div
+      class="flex flex-col lg:flex-row lg:h-screen"
+      data-controller="exam <%= 'exam-room-timer' if @room_ends_at %>"
+      data-exam-total-value="<%= total_questions %>"
+      data-exam-current-value="0"
+      <% if @room_ends_at && @room_ends_at.respond_to?(:iso8601) %>data-exam-room-timer-ends-at-value="<%= @room_ends_at.iso8601 %>"<% end %>
+    >
+      <%# Sidebar: Question navigator %>
+      <aside class="lg:w-64 xl:w-72 lg:flex-shrink-0 lg:border-r lg:border-slate-200 lg:overflow-y-auto bg-white">
+        <div class="p-4">
+          <%# Exam info header %>
+          <div class="mb-4 pb-4 border-b border-slate-100">
+            <h2 class="text-sm font-bold text-slate-900 truncate"><%= exam_title %></h2>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              <span class="inline-flex items-center rounded-lg bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-700"><%= total_questions %> questions</span>
+              <span class="inline-flex items-center rounded-lg bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700"><%= number_pass %> to pass</span>
+              <% if exam_time.present? && exam_time > 0 %>
+                <span class="inline-flex items-center rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600"><%= (exam_time / 60).to_i %> min</span>
+              <% end %>
+            </div>
+            <% if @room_ends_at %>
+              <div class="mt-3 rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-center">
+                <p class="text-[10px] font-semibold text-rose-600 uppercase tracking-wide">Time Remaining</p>
+                <p class="text-lg font-mono font-extrabold text-rose-700 tabular-nums" data-exam-room-timer-target="countdown">--:--:--</p>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Progress bar %>
+          <div class="mb-4">
+            <div class="flex items-center justify-between mb-1.5">
+              <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Progress</p>
+              <p class="text-xs font-medium text-slate-500"><span data-exam-target="answeredCount">0</span> / <%= total_questions %></p>
+            </div>
+            <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full rounded-full bg-indigo-500 transition-all duration-300 ease-out" data-exam-target="progressBar" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <%# Question grid %>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Questions</p>
+          <div class="grid grid-cols-5 gap-1.5">
+            <% @questions.each_with_index do |_q, index| %>
+              <button
+                type="button"
+                class="exam-sidebar-btn w-9 h-9 rounded-lg text-xs font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 cursor-pointer <%= index == 0 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' %>"
+                data-exam-target="questionItem"
+                data-question-index="<%= index %>"
+                data-action="click->exam#goTo"
+                title="<%= index == 0 ? 'Viewing' : 'Unanswered' %>"
+              >
+                <%= index + 1 %>
+              </button>
+            <% end %>
+          </div>
+
+          <%# Legend %>
+          <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-500">
+            <p class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded-md bg-slate-100 border border-slate-200 shrink-0"></span>
+              Unanswered
+            </p>
+            <p class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded-md bg-indigo-100 border-2 border-indigo-400 shrink-0"></span>
+              Answered
+            </p>
+            <p class="flex items-center gap-2">
+              <span class="w-5 h-5 rounded-md bg-indigo-600 shrink-0"></span>
+              Current
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <%# Main: Question content %>
+      <main class="flex-1 flex flex-col min-h-0 lg:overflow-y-auto">
+        <%= form_with url: exams_path, method: :post, local: true, data: { turbo: false, action: "change->exam#markAnswered" }.merge(@room_ends_at ? { exam_room_timer_target: "form" } : {}), class: "flex flex-col flex-1" do |f| %>
+          <%= f.hidden_field :attempt_id, value: @exam_attempt&.attempt_token, name: "attempt_id" %>
+          <div class="flex-1 p-4 sm:p-6 lg:p-8">
+            <% @questions.each_with_index do |question, index| %>
+              <% q_id = question["id"] %>
+              <% q_type = question["type"] %>
+              <% choices = question["choices"] || [] %>
+              <% is_multi = q_type == "multiple" %>
+              <section
+                class="rounded-2xl bg-white border border-slate-200 overflow-hidden <%= index == 0 ? '' : 'hidden' %>"
+                data-exam-target="questionPanel"
+                data-question-index="<%= index %>"
+              >
+                <%# Question header %>
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center rounded-lg bg-indigo-100 px-2.5 py-1 text-xs font-bold text-indigo-700">Q<%= index + 1 %></span>
+                  <span class="text-xs text-slate-400">of <%= total_questions %></span>
+                  <% if question["topic_key"].present? %>
+                    <span class="inline-flex items-center rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600" title="<%= question['topic_name'] %>"><%= question["topic_key"] %></span>
+                  <% end %>
+                  <% if is_multi %>
+                    <span class="inline-flex items-center rounded-lg bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">Multiple answers</span>
+                  <% end %>
+                </div>
+
+                <%# Question body %>
+                <div class="p-6">
+                  <div class="prose prose-slate max-w-none text-slate-700 mb-6">
+                    <%= simple_exam_markdown(question["question"]) %>
+                  </div>
+
+                  <%# Choices %>
+                  <fieldset class="space-y-2">
+                    <legend class="sr-only">Select answer</legend>
+                    <% choices.each do |choice| %>
+                      <% c_id = choice["id"] %>
+                      <% label_text = choice["label"] %>
+                      <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/30 cursor-pointer transition-all duration-150 has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 has-[:checked]:ring-1 has-[:checked]:ring-indigo-500">
+                        <% if is_multi %>
+                          <%= f.check_box nil, { name: "answers[#{q_id}][]", value: c_id, id: "q_#{q_id}_c_#{c_id}", class: "mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" }, c_id, nil %>
+                        <% else %>
+                          <%= f.radio_button nil, c_id, { name: "answers[#{q_id}]", id: "q_#{q_id}_c_#{c_id}", class: "mt-0.5 h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" } %>
+                        <% end %>
+                        <span class="flex-1 text-sm font-medium text-slate-800 select-none"><%= c_id %>. <%= simple_exam_markdown(label_text) %></span>
+                      </label>
+                    <% end %>
+                  </fieldset>
+                </div>
+              </section>
+            <% end %>
+          </div>
+
+          <%# Navigation footer %>
+          <div class="flex-shrink-0 flex items-center justify-between gap-3 p-4 sm:p-6 lg:p-8 border-t border-slate-200 bg-white">
+            <button
+              type="button"
+              class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer"
+              data-action="click->exam#prev"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+              Previous
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer"
+              data-action="click->exam#next"
+            >
+              Next
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            </button>
+            <button
+              type="submit"
+              class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              Submit
+            </button>
+          </div>
+        <% end %>
+      </main>
+    </div>
+  <% else %>
+    <%# Empty state %>
+    <div class="min-h-[calc(100vh-3.5rem)] flex items-center justify-center p-6">
+      <div class="text-center">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 mb-4">
+          <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9.75m3 0h3.375a1.125 1.125 0 010 2.25H6.375a1.125 1.125 0 010-2.25h3.375m3 0V18m-3-5.625h1.5" /></svg>
+        </div>
+        <h2 class="text-lg font-bold text-slate-900">No Exam Found</h2>
+        <p class="mt-2 text-sm text-slate-500">No exam session found. Please create an exam first.</p>
+        <div class="mt-6">
+          <%= link_to "Create Exam", pre_exams_path, class: "inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors duration-150 cursor-pointer" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

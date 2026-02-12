@@ -1,0 +1,28 @@
+<div class="min-h-[calc(100vh-3.5rem)] flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 mb-4">
+        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>
+      </div>
+      <h1 class="text-2xl font-bold text-slate-900">Join a Room</h1>
+      <p class="mt-2 text-sm text-slate-500">Enter the room code from your host to join the assessment session.</p>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-8">
+      <%= form_with url: join_path, method: :get, local: true, class: "space-y-5" do |f| %>
+        <div>
+          <label for="room_code" class="block text-sm font-medium text-slate-700">Room code</label>
+          <input type="text" name="room_code" id="room_code" required autofocus placeholder="e.g. OWBnZuk5" autocomplete="off" class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-3 text-center text-lg font-mono font-semibold text-slate-900 tracking-wider placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-colors duration-150" />
+          <p class="mt-2 text-xs text-slate-400">The code is provided by your interviewer or host.</p>
+        </div>
+        <button type="submit" class="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer">
+          Go to room
+        </button>
+      <% end %>
+    </div>
+
+    <p class="mt-6 text-center text-sm text-slate-400">
+      <%= link_to "Back to home", root_path, class: "hover:text-slate-600 transition-colors duration-150" %>
+    </p>
+  </div>
+</div>

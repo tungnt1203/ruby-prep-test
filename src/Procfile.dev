@@ -1,0 +1,2 @@
+vite: bin/vite dev
+web: PORT=5100 bin/rails s -b 0.0.0.0 -p 5100

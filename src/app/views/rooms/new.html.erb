@@ -1,0 +1,138 @@
+<div class="min-h-[calc(100vh-3.5rem)] py-8 px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-xl">
+    <div class="text-center mb-8">
+      <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 mb-4">
+        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      </div>
+      <h1 class="text-2xl font-bold text-slate-900">Schedule a Room</h1>
+      <p class="mt-2 text-sm text-slate-500">Create a timed room for candidates to join and take the exam together.</p>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white">
+      <%= form_with url: rooms_path, method: :post, local: true, data: { turbo: false } do |f| %>
+
+        <%# Section 1: Exam selection %>
+        <div class="p-6 border-b border-slate-100">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+            </span>
+            <h2 class="text-sm font-bold text-slate-900">Exam</h2>
+          </div>
+          <div>
+            <label for="exam_hash_id" class="block text-sm font-medium text-slate-700">Select an exam</label>
+            <% if @exam_sessions.any? %>
+              <% preselected_in_list = @preselected_exam_hash_id && @exam_sessions.any? { |es| es.hash_id == @preselected_exam_hash_id } %>
+              <% show_manual = @preselected_exam_hash_id.present? && !preselected_in_list %>
+              <select name="exam_hash_id" id="exam_hash_id" class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 cursor-pointer" onchange="var w=document.getElementById('exam_hash_manual_wrapper'); w.classList.toggle('hidden', this.value!=='__manual__'); if(this.value!=='__manual__') document.getElementById('exam_hash_id_manual').value='';">
+                <option value="">-- Select exam --</option>
+                <% @exam_sessions.each do |es| %>
+                  <option value="<%= es.hash_id %>" <%= "selected" if @preselected_exam_hash_id == es.hash_id %>><%= es.exam_title %> (<%= es.hash_id %>, <%= es.total_questions %> questions)</option>
+                <% end %>
+                <option value="__manual__" <%= "selected" if show_manual %>>Enter code manually</option>
+              </select>
+              <div id="exam_hash_manual_wrapper" class="mt-2 <%= show_manual ? '' : 'hidden' %>">
+                <input type="text" name="exam_hash_id_manual" id="exam_hash_id_manual" value="<%= @preselected_exam_hash_id %>" placeholder="Paste exam code" class="block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
+              </div>
+            <% else %>
+              <input type="text" name="exam_hash_id" id="exam_hash_id" value="<%= @preselected_exam_hash_id %>" required placeholder="e.g. abc123def456" class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
+              <p class="mt-1.5 text-xs text-amber-600">
+                No exams yet.
+                <%= link_to "Create an exam first", pre_exams_path, class: "underline font-medium" %>, then come back.
+              </p>
+            <% end %>
+          </div>
+        </div>
+
+        <%# Section 2: Room details %>
+        <div class="p-6 border-b border-slate-100">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" /></svg>
+            </span>
+            <h2 class="text-sm font-bold text-slate-900">Room Details</h2>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label for="room_name" class="block text-sm font-medium text-slate-700">Room name <span class="text-slate-400 font-normal">(optional)</span></label>
+              <input type="text" name="room_name" id="room_name" placeholder="e.g. Ruby Backend - <%= Date.current.strftime('%Y-%m-%d') %>" class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
+            </div>
+            <div>
+              <label for="instructions" class="block text-sm font-medium text-slate-700">Instructions <span class="text-slate-400 font-normal">(optional)</span></label>
+              <textarea name="instructions" id="instructions" rows="3" placeholder="e.g. Cameras on. No external help." class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 resize-none"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <%# Section 3: Requirements %>
+        <div class="p-6 border-b border-slate-100">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-violet-600">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </span>
+            <h2 class="text-sm font-bold text-slate-900">Candidate Requirements</h2>
+          </div>
+          <div class="space-y-3">
+            <label class="flex items-center gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 transition-colors duration-150 has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50/50">
+              <input type="hidden" name="require_display_name" value="0" />
+              <input type="checkbox" name="require_display_name" id="require_display_name" value="1" checked class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+              <div>
+                <span class="text-sm font-medium text-slate-700">Require display name</span>
+                <p class="text-xs text-slate-500">Candidates must enter their name before starting.</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 transition-colors duration-150 has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50/50">
+              <input type="hidden" name="require_candidate_identifier" value="0" />
+              <input type="checkbox" name="require_candidate_identifier" id="require_candidate_identifier" value="1" class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+              <div>
+                <span class="text-sm font-medium text-slate-700">Require email or candidate ID</span>
+                <p class="text-xs text-slate-500">Candidates must provide an identifier before starting.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <%# Section 4: Schedule %>
+        <div class="p-6 border-b border-slate-100">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+            </span>
+            <h2 class="text-sm font-bold text-slate-900">Schedule</h2>
+          </div>
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="starts_at_date" class="block text-sm font-medium text-slate-700">Start date</label>
+                <input type="date" name="starts_at_date" id="starts_at_date" required class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 cursor-pointer" />
+              </div>
+              <div>
+                <label for="starts_at_time" class="block text-sm font-medium text-slate-700">Start time</label>
+                <input type="time" name="starts_at_time" id="starts_at_time" required class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 cursor-pointer" />
+              </div>
+            </div>
+            <div>
+              <label for="duration_minutes" class="block text-sm font-medium text-slate-700">Time limit <span class="text-slate-400 font-normal">(optional)</span></label>
+              <div class="mt-1.5 flex items-center gap-2">
+                <input type="number" name="duration_minutes" id="duration_minutes" min="0" placeholder="e.g. 45" class="block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
+                <span class="text-sm text-slate-500 shrink-0">minutes</span>
+              </div>
+              <p class="mt-1.5 text-xs text-slate-400">Leave blank for no time limit.</p>
+            </div>
+          </div>
+        </div>
+
+        <%# Submit %>
+        <div class="p-6">
+          <button type="submit" class="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer">
+            Create Room
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <p class="mt-6 text-center">
+      <%= link_to "Back to Dashboard", dashboard_path, class: "text-sm text-slate-400 hover:text-slate-600 transition-colors duration-150" %>
+    </p>
+  </div>
+</div>
