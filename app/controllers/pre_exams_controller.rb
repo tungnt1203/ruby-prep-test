@@ -7,7 +7,7 @@ class PreExamsController < ApplicationController
   end
 
   def create_test
-    result = CreateExamFromBankService.new.call
+    result = CreateExamFromBankService.new(exam_title: params[:exam_title].presence).call
     redirect_to created_pre_exams_path(exam_code: result[:hash_id]), notice: "Exam created with 50 random questions from Ruby Silver."
   rescue CreateExamFromBankService::Error => e
     redirect_to pre_exams_path, alert: e.message
