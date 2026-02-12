@@ -67,6 +67,16 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build Vite assets for test
+        run: bin/vite build --clear --mode=test
 
       - name: Run tests
         env:
