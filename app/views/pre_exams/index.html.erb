@@ -8,6 +8,10 @@
       <%= link_to "Schedule a room", new_room_path, class: "text-indigo-600 hover:underline" %>
     </p>
     <%= form_with url: create_test_pre_exams_path, method: :post, local: true, data: { turbo: false }, class: "mt-6 space-y-4" do |f| %>
+      <div>
+        <label for="exam_title" class="block text-sm font-medium text-slate-700">Exam title (optional)</label>
+        <input type="text" name="exam_title" id="exam_title" placeholder="Ruby 3.1.x Silver Exam" value="Ruby 3.1.x Silver Exam" class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+      </div>
       <button type="submit" class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
         Create exam
       </button>
