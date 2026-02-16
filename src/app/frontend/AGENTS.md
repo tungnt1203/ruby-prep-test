@@ -16,8 +16,7 @@ app/frontend/
     ├── exam_result_controller.js           # Results display
     ├── exam_room_timer_controller.js       # Room countdown
     ├── hello_controller.js                 # Example controller
-    ├── room_countdown_controller.js        # Room start countdown
-    └── room_participants_controller.js     # Live participants list
+    └── room_countdown_controller.js        # Room start countdown
 ```
 
 ## Naming Conventions

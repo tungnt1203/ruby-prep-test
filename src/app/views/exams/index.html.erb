@@ -82,7 +82,8 @@
       <%# Main: Question content %>
       <main class="flex-1 flex flex-col min-h-0 lg:overflow-y-auto">
         <%= form_with url: exams_path, method: :post, local: true, data: { turbo: false, action: "change->exam#markAnswered" }.merge(@room_ends_at ? { exam_room_timer_target: "form" } : {}), class: "flex flex-col flex-1" do |f| %>
-          <%= f.hidden_field :attempt_id, value: @exam_attempt&.attempt_token, name: "attempt_id" %>
+          <%= hidden_field_tag :exam_code, @exam_session.hash_id %>
+          <%= hidden_field_tag :room_code, @exam_room&.room_code %>
           <div class="flex-1 p-4 sm:p-6 lg:p-8">
             <% @questions.each_with_index do |question, index| %>
               <% q_id = question["id"] %>

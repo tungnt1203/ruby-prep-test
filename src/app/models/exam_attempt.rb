@@ -3,6 +3,7 @@
 class ExamAttempt < ApplicationRecord
   belongs_to :exam_session
   belongs_to :exam_room, optional: true
+  belongs_to :user, optional: true
 
   validates :attempt_token, presence: true, uniqueness: true
 
@@ -31,17 +32,18 @@ class ExamAttempt < ApplicationRecord
   def broadcast_room_participants
     return unless exam_room_id?
 
-    room = exam_room
-    room.reload
-    html = ApplicationController.render(
-      partial: "rooms/participants",
-      locals: { room: room },
-      layout: false
-    )
-    Turbo::StreamsChannel.broadcast_update_to(
-      "room:#{room.room_code}",
+    room = exam_room.reload
+    stream = ActionView::RecordIdentifier.dom_id(room)
+
+    Turbo::StreamsChannel.broadcast_replace_to(
+      stream,
       target: "room_#{room.room_code}_participants",
-      html: html
+      html: ApplicationController.render(partial: "rooms/participants", locals: { room: room }, layout: false)
+    )
+    Turbo::StreamsChannel.broadcast_replace_to(
+      stream,
+      target: "room_#{room.room_code}_results_section",
+      html: ApplicationController.render(partial: "rooms/results_section", locals: { room: room }, layout: false)
     )
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_11_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_16_000000) do
   create_table "bank_question_choices", force: :cascade do |t|
     t.integer "bank_question_id", null: false
     t.string "choice_key", null: false
@@ -41,9 +41,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_100000) do
     t.integer "exam_session_id", null: false
     t.text "submissions"
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["attempt_token"], name: "index_exam_attempts_on_attempt_token", unique: true
     t.index ["exam_room_id"], name: "index_exam_attempts_on_exam_room_id"
     t.index ["exam_session_id"], name: "index_exam_attempts_on_exam_session_id"
+    t.index ["user_id", "exam_session_id", "exam_room_id"], name: "index_exam_attempts_on_user_session_room"
+    t.index ["user_id"], name: "index_exam_attempts_on_user_id"
   end
 
   create_table "exam_rooms", force: :cascade do |t|
@@ -131,6 +134,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_11_100000) do
   add_foreign_key "bank_questions", "question_topics"
   add_foreign_key "exam_attempts", "exam_rooms"
   add_foreign_key "exam_attempts", "exam_sessions"
+  add_foreign_key "exam_attempts", "users"
   add_foreign_key "exam_rooms", "exam_sessions"
   add_foreign_key "exam_rooms", "users", column: "created_by_id"
   add_foreign_key "question_choices", "questions"

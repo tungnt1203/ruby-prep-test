@@ -55,44 +55,16 @@
           <div class="space-y-4">
             <div>
               <label for="room_name" class="block text-sm font-medium text-slate-700">Room name <span class="text-slate-400 font-normal">(optional)</span></label>
-              <input type="text" name="room_name" id="room_name" placeholder="e.g. Ruby Backend - <%= Date.current.strftime('%Y-%m-%d') %>" class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
+              <input type="text" name="room_name" id="room_name" value="<%= @room_name %>" placeholder="e.g. Ruby Backend - <%= Date.current.strftime('%Y-%m-%d') %>" class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
             </div>
             <div>
               <label for="instructions" class="block text-sm font-medium text-slate-700">Instructions <span class="text-slate-400 font-normal">(optional)</span></label>
-              <textarea name="instructions" id="instructions" rows="3" placeholder="e.g. Cameras on. No external help." class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 resize-none"></textarea>
+              <textarea name="instructions" id="instructions" rows="3" placeholder="e.g. Cameras on. No external help." class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 resize-none"><%= @instructions %></textarea>
             </div>
           </div>
         </div>
 
-        <%# Section 3: Requirements %>
-        <div class="p-6 border-b border-slate-100">
-          <div class="flex items-center gap-3 mb-4">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-violet-600">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            </span>
-            <h2 class="text-sm font-bold text-slate-900">Candidate Requirements</h2>
-          </div>
-          <div class="space-y-3">
-            <label class="flex items-center gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 transition-colors duration-150 has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50/50">
-              <input type="hidden" name="require_display_name" value="0" />
-              <input type="checkbox" name="require_display_name" id="require_display_name" value="1" checked class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
-              <div>
-                <span class="text-sm font-medium text-slate-700">Require display name</span>
-                <p class="text-xs text-slate-500">Candidates must enter their name before starting.</p>
-              </div>
-            </label>
-            <label class="flex items-center gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:bg-slate-50 transition-colors duration-150 has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50/50">
-              <input type="hidden" name="require_candidate_identifier" value="0" />
-              <input type="checkbox" name="require_candidate_identifier" id="require_candidate_identifier" value="1" class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
-              <div>
-                <span class="text-sm font-medium text-slate-700">Require email or candidate ID</span>
-                <p class="text-xs text-slate-500">Candidates must provide an identifier before starting.</p>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <%# Section 4: Schedule %>
+        <%# Schedule %>
         <div class="p-6 border-b border-slate-100">
           <div class="flex items-center gap-3 mb-4">
             <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
@@ -104,17 +76,17 @@
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label for="starts_at_date" class="block text-sm font-medium text-slate-700">Start date</label>
-                <input type="date" name="starts_at_date" id="starts_at_date" required class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 cursor-pointer" />
+                <input type="date" name="starts_at_date" id="starts_at_date" value="<%= @starts_at_date %>" required class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 cursor-pointer" />
               </div>
               <div>
                 <label for="starts_at_time" class="block text-sm font-medium text-slate-700">Start time</label>
-                <input type="time" name="starts_at_time" id="starts_at_time" required class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 cursor-pointer" />
+                <input type="time" name="starts_at_time" id="starts_at_time" value="<%= @starts_at_time %>" required class="mt-1.5 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150 cursor-pointer" />
               </div>
             </div>
             <div>
               <label for="duration_minutes" class="block text-sm font-medium text-slate-700">Time limit <span class="text-slate-400 font-normal">(optional)</span></label>
               <div class="mt-1.5 flex items-center gap-2">
-                <input type="number" name="duration_minutes" id="duration_minutes" min="0" placeholder="e.g. 45" class="block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
+                <input type="number" name="duration_minutes" id="duration_minutes" min="0" value="<%= @duration_minutes %>" placeholder="e.g. 45" class="block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:text-sm transition-colors duration-150" />
                 <span class="text-sm text-slate-500 shrink-0">minutes</span>
               </div>
               <p class="mt-1.5 text-xs text-slate-400">Leave blank for no time limit.</p>
