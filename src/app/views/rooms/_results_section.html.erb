@@ -1,0 +1,78 @@
+<%# Turbo Stream target: room_<room_code>_results_section %>
+<% exam_session = room.exam_session %>
+<% leaderboard = room.leaderboard_entries %>
+<div id="room_<%= room.room_code %>_results_section">
+  <div class="flex items-center justify-between mb-6">
+    <p class="text-sm text-slate-500"><%= leaderboard.size %> submission<%= leaderboard.size == 1 ? '' : 's' %></p>
+    <%= link_to room_results_path(room.room_code, format: :csv), class: "inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors duration-150 cursor-pointer" do %>
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+      Export CSV
+    <% end %>
+  </div>
+  <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-slate-200">
+      <thead>
+        <tr class="bg-slate-50">
+          <th scope="col" class="w-16 px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Rank</th>
+          <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">User</th>
+          <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Score</th>
+          <th scope="col" class="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">Submitted</th>
+          <th scope="col" class="px-5 py-3.5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wide">Details</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <% leaderboard.each_with_index do |entry, index| %>
+          <% attempt = entry[:attempt] %>
+          <% score_pct = entry[:total] > 0 ? (entry[:score].to_f / entry[:total] * 100).round : 0 %>
+          <tr class="hover:bg-slate-50/70 transition-colors duration-100">
+            <td class="px-5 py-4">
+              <% if index == 0 && leaderboard.size > 1 %>
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-700">1</span>
+              <% elsif index == 1 && leaderboard.size > 2 %>
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-sm font-bold text-slate-600">2</span>
+              <% elsif index == 2 && leaderboard.size > 3 %>
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-orange-700">3</span>
+              <% else %>
+                <span class="inline-flex h-8 w-8 items-center justify-center text-sm font-medium text-slate-500"><%= index + 1 %></span>
+              <% end %>
+            </td>
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700"><%= (attempt.display_name.presence || "?")[0].upcase %></span>
+                <span class="text-sm font-medium text-slate-900"><%= attempt.display_name.presence || attempt.candidate_identifier.presence || "Anonymous" %></span>
+              </div>
+            </td>
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="flex-1 max-w-[100px]">
+                  <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                    <div class="h-full rounded-full <%= score_pct >= 70 ? 'bg-emerald-500' : score_pct >= 50 ? 'bg-amber-400' : 'bg-rose-400' %>" style="width: <%= score_pct %>%"></div>
+                  </div>
+                </div>
+                <span class="text-sm font-semibold text-slate-700"><%= entry[:score] %> / <%= entry[:total] %></span>
+              </div>
+            </td>
+            <td class="px-5 py-4 text-sm text-slate-500"><%= entry[:submitted_at].strftime("%H:%M") %></td>
+            <td class="px-5 py-4 text-right">
+              <%= link_to exam_path(exam_session.hash_id, attempt_id: attempt.attempt_token), class: "inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-indigo-600 hover:bg-indigo-50 transition-colors duration-150 cursor-pointer" do %>
+                View
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <% if leaderboard.empty? %>
+    <div class="px-5 py-16 text-center">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 mb-4">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+      </div>
+      <p class="text-sm font-medium text-slate-600">No submissions yet</p>
+      <p class="mt-1 text-sm text-slate-400">Results will appear as candidates submit their exams.</p>
+    </div>
+  <% end %>
+  </div>
+</div>

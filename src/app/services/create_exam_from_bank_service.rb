@@ -8,8 +8,9 @@ class CreateExamFromBankService
   DEFAULT_TIME_LIMIT = 60 * 60 # 1 hour
   DEFAULT_NUMBER_PASS = 40
 
-  def initialize(questions_count: EXAM_QUESTIONS_COUNT)
+  def initialize(questions_count: EXAM_QUESTIONS_COUNT, exam_title: nil)
     @questions_count = questions_count
+    @exam_title = exam_title
   end
 
   def call
@@ -25,7 +26,7 @@ class CreateExamFromBankService
     ExamSession.transaction do
       session = ExamSession.create!(
         hash_id: hash_id,
-        exam_title: DEFAULT_TITLE,
+        exam_title: @exam_title.presence || DEFAULT_TITLE,
         exam_description: "50 random questions from Ruby Silver question bank",
         total_questions: @questions_count,
         number_pass: DEFAULT_NUMBER_PASS,

@@ -4,44 +4,24 @@ class ExamsController < ApplicationController
   before_action :require_login, only: [ :index, :create, :show ]
 
   def index
-    hash_id = params[:exam_code].presence || session[:exam_hash_id]
-    room_code = params[:room_code].presence || session[:exam_room_code]
-    if room_code.present?
-      session[:exam_room_code] = room_code
-      @exam_room = ExamRoom.find_by(room_code: room_code)
-    else
-      @exam_room = nil
-      session.delete(:exam_room_code)
-      session.delete(:exam_display_name)
-    end
+    hash_id = params[:exam_code].presence
+    room_code = params[:room_code].presence
+    @exam_room = room_code.present? ? ExamRoom.find_by(room_code: room_code) : nil
 
     if hash_id.present?
-      session[:exam_hash_id] = hash_id
-      session[:exam_display_name] = params[:display_name].presence || session[:exam_display_name]
-      session[:exam_candidate_identifier] = params[:candidate_identifier].presence || session[:exam_candidate_identifier]
       @exam_session = ExamSession.find_by(hash_id: hash_id)
-      if hash_id.present? && @exam_session.nil?
+      if @exam_session.nil?
         redirect_to root_path, alert: "Exam not found. Please use a valid exam or room link."
         return
       end
-      if @exam_room && @exam_session
-        if @exam_room.require_display_name && session[:exam_display_name].blank?
-          redirect_to room_path(@exam_room.room_code), alert: "Please enter your name to start the exam."
-          return
-        end
-        if @exam_room.require_candidate_identifier && session[:exam_candidate_identifier].blank?
-          redirect_to room_path(@exam_room.room_code), alert: "Please enter your email or candidate ID to start the exam."
-          return
-        end
-        if !@exam_room.started?
-          redirect_to room_path(@exam_room.room_code), alert: "Exam has not started yet. Please wait until the start time."
-          return
-        end
+      if @exam_room && @exam_session && !@exam_room.started?
+        redirect_to room_path(@exam_room.room_code), alert: "Exam has not started yet. Please wait until the start time."
+        return
       end
       if @exam_session
         @exam_attempt = find_or_create_attempt
         if @exam_room&.started? && @exam_attempt&.submissions.present?
-          redirect_to exam_path(hash_id, attempt_id: @exam_attempt.attempt_token)
+          redirect_to exam_path(hash_id, room_code: room_code), notice: "You already submitted. Here is your result."
           return
         end
         if @exam_room&.expired?
@@ -67,27 +47,30 @@ class ExamsController < ApplicationController
   end
 
   def create
-    hash_id = session[:exam_hash_id]
+    hash_id = params[:exam_code].presence
     unless hash_id.present?
-      redirect_to pre_exams_path, alert: "Invalid session. Please create an exam first."
+      redirect_to pre_exams_path, alert: "Invalid request. Please start from an exam or room link."
+      return
+    end
+
+    exam_session = ExamSession.find_by(hash_id: hash_id)
+    attempt = find_attempt_for_submit(exam_session)
+    unless attempt
+      redirect_to exams_path(exam_code: hash_id, room_code: params[:room_code].presence), alert: "Could not find your attempt. Please start the exam again."
       return
     end
 
     answers_hash = params[:answers].present? ? params[:answers].to_unsafe_h : {}
     submissions = build_submissions_from_params(answers_hash)
-
     payload = submissions.map { |s| { "question_id" => s[:question_id], "answers" => s[:answers] } }
-    exam_session = ExamSession.find_by(hash_id: hash_id)
-    attempt_token = params[:attempt_id].presence || session[:exam_attempt_token]
-    attempt = ExamAttempt.find_by(attempt_token: attempt_token, exam_session: exam_session) if attempt_token && exam_session
-    attempt&.update!(submissions: payload.to_json)
+    attempt.update!(submissions: payload.to_json)
 
-    redirect_to exam_path(hash_id, attempt_id: attempt&.attempt_token), notice: "Submission saved."
+    redirect_to exam_path(hash_id, room_code: params[:room_code].presence), notice: "Submission saved."
   end
 
   def show
     @hash_id = params[:id]
-    @room_code = session[:exam_room_code]
+    @room_code = params[:room_code].presence
     @exam_session = ExamSession.find_by(hash_id: @hash_id)
     @exam_attempt = find_attempt_for_result
     last_submissions = @exam_attempt&.submissions_array
@@ -145,25 +128,48 @@ class ExamsController < ApplicationController
   end
 
   def find_or_create_attempt
-    token = session[:exam_attempt_token]
-    scope = @exam_session.exam_attempts
-    scope = scope.where(exam_room_id: @exam_room.id) if @exam_room&.started?
-    attempt = scope.find_by(attempt_token: token) if token.present?
+    scope = @exam_session.exam_attempts.where(user_id: current_user.id)
+    scope = scope.where(exam_room_id: @exam_room ? @exam_room.id : nil)
+    attempt = scope.first
     unless attempt
-      attrs = { exam_room: @exam_room&.started? ? @exam_room : nil }
-      attrs[:display_name] = session[:exam_display_name].presence if session[:exam_display_name].present?
-      attrs[:candidate_identifier] = session[:exam_candidate_identifier].presence if session[:exam_candidate_identifier].present?
+      attrs = {
+        user_id: current_user.id,
+        exam_room: @exam_room || nil,
+        display_name: current_user.email.presence,
+        candidate_identifier: current_user.email.presence
+      }
       attempt = @exam_session.exam_attempts.create!(attrs)
-      session[:exam_attempt_token] = attempt.attempt_token
     end
     attempt
+  end
+
+  def find_attempt_for_submit(exam_session)
+    return nil unless exam_session && current_user
+    scope = exam_session.exam_attempts.where(user_id: current_user.id)
+    room_code = params[:room_code].presence
+    if room_code.present?
+      room = ExamRoom.find_by(room_code: room_code)
+      return nil unless room # invalid room_code => don't submit to wrong attempt
+      scope = scope.where(exam_room_id: room.id)
+    else
+      scope = scope.where(exam_room_id: nil)
+    end
+    scope.first
   end
 
   def find_attempt_for_result
     if params[:attempt_id].present?
       ExamAttempt.find_by(attempt_token: params[:attempt_id], exam_session: @exam_session)
-    elsif session[:exam_attempt_token].present? && @exam_session
-      ExamAttempt.find_by(attempt_token: session[:exam_attempt_token], exam_session: @exam_session)
+    elsif @exam_session && current_user
+      scope = @exam_session.exam_attempts.where(user_id: current_user.id)
+      if @room_code.present?
+        room = ExamRoom.find_by(room_code: @room_code)
+        return nil unless room # invalid room_code => don't show wrong attempt
+        scope = scope.where(exam_room_id: room.id)
+      else
+        scope = scope.where(exam_room_id: nil)
+      end
+      scope.first
     end
   end
 

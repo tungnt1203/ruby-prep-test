@@ -33,6 +33,17 @@ class ExamRoom < ApplicationRecord
     exam_session&.hash_id
   end
 
+  # Same structure as RoomsController#results @leaderboard, for partial/stream
+  def leaderboard_entries
+    es = exam_session
+    attempts = exam_attempts.where.not(submissions: [ nil, "" ])
+    attempts.map do |attempt|
+      subs = attempt.submissions_array
+      result = es.score_submissions(subs)
+      { attempt: attempt, score: result[:score], total: result[:total], submitted_at: attempt.updated_at }
+    end.sort_by { |e| [ -e[:score], e[:submitted_at].to_i ] }
+  end
+
   private
 
   def generate_room_code

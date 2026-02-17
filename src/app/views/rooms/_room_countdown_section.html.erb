@@ -1,0 +1,34 @@
+<%# Turbo Stream replace target: room_countdown_section %>
+<% starts_at_iso = room.starts_at.utc.iso8601.to_s.strip %>
+<div id="room_countdown_section" class="space-y-4" data-room-countdown-starts-at-value="<%= starts_at_iso %>">
+  <%# Countdown card %>
+  <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center">
+    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Starts at</p>
+    <p class="text-base font-semibold text-slate-800" data-room-countdown-target="startsAt"><%= room.starts_at.strftime("%b %d, %Y %H:%M %Z") %></p>
+    <p class="text-xs text-slate-400 mt-1" data-room-countdown-target="localTime">(<span class="local-time" data-iso="<%= starts_at_iso %>">...</span>)</p>
+    <div class="mt-4 py-4 px-6 rounded-xl bg-slate-50 inline-block">
+      <p class="text-3xl font-mono font-extrabold text-indigo-600 tabular-nums" data-room-countdown-target="countdown">--:--:--</p>
+      <p class="mt-1 text-xs text-slate-500" data-room-countdown-target="label">Loading...</p>
+    </div>
+    <script>
+      (function() {
+        var el = document.querySelector('#room_countdown_section .local-time');
+        if (el && el.dataset.iso) {
+          var d = new Date(el.dataset.iso);
+          el.textContent = 'your time: ' + d.toLocaleString();
+        }
+      })();
+    </script>
+  </div>
+
+  <%# Start exam block (shown by countdown controller when started); participants visible to all, form hidden for host via CSS %>
+  <div data-room-countdown-target="startBlock" style="display: <%= room.started? ? 'block' : 'none' %>;" class="space-y-4">
+    <%= render "rooms/participants", room: room %>
+
+    <div class="room-start-exam-form">
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 text-center">
+        <%= link_to "Start Exam", exams_path(exam_code: room.exam_hash_id, room_code: room.room_code), class: "inline-flex items-center justify-center rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150 cursor-pointer" %>
+      </div>
+    </div>
+  </div>
+</div>
