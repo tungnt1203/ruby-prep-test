@@ -31,7 +31,8 @@
       <div data-controller="room-countdown"
            data-room-countdown-room-url-value="<%= exams_path(exam_code: @room.exam_hash_id, room_code: @room.room_code) %>"
            data-room-countdown-is-host-value="<%= room_created_by_current_user?(@room) %>"
-           data-room-countdown-starts-at-value="<%= @room.starts_at.utc.iso8601 %>">
+           data-room-countdown-starts-at-value="<%= @room.starts_at.utc.iso8601 %>"
+           data-room-countdown-ends-at-value="<%= @room.ends_at&.utc&.iso8601 %>">
         <%= render "rooms/room_countdown_section", room: @room %>
       </div>
 
