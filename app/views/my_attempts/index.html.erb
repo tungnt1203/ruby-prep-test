@@ -1,0 +1,126 @@
+<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-900">My attempts</h1>
+      <p class="mt-1 text-sm text-slate-500">Danh sách các lần làm bài của bạn (mới nhất trước).</p>
+    </div>
+    <%= link_to "Join Room", join_path, class: "inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors duration-150 cursor-pointer" %>
+  </div>
+
+  <div class="mt-6 rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 overflow-hidden">
+    <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between gap-3">
+      <p class="text-sm font-semibold text-slate-900">Attempts</p>
+      <p class="text-xs text-slate-500">Page <span class="font-semibold text-slate-700"><%= @page %></span></p>
+    </div>
+
+    <% if @rows.blank? %>
+      <div class="p-8 text-center">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 mb-4">
+          <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M9 8h6m-6 12h6a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0015 4.5H9A2.25 2.25 0 006.75 6.75v13.5A2.25 2.25 0 009 22.5z" /></svg>
+        </div>
+        <h2 class="text-lg font-bold text-slate-900">Chưa có lần làm bài nào</h2>
+        <p class="mt-2 text-sm text-slate-500">Vào phòng thi hoặc mở một đề thi để bắt đầu.</p>
+        <%= link_to "Join Room", join_path, class: "mt-4 inline-flex items-center rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors duration-150 cursor-pointer" %>
+      </div>
+    <% else %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">Exam</th>
+              <th class="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">Room</th>
+              <th class="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">Status</th>
+              <th class="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">Score</th>
+              <th class="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-slate-500">Submitted</th>
+              <th class="px-5 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 bg-white">
+            <% @rows.each do |row| %>
+              <% attempt = row[:attempt] %>
+              <% exam_session = attempt.exam_session %>
+              <% room = attempt.exam_room %>
+              <% score = row[:score] %>
+              <% submitted_at = row[:submitted_at] %>
+              <% score_value = score.present? ? score[:score].to_i : nil %>
+              <% total_value = score.present? ? score[:total_questions].to_i : nil %>
+              <% pass_value = score.present? ? score[:number_pass].to_i : nil %>
+              <% passed = score.present? ? (score_value >= pass_value) : nil %>
+
+              <tr class="hover:bg-slate-50/60 transition-colors">
+                <td class="px-5 py-4 align-top">
+                  <p class="text-sm font-semibold text-slate-900"><%= exam_session&.exam_title.presence || "Untitled exam" %></p>
+                  <p class="mt-0.5 text-xs text-slate-500 font-mono"><%= exam_session&.hash_id %></p>
+                </td>
+                <td class="px-5 py-4 align-top">
+                  <% if room.present? %>
+                    <p class="text-sm font-semibold text-slate-800"><%= room.room_code %></p>
+                    <% if room.name.present? %>
+                      <p class="mt-0.5 text-xs text-slate-500 truncate max-w-[180px]" title="<%= room.name %>"><%= room.name %></p>
+                    <% end %>
+                  <% else %>
+                    <span class="inline-flex items-center rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600">No room</span>
+                  <% end %>
+                </td>
+                <td class="px-5 py-4 align-top">
+                  <% if attempt.submissions.present? %>
+                    <% if passed == true %>
+                      <span class="inline-flex items-center rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">Pass</span>
+                    <% else %>
+                      <span class="inline-flex items-center rounded-lg bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700">Fail</span>
+                    <% end %>
+                  <% else %>
+                    <span class="inline-flex items-center rounded-lg bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">In progress</span>
+                  <% end %>
+                </td>
+                <td class="px-5 py-4 align-top">
+                  <% if attempt.submissions.present? && score.present? %>
+                    <p class="text-sm font-bold text-slate-900"><%= score_value %> / <%= total_value %></p>
+                    <p class="mt-0.5 text-xs text-slate-500">Pass: <%= pass_value %></p>
+                  <% else %>
+                    <p class="text-sm text-slate-400">—</p>
+                  <% end %>
+                </td>
+                <td class="px-5 py-4 align-top">
+                  <% if submitted_at.present? %>
+                    <p class="text-sm font-medium text-slate-800"><%= l(submitted_at, format: :short) %></p>
+                  <% else %>
+                    <p class="text-sm text-slate-400">—</p>
+                  <% end %>
+                </td>
+                <td class="px-5 py-4 align-top text-right">
+                  <% if attempt.submissions.present? %>
+                    <%= link_to "View result",
+                      exam_path(exam_session.hash_id, room_code: room&.room_code, attempt_id: attempt.attempt_token),
+                      class: "inline-flex items-center rounded-xl bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors duration-150 cursor-pointer"
+                    %>
+                  <% else %>
+                    <%= link_to "Continue",
+                      exams_path(exam_code: exam_session.hash_id, room_code: room&.room_code),
+                      class: "inline-flex items-center rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors duration-150 cursor-pointer"
+                    %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 px-5 py-4 border-t border-slate-200 bg-white">
+        <div class="text-xs text-slate-500">
+          Hiển thị tối đa <span class="font-semibold text-slate-700"><%= MyAttemptsController::PER_PAGE %></span> attempts mỗi trang.
+        </div>
+        <div class="flex items-center gap-2">
+          <% if @page > 1 %>
+            <%= link_to "Previous", my_attempts_path(page: @page - 1), class: "inline-flex items-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors duration-150 cursor-pointer" %>
+          <% end %>
+          <% if @has_next_page %>
+            <%= link_to "Next", my_attempts_path(page: @page + 1), class: "inline-flex items-center rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors duration-150 cursor-pointer" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

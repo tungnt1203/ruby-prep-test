@@ -24,6 +24,8 @@ Rails.application.routes.draw do
 
   get "join", to: "home#join", as: :join
 
+  get "my_attempts", to: "my_attempts#index", as: :my_attempts
+
   resources :pre_exams, only: [ :index ], path: "pre_exams" do
     get :created, on: :collection
     post :create_test, on: :collection

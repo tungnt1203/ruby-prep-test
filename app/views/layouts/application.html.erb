@@ -45,6 +45,7 @@
               <%= link_to "Create Exam", pre_exams_path, class: "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
             <% end %>
             <%= link_to "Join Room", join_path, class: "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
+            <%= link_to "My Attempts", my_attempts_path, class: "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors duration-150 cursor-pointer" %>
             <div class="ml-3 h-5 w-px bg-slate-200"></div>
             <div class="ml-3 flex items-center gap-2.5">
               <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700"><%= current_user.email[0].upcase %></span>
@@ -87,6 +88,7 @@
             <%= link_to "Create Exam", pre_exams_path, class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
           <% end %>
           <%= link_to "Join Room", join_path, class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
+          <%= link_to "My Attempts", my_attempts_path, class: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 cursor-pointer" %>
           <div class="border-t border-slate-200 mt-2 pt-2">
             <%= button_to "Sign out", logout_path, method: :delete, class: "w-full text-left rounded-lg px-3 py-2.5 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 cursor-pointer" %>
           </div>
