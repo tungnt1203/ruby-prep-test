@@ -1,0 +1,25 @@
+submitted_in_room:
+  exam_session: one
+  exam_room: one
+  user: one
+  attempt_token: CandidateTokenRoom01
+  display_name: candidate@example.com
+  candidate_identifier: candidate@example.com
+  submissions:
+
+in_progress_no_room:
+  exam_session: one
+  user: one
+  attempt_token: CandidateTokenNoRoom01
+  display_name: candidate@example.com
+  candidate_identifier: candidate@example.com
+  submissions:
+
+host_submitted:
+  exam_session: one
+  user: host
+  attempt_token: HostToken01
+  display_name: host@example.com
+  candidate_identifier: host@example.com
+  submissions: <%= [{ "question_id" => ActiveRecord::FixtureSet.identify(:one), "answers" => "B" }].to_json %>
+

@@ -66,75 +66,364 @@
       <% end %>
     </div>
   <% else %>
-    <%# ===== GUEST LANDING ===== %>
-    <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-      <%# Hero Section %>
-      <div class="text-center mb-16">
-        <div class="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-1.5 mb-6">
-          <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
-          <span class="text-xs font-semibold text-indigo-700 uppercase tracking-wide">Ruby Silver Assessment Platform</span>
+    <%# ===== GUEST LANDING PAGE ===== %>
+    
+    <%# Hero Section %>
+    <section class="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <div class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,transparent,black)]"></div>
+      <div class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-32 lg:px-8">
+        <div class="text-center max-w-4xl mx-auto">
+          <div class="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-4 py-1.5 mb-6 ring-1 ring-indigo-200">
+            <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
+            <span class="text-xs font-semibold text-indigo-700 uppercase tracking-wide">Ruby Silver Assessment Platform</span>
+          </div>
+          
+          <h1 class="text-4xl font-extrabold text-slate-900 sm:text-5xl lg:text-6xl tracking-tight leading-tight">
+            Assess Ruby Skills<br class="hidden sm:inline">
+            <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">with Confidence</span>
+          </h1>
+          
+          <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600 sm:text-xl leading-relaxed">
+            Create timed exams from the official Ruby Silver question bank. Schedule rooms, invite candidates, and track results in real-time.
+          </p>
+          
+          <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <%= link_to signup_path, class: "group inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-500/25 hover:bg-indigo-500 hover:shadow-indigo-500/40 transition-all duration-200 cursor-pointer" do %>
+              Get Started Free
+              <svg class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            <% end %>
+            <%= link_to join_path, class: "inline-flex items-center gap-2 rounded-xl border-2 border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 hover:border-slate-300 hover:bg-slate-50 transition-all duration-200 cursor-pointer" do %>
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>
+              Join a Room
+            <% end %>
+          </div>
         </div>
-        <h1 class="text-3xl font-extrabold text-slate-900 sm:text-4xl lg:text-5xl tracking-tight">
-          Assess Ruby Skills<br class="hidden sm:inline"> with Confidence
-        </h1>
-        <p class="mx-auto mt-4 max-w-xl text-base text-slate-600 sm:text-lg">
-          Create timed exams from the Ruby Silver question bank. Schedule rooms, invite candidates, and review results in real-time.
+      </div>
+    </section>
+
+    <%# Stats Section %>
+    <section class="bg-white border-y border-slate-100">
+      <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-indigo-600 sm:text-4xl">500+</div>
+            <div class="mt-1 text-sm text-slate-500">Questions in Bank</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-indigo-600 sm:text-4xl">50</div>
+            <div class="mt-1 text-sm text-slate-500">Questions per Exam</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-indigo-600 sm:text-4xl">Real-time</div>
+            <div class="mt-1 text-sm text-slate-500">Leaderboard</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-indigo-600 sm:text-4xl">Instant</div>
+            <div class="mt-1 text-sm text-slate-500">Results & Analytics</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%# Features Section %>
+    <section class="bg-slate-50 py-20 sm:py-32">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl tracking-tight">
+            Everything you need for Ruby assessments
+          </h2>
+          <p class="mt-4 text-lg text-slate-600">
+            From creating exams to analyzing results, FastQuiz provides a complete solution for Ruby skill assessment.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <%# Feature 1 %>
+          <div class="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:shadow-lg hover:ring-indigo-200">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 mb-6 transition-colors duration-200 group-hover:bg-indigo-600 group-hover:text-white">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.67.062-.947.122M12 6v6h4.5m-4.5 0a2.25 2.25 0 013.75 1.5V18a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 18V7.694m0 0A2.25 2.25 0 015.25 6h.008M9.75 12H4.5m5.75 4.5H4.5" /></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900">Ruby Silver Question Bank</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">500+ curated questions covering all Ruby Silver certification topics: syntax, OOP, blocks, exceptions, and more.</p>
+          </div>
+
+          <%# Feature 2 %>
+          <div class="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:shadow-lg hover:ring-emerald-200">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 mb-6 transition-colors duration-200 group-hover:bg-emerald-600 group-hover:text-white">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900">Timed Exam Rooms</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">Schedule rooms with custom start times and durations. Candidates start together with synchronized countdown timers.</p>
+          </div>
+
+          <%# Feature 3 %>
+          <div class="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:shadow-lg hover:ring-purple-200">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600 mb-6 transition-colors duration-200 group-hover:bg-purple-600 group-hover:text-white">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900">Real-time Leaderboard</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">Watch scores appear in real-time as candidates submit. See who passed, rankings, and detailed breakdowns instantly.</p>
+          </div>
+
+          <%# Feature 4 %>
+          <div class="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:shadow-lg hover:ring-amber-200">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-amber-600 mb-6 transition-colors duration-200 group-hover:bg-amber-600 group-hover:text-white">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" /></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900">Detailed Analytics</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">See per-topic performance, pass rates, and individual question analytics. Export results to CSV for further analysis.</p>
+          </div>
+
+          <%# Feature 5 %>
+          <div class="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:shadow-lg hover:ring-rose-200">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-600 mb-6 transition-colors duration-200 group-hover:bg-rose-600 group-hover:text-white">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900">Easy Room Sharing</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">Generate unique room codes and shareable links. Candidates join with a simple code — no complex setup required.</p>
+          </div>
+
+          <%# Feature 6 %>
+          <div class="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 transition-all duration-200 hover:shadow-lg hover:ring-cyan-200">
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-100 text-cyan-600 mb-6 transition-colors duration-200 group-hover:bg-cyan-600 group-hover:text-white">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900">Secure & Private</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">Each room is isolated with unique codes. Results are only visible to the host and the respective candidate.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%# How It Works Section %>
+    <section class="bg-white py-20 sm:py-32">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl tracking-tight">
+            How it works
+          </h2>
+          <p class="mt-4 text-lg text-slate-600">
+            Get started in minutes with our simple 3-step process
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <%# Step 1 %>
+          <div class="relative text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 text-white text-2xl font-bold shadow-lg shadow-indigo-500/30">
+              1
+            </div>
+            <h3 class="mt-6 text-xl font-semibold text-slate-900">Create an Exam</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">Generate a 50-question exam from the Ruby Silver question bank. Questions are randomly selected and shuffled.</p>
+            <div class="hidden lg:block absolute top-8 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-indigo-200 to-transparent"></div>
+          </div>
+
+          <%# Step 2 %>
+          <div class="relative text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-white text-2xl font-bold shadow-lg shadow-emerald-500/30">
+              2
+            </div>
+            <h3 class="mt-6 text-xl font-semibold text-slate-900">Schedule a Room</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">Create a room with your exam, set the start time and duration. Share the room code with your candidates.</p>
+            <div class="hidden lg:block absolute top-8 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-emerald-200 to-transparent"></div>
+          </div>
+
+          <%# Step 3 %>
+          <div class="text-center">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-600 text-white text-2xl font-bold shadow-lg shadow-amber-500/30">
+              3
+            </div>
+            <h3 class="mt-6 text-xl font-semibold text-slate-900">Review Results</h3>
+            <p class="mt-3 text-sm text-slate-600 leading-relaxed">Watch the leaderboard in real-time. Export detailed results and analyze performance by topic.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%# CTA Section %>
+    <section class="bg-gradient-to-br from-indigo-600 to-purple-700 py-20 sm:py-32">
+      <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-white sm:text-4xl tracking-tight">
+          Ready to assess Ruby skills?
+        </h2>
+        <p class="mt-4 text-lg text-indigo-100">
+          Join hundreds of teams using FastQuiz for their Ruby Silver assessments.
         </p>
-      </div>
-
-      <%# Dual-path CTAs %>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 max-w-2xl mx-auto">
-        <%# Host path %>
-        <div class="rounded-2xl border-2 border-slate-200 bg-white p-8 text-center transition-all duration-150 hover:border-indigo-300 hover:shadow-md">
-          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 mb-4">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
-          </div>
-          <h3 class="text-lg font-bold text-slate-900">I'm a Host</h3>
-          <p class="mt-2 text-sm text-slate-500">Create exams and manage assessment rooms.</p>
-          <div class="mt-6 space-y-2">
-            <%= link_to "Sign in", login_path, class: "block w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors duration-150 cursor-pointer" %>
-            <%= link_to "Create account", signup_path, class: "block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors duration-150 cursor-pointer" %>
-          </div>
-        </div>
-
-        <%# Participant path %>
-        <div class="rounded-2xl border-2 border-slate-200 bg-white p-8 text-center transition-all duration-150 hover:border-orange-300 hover:shadow-md">
-          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100 text-orange-600 mb-4">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-          </div>
-          <h3 class="text-lg font-bold text-slate-900">I'm a Candidate</h3>
-          <p class="mt-2 text-sm text-slate-500">Have a room code? Jump right in.</p>
-          <div class="mt-6 space-y-2">
-            <%= link_to "Join a Room", join_path, class: "block w-full rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-orange-400 transition-colors duration-150 cursor-pointer" %>
-            <%= link_to "Sign in first", login_path, class: "block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors duration-150 cursor-pointer" %>
-          </div>
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <%= link_to signup_path, class: "group inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 shadow-lg hover:bg-indigo-50 transition-all duration-200 cursor-pointer" do %>
+            Create Free Account
+            <svg class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+          <% end %>
+          <%= link_to login_path, class: "inline-flex items-center gap-2 rounded-xl border-2 border-white/30 px-8 py-4 text-base font-semibold text-white hover:bg-white/10 transition-all duration-200 cursor-pointer" do %>
+            Sign In
+          <% end %>
         </div>
       </div>
+    </section>
 
-      <%# Feature highlights %>
-      <div class="mt-20 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div class="text-center">
-          <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 mb-3">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          </div>
-          <h4 class="text-sm font-semibold text-slate-900">Timed Rooms</h4>
-          <p class="mt-1 text-sm text-slate-500">Candidates start together with a shared countdown timer.</p>
+    <%# Testimonials Section %>
+    <section class="bg-slate-50 py-20 sm:py-32">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl tracking-tight">
+            Trusted by development teams
+          </h2>
+          <p class="mt-4 text-lg text-slate-600">
+            See what companies are saying about FastQuiz
+          </p>
         </div>
-        <div class="text-center">
-          <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 mb-3">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <%# Testimonial 1 %>
+          <div class="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
+            <div class="flex items-center gap-1 mb-4">
+              <% 5.times do %>
+                <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+              <% end %>
+            </div>
+            <p class="text-slate-600 leading-relaxed mb-6">"FastQuiz helped us assess Ruby skills efficiently during our hiring process. The question bank is comprehensive and the real-time results saved us hours of evaluation time."</p>
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-semibold text-sm">TN</div>
+              <div>
+                <div class="font-semibold text-slate-900">Tech Lead</div>
+                <div class="text-sm text-slate-500">Ruby on Rails Company</div>
+              </div>
+            </div>
           </div>
-          <h4 class="text-sm font-semibold text-slate-900">Live Leaderboard</h4>
-          <p class="mt-1 text-sm text-slate-500">Track scores in real-time as candidates submit.</p>
-        </div>
-        <div class="text-center">
-          <div class="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-600 mb-3">
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" /></svg>
+
+          <%# Testimonial 2 %>
+          <div class="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
+            <div class="flex items-center gap-1 mb-4">
+              <% 5.times do %>
+                <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+              <% end %>
+            </div>
+            <p class="text-slate-600 leading-relaxed mb-6">"We used FastQuiz for our internal team training. The detailed analytics helped identify knowledge gaps and tailor our learning path. Highly recommended!"</p>
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-semibold text-sm">PM</div>
+              <div>
+                <div class="font-semibold text-slate-900">Training Manager</div>
+                <div class="text-sm text-slate-500">Software Enterprise</div>
+              </div>
+            </div>
           </div>
-          <h4 class="text-sm font-semibold text-slate-900">Ruby Silver Bank</h4>
-          <p class="mt-1 text-sm text-slate-500">Curated questions from the official Ruby Silver certification.</p>
+
+          <%# Testimonial 3 %>
+          <div class="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
+            <div class="flex items-center gap-1 mb-4">
+              <% 5.times do %>
+                <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+              <% end %>
+            </div>
+            <p class="text-slate-600 leading-relaxed mb-6">"As a candidate, I appreciated the clean interface and fair exam experience. Passed my Ruby Silver certification on the first try thanks to the practice!"</p>
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-700 font-semibold text-sm">JD</div>
+              <div>
+                <div class="font-semibold text-slate-900">Software Developer</div>
+                <div class="text-sm text-slate-500">Freelancer</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <%# FAQ Section %>
+    <section class="bg-white py-20 sm:py-32">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl tracking-tight">
+            Frequently asked questions
+          </h2>
+        </div>
+
+        <div class="space-y-4">
+          <%# FAQ 1 %>
+          <div class="rounded-xl border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold text-slate-900">How does FastQuiz work?</h3>
+            <p class="mt-3 text-slate-600 leading-relaxed">Hosts create exams from our Ruby Silver question bank, schedule rooms with specific times, and share room codes with candidates. Candidates join using the code, take the exam, and results are shown in real-time.</p>
+          </div>
+
+          <%# FAQ 2 %>
+          <div class="rounded-xl border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold text-slate-900">What topics are covered in the question bank?</h3>
+            <p class="mt-3 text-slate-600 leading-relaxed">Our question bank covers all Ruby Silver certification topics: data types, strings, arrays, hashes, blocks and procs, modules and classes, exception handling, file I/O, and more.</p>
+          </div>
+
+          <%# FAQ 3 %>
+          <div class="rounded-xl border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold text-slate-900">How is the exam scored?</h3>
+            <p class="mt-3 text-slate-600 leading-relaxed">Each exam contains 50 questions. The passing score is 72% (36 correct answers), matching the official Ruby Silver certification standard. You can view detailed results per question and per topic.</p>
+          </div>
+
+          <%# FAQ 4 %>
+          <div class="rounded-xl border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold text-slate-900">Can I retake an exam?</h3>
+            <p class="mt-3 text-slate-600 leading-relaxed">Yes! Each room generates a unique exam with shuffled questions. Candidates can join different rooms and take exams multiple times. Your history is saved in "My Attempts".</p>
+          </div>
+
+          <%# FAQ 5 %>
+          <div class="rounded-xl border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold text-slate-900">Is FastQuiz free to use?</h3>
+            <p class="mt-3 text-slate-600 leading-relaxed">Yes, FastQuiz is completely free for both hosts and candidates. Create unlimited exams and rooms without any charges.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%# Footer %>
+    <footer class="bg-slate-900 text-slate-300">
+      <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          <div class="col-span-2 md:col-span-1">
+            <div class="flex items-center gap-2.5 mb-4">
+              <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-extrabold text-sm">R</span>
+              <span class="text-sm font-bold text-white">Ruby Prep Test</span>
+            </div>
+            <p class="text-sm text-slate-400 leading-relaxed">The fastest way to assess Ruby Silver skills. Create exams, schedule rooms, and track results in real-time.</p>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-4">Platform</h4>
+            <ul class="space-y-2 text-sm">
+              <li><%= link_to "Home", root_path, class: "hover:text-white transition-colors duration-150" %></li>
+              <li><%= link_to "Join Room", join_path, class: "hover:text-white transition-colors duration-150" %></li>
+              <li><%= link_to "Sign In", login_path, class: "hover:text-white transition-colors duration-150" %></li>
+              <li><%= link_to "Sign Up", signup_path, class: "hover:text-white transition-colors duration-150" %></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-4">Resources</h4>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="hover:text-white transition-colors duration-150">Documentation</a></li>
+              <li><a href="#" class="hover:text-white transition-colors duration-150">Ruby Silver Guide</a></li>
+              <li><a href="#" class="hover:text-white transition-colors duration-150">Help Center</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-4">Legal</h4>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="hover:text-white transition-colors duration-150">Privacy Policy</a></li>
+              <li><a href="#" class="hover:text-white transition-colors duration-150">Terms of Service</a></li>
+              <li><a href="#" class="hover:text-white transition-colors duration-150">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-slate-400">&copy; <%= Date.current.year %> Ruby Prep Test. All rights reserved.</p>
+          <div class="flex items-center gap-4">
+            <a href="#" class="text-slate-400 hover:text-white transition-colors duration-150" aria-label="GitHub">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg>
+            </a>
+            <a href="#" class="text-slate-400 hover:text-white transition-colors duration-150" aria-label="Twitter">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
   <% end %>
 </div>
