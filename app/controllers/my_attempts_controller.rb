@@ -44,4 +44,3 @@ class MyAttemptsController < ApplicationController
     attempt.exam_session.score_submissions(attempt.submissions_array)
   end
 end
-

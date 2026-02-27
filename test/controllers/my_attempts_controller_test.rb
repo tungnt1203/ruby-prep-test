@@ -26,4 +26,3 @@ class MyAttemptsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/No room/, response.body)
   end
 end
-
