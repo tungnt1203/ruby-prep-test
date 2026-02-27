@@ -18,7 +18,16 @@ console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify
 import * as Turbo from "@hotwired/turbo"
 import "../turbo/cable_stream_source_element.js"
 Turbo.start()
-//
+
+// PWA: register service worker for offline support
+if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker").then(
+      (reg) => {},
+      (err) => console.warn("Service worker registration failed:", err)
+    )
+  })
+}
 // import ActiveStorage from '@rails/activestorage'
 // ActiveStorage.start()
 //
